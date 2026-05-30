@@ -1,0 +1,8 @@
+ERC report (2026-05-29T17:53:55-0400, Encoding UTF8)
+
+***** Sheet /
+[no_connect_dangling]: Unconnected "no connection" flag
+    ; warning
+    @(-10.00 mm, 25.00 mm): No Connect
+
+ ** ERC messages: 1  Errors 0  Warnings 1

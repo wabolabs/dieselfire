@@ -1,0 +1,14 @@
+ERC report (2026-05-29T17:59:50-0400, Encoding UTF8)
+
+***** Sheet /
+[no_connect_dangling]: Unconnected "no connection" flag
+    ; warning
+    @(-10.00 mm, 25.00 mm): No Connect
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-120.00 mm, 100.00 mm): Label '5V'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-160.00 mm, 60.00 mm): Label '12V'
+
+ ** ERC messages: 3  Errors 2  Warnings 1

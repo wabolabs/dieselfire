@@ -1,0 +1,74 @@
+ERC report (2026-05-29T18:02:48-0400, Encoding UTF8)
+
+***** Sheet /
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-20.00 mm, 0.00 mm): Label 'SPI_MISO'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-20.00 mm, 10.00 mm): Label 'SPI_MOSI'
+[no_connect_dangling]: Unconnected "no connection" flag
+    ; warning
+    @(-10.00 mm, 25.00 mm): No Connect
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-20.00 mm, -20.00 mm): Label 'SPI_CS'
+[no_connect_dangling]: Unconnected "no connection" flag
+    ; warning
+    @(-10.00 mm, 35.00 mm): No Connect
+[label_dangling]: Label not connected to anything
+    ; error
+    @(0.00 mm, -40.00 mm): Label 'TEMP_SENSOR'
+[no_connect_dangling]: Unconnected "no connection" flag
+    ; warning
+    @(-10.00 mm, 45.00 mm): No Connect
+[label_dangling]: Label not connected to anything
+    ; error
+    @(40.00 mm, -30.00 mm): Label 'BME280'
+[no_connect_dangling]: Unconnected "no connection" flag
+    ; warning
+    @(-10.00 mm, 55.00 mm): No Connect
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-40.00 mm, -40.00 mm): Label 'CO_SENSOR'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-60.00 mm, 20.00 mm): Label 'BLUE_WIRE_TX'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(40.00 mm, 50.00 mm): Label 'GT911'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-60.00 mm, 30.00 mm): Label 'BLUE_WIRE_RX'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-20.00 mm, 70.00 mm): Label 'LCD_DC'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(80.00 mm, -30.00 mm): Label 'DS3231'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-20.00 mm, 90.00 mm): Label 'I2C_SDA'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-20.00 mm, 100.00 mm): Label 'I2C_SCL'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-80.00 mm, 100.00 mm): Label '3V3'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-120.00 mm, 50.00 mm): Label 'GND'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-120.00 mm, 100.00 mm): Label '5V'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-160.00 mm, 60.00 mm): Label '12V'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-160.00 mm, 100.00 mm): Label 'USB_TX'
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-160.00 mm, 110.00 mm): Label 'USB_RX'
+
+ ** ERC messages: 23  Errors 19  Warnings 4

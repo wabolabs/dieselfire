@@ -1,0 +1,8 @@
+ERC report (2026-05-29T17:53:33-0400, Encoding UTF8)
+
+***** Sheet /
+[label_dangling]: Label not connected to anything
+    ; error
+    @(-160.00 mm, 60.00 mm): Label '12V'
+
+ ** ERC messages: 1  Errors 1  Warnings 0
