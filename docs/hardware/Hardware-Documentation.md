@@ -6,7 +6,7 @@
 
 | Parameter | Value |
 |---|---|
-| Dimensions | 80mm × 60mm |
+| Dimensions | 100mm × 100mm |
 | Layers | 2-layer |
 | Board Thickness | 1.6mm |
 | Copper Weight | 1oz (35µm) |
@@ -54,9 +54,20 @@ The schematic is divided into the following sections:
 
 ### 3. Display
 
-- **TFT:** 2.8" ILI9341 (FPC connector, U2)
-- **Touch:** GT911 capacitive (U3)
+- **TFT:** 2.8" ILI9341, 320×240 (FPC into U11, an FH12-18S 0.5mm connector)
+- **Touch:** GT911 capacitive (U10, on the main board)
 - **Interface:** SPI (IO16-18), I2C (IO10, IO21)
+- **Mounting:** The bare panel mounts to the **inside of the case lid** facing
+  the user (active area 43.2 × 57.6 mm portrait, glass 50 × 69.2 mm). The PCB
+  sits behind it; the FPC tail folds down to U11. A documentation keepout for
+  the panel is drawn on the board's `Dwgs.User` layer (see `DISP_*` in
+  `kicad/pipeline.py`) so no tall part lands under the display.
+
+### 3a. User Buttons
+
+- **SW1/SW2:** right-angle (side-actuated) tactile switches on the front board
+  edge; plungers face the front wall so they're pressed from the **side of the
+  case**, keeping the front face clear for the touchscreen.
 
 ### 4. Sensors
 

@@ -48,6 +48,17 @@ FREEROUTING_BIN = HERE.parent / "external" / "freerouting-2.2.4-linux-x64" / "bi
 BOARD_W = 100
 BOARD_H = 100
 
+# ---- ILI9341 2.8" display (lid-mounted, faces user; FPC tail -> U11) ----
+# Panel mounts to the case lid; the PCB sits behind it.  These values define a
+# documentation keepout on the board so no tall part lands under the panel and
+# the assembler/CAD share one source of truth with the case generator.
+DISP_CX = 50.0          # display centre on the board (X)
+DISP_CY = 50.0          # display centre on the board (Y)
+DISP_ACT_W = 43.2       # active (viewable) area width  (portrait, 240 px)
+DISP_ACT_H = 57.6       # active (viewable) area height (portrait, 320 px)
+DISP_MOD_W = 50.0       # glass/module outline width
+DISP_MOD_H = 69.2       # glass/module outline height (FPC tail exits +Y edge)
+
 # Design rule targets
 TRACK_WIDTH_MM = 0.25
 CLEARANCE_MM = 0.2
@@ -267,18 +278,22 @@ def get_components():
     })
 
     # ---- Buttons & LEDs ----
+    # Side-actuated (right-angle) tactiles in the clear front-edge gap (x52..80,
+    # between J5 and the USB-C).  Actuator faces the front wall (-Y) so the
+    # buttons are pressed from the case side, leaving the front face to the
+    # touchscreen.  Default footprint orientation already points the plunger -Y.
     comps.append({
         "ref": "SW1",
-        "lib": "Button_Switch_SMD",
-        "fp_name": "SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm",
-        "x": 28, "y": 30, "rotation": 0, "layer": "F.Cu",
+        "lib": "Button_Switch_THT",
+        "fp_name": "SW_Tactile_SPST_Angled_PTS645Vx39-2LFS",
+        "x": 60, "y": 5, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BUTTON1", "2": "GND"},
     })
     comps.append({
         "ref": "SW2",
-        "lib": "Button_Switch_SMD",
-        "fp_name": "SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm",
-        "x": 56, "y": 30, "rotation": 0, "layer": "F.Cu",
+        "lib": "Button_Switch_THT",
+        "fp_name": "SW_Tactile_SPST_Angled_PTS645Vx39-2LFS",
+        "x": 71, "y": 5, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BUTTON2", "2": "GND"},
     })
     comps.append({
@@ -373,7 +388,42 @@ def create_board_outline(board):
         shape.SetLayer(edge_layer)
         board.Add(shape)
 
+    _add_display_keepout(board)
+
     print("  Board outline created.")
+
+
+def _add_display_keepout(board):
+    """Document the lid-mounted ILI9341 panel footprint on the board.
+
+    Draws the glass/module outline and the active viewing area on the
+    User.Drawings layer (no copper, no DRC silk noise) plus a label, so the
+    keepout under the display is explicit and matches the case generator.
+    """
+    dwg = pcbnew.Dwgs_User   # GetLayerID("Dwgs.User") yields an unusable id here
+
+    def rect(cx, cy, w, h):
+        x0, y0, x1, y1 = cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2
+        corners = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+        for i in range(4):
+            s = pcbnew.PCB_SHAPE(board)
+            s.SetShape(pcbnew.SHAPE_T_SEGMENT)
+            s.SetStart(pcbnew.VECTOR2I_MM(*corners[i]))
+            s.SetEnd(pcbnew.VECTOR2I_MM(*corners[(i + 1) % 4]))
+            s.SetWidth(int(0.15 * 1e6))
+            board.Add(s)
+            s.SetLayer(dwg)   # set after Add — otherwise serialized as UNDEFINED
+
+    # Module outline (glass) and active viewing area
+    rect(DISP_CX, DISP_CY, DISP_MOD_W, DISP_MOD_H)
+    rect(DISP_CX, DISP_CY, DISP_ACT_W, DISP_ACT_H)
+
+    txt = pcbnew.PCB_TEXT(board)
+    txt.SetText('ILI9341 2.8" (lid-mounted)')
+    txt.SetPosition(pcbnew.VECTOR2I_MM(DISP_CX, DISP_CY))
+    txt.SetTextSize(pcbnew.VECTOR2I_MM(1.5, 1.5))
+    board.Add(txt)
+    txt.SetLayer(pcbnew.Dwgs_User)   # set after Add — PCB_TEXT layer otherwise UNDEFINED
 
 
 def create_nets(board):
@@ -664,8 +714,46 @@ def gap_fill(board):
     return filled
 
 
+# Some headless pcbnew builds lack a program context, where
+# pcbnew.ZONE_FILLER(...).Fill() aborts the interpreter (the same root cause
+# that makes LoadBoard return None).  We probe that capability once in a throw-
+# away subprocess: where filling works we pour solid GND planes; where it would
+# crash we still DEFINE the zones + stitch vias but leave them unfilled (KiCad
+# fills them on open / `Edit > Fill All Zones`).
+_ZONE_FILL_SUPPORTED = None
+
+
+def zone_fill_supported() -> bool:
+    """True if pcbnew.ZONE_FILLER can fill a zone without crashing (cached)."""
+    global _ZONE_FILL_SUPPORTED
+    if _ZONE_FILL_SUPPORTED is not None:
+        return _ZONE_FILL_SUPPORTED
+    probe = (
+        "import sys;sys.path.insert(0,'/usr/lib/python3/dist-packages');import pcbnew;"
+        "b=pcbnew.BOARD();b.SetCopperLayerCount(2);"
+        "el=b.GetLayerID('Edge.Cuts');"
+        "import itertools;"
+        "pts=[(0,0),(100,0),(100,100),(0,100)];"
+        "[ (lambda s:(s.SetShape(pcbnew.SHAPE_T_SEGMENT),s.SetStart(pcbnew.VECTOR2I_MM(*pts[i])),"
+        "s.SetEnd(pcbnew.VECTOR2I_MM(*pts[(i+1)%4])),s.SetWidth(150000),s.SetLayer(el),b.Add(s)))"
+        "(pcbnew.PCB_SHAPE(b)) for i in range(4)];"
+        "n=pcbnew.NETINFO_ITEM(b,'GND');b.Add(n);"
+        "z=pcbnew.ZONE(b);z.SetLayer(pcbnew.F_Cu);z.SetNetCode(n.GetNetCode());"
+        "po=z.Outline();po.NewOutline();"
+        "[po.Append(pcbnew.FromMM(x),pcbnew.FromMM(y)) for x,y in [(1,1),(99,1),(99,99),(1,99)]];"
+        "b.Add(z);pcbnew.ZONE_FILLER(b).Fill(b.Zones());print('FILLOK')"
+    )
+    try:
+        r = subprocess.run([sys.executable, "-c", probe],
+                           capture_output=True, text=True, timeout=60)
+        _ZONE_FILL_SUPPORTED = (r.returncode == 0 and "FILLOK" in r.stdout)
+    except Exception:
+        _ZONE_FILL_SUPPORTED = False
+    return _ZONE_FILL_SUPPORTED
+
+
 def pour_ground(board):
-    """Pour GND on both layers, fill, add stitching vias, bond islands."""
+    """Define GND zones on both layers + stitch vias (fills if supported)."""
     print("Phase 2: Pouring GND zones...")
 
     gnd = board.FindNet("GND")
@@ -693,12 +781,15 @@ def pour_ground(board):
             poly.Append(x, y)
         board.Add(z)
 
-    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
-    print(f"  GND zones filled ({board.GetAreaCount()} zones).")
-
     gnd_via_grid(board, gnd)
-    pcbnew.ZONE_FILLER(board).Fill(board.Zones())
-    bond_pour_islands(board, gnd)
+
+    if zone_fill_supported():
+        pcbnew.ZONE_FILLER(board).Fill(board.Zones())
+        bond_pour_islands(board, gnd)
+        print(f"  GND zones filled ({board.GetAreaCount()} zones).")
+    else:
+        print(f"  GND zones defined unfilled ({board.GetAreaCount()} zones); "
+              "headless ZONE_FILLER unavailable — fill in KiCad (press B).")
 
 
 def gnd_via_grid(board, gnd):
@@ -816,11 +907,18 @@ def run_drc():
         capture_output=True, text=True,
     )
     text = result.stdout + result.stderr
+    if "Failed to load board" in text or "Found" not in text:
+        print("  DRC: kicad-cli could not load the board — DRC NOT run.")
+        print(f"    {text.strip().splitlines()[-1] if text.strip() else '(no output)'}")
+        return -1, -1
     m_v = re.search(r"Found (\d+) DRC violations", text)
     m_u = re.search(r"Found (\d+) unconnected", text)
     violations = int(m_v.group(1)) if m_v else 0
     unconnected = int(m_u.group(1)) if m_u else 0
-    print(f"  DRC: {violations} violations, {unconnected} unconnected.")
+    note = ""
+    if unconnected and not zone_fill_supported():
+        note = "  (GND zones unfilled here; most clear once filled in KiCad)"
+    print(f"  DRC: {violations} violations, {unconnected} unconnected.{note}")
     return violations, unconnected
 
 
@@ -883,7 +981,14 @@ def main():
 
     # --- Phase 2: Route ---
     print("=== Phase 2: Route ===")
-    board = pcbnew.LoadBoard(str(PCB_PATH))
+    # Reload from disk for a clean state; if the headless pcbnew program context
+    # is already up (LoadBoard then asserts and returns None), reuse the
+    # in-memory board from Phase 1 instead.
+    reloaded = pcbnew.LoadBoard(str(PCB_PATH))
+    if reloaded is not None:
+        board = reloaded
+    else:
+        print("  (LoadBoard unavailable in-process; reusing Phase 1 board)")
 
     # Clear any prior copper for clean autoroute
     _clear_copper(board)
@@ -892,6 +997,7 @@ def main():
     autoroute(board)
     import_routes(board)
     gap_fill(board)
+    board.Save(str(PCB_PATH))   # persist routed tracks before the pour step
     pour_ground(board)
     board.Save(str(PCB_PATH))
 
@@ -900,11 +1006,18 @@ def main():
 
     if violations == 0 and unconnected == 0:
         print("\nBoard is DRC-clean and fully connected.")
+    elif not zone_fill_supported():
+        print(f"\nBoard routed; {violations} violations / {unconnected} unconnected "
+              "reported with GND zones unfilled.")
+        print("Open in KiCad and press B (Fill All Zones) to complete the GND planes.")
     else:
         print(f"\nBoard has {violations} violations and {unconnected} unconnected.")
         print("Critical traces are routed. Board usable for fab.")
 
-    export_fab()
+    try:
+        export_fab()
+    except subprocess.CalledProcessError as e:
+        print(f"  WARNING: fab export failed ({e}); routed board is still saved.")
 
     print("\n" + "=" * 60)
     print("Pipeline complete!")

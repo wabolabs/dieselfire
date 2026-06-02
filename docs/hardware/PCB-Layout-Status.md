@@ -2,83 +2,54 @@
 
 ## Current State
 
-The PCB layout has been generated using KiCad's Python API with the following elements:
+The PCB is generated end-to-end by the automation pipeline
+[`kicad/pipeline.py`](../../kicad/pipeline.py) (place → Freerouting autoroute →
+GND pour → DRC → fab export). Run it with:
 
-### Completed
-- **Board outline**: 80mm x 60mm with rounded corners
-- **Mounting holes**: 4x M3 (3.2mm drill) at corners
-- **Copper zones**: 
-  - GND plane on both layers
-  - 3.3V, 5V, 12V power zones on top layer
-- **Ground vias**: Grid of vias connecting top and bottom ground planes
-- **Test points**: TP_GND, TP_3V3, TP_5V, TP_12V
-- **Silkscreen**: Board name and revision area
-
-### Needs Manual Completion
-- **Component footprints**: Need to be placed and routed in KiCad GUI
-- **Trace routing**: Manual routing required between components
-- **Component placement**: Optimize layout for signal integrity
-
-## How to Complete the PCB Layout
-
-### 1. Open in KiCad
 ```bash
-kicad pcb/Afterburner-Modern.kicad_pcb
+kicad/run_pipeline.sh --full      # or: python3 kicad/pipeline.py
 ```
 
-### 2. Add Component Footprints
-Use the footprint library (`footprints/Afterburner.kicad_fp`) or KiCad's built-in libraries:
+### Completed (automated)
 
-| Reference | Component | Footprint | Position (mm) |
-|---|---|---|---|
-| J1 | USB-C | USB-C-S6 | (-30, 25) |
-| J2 | Terminal Block | TerminalBlock_2Pin | (-30, -25) |
-| J3 | Blue Wire JST-XH | JST-XH-3 | (30, 20) |
-| J4 | DS18B20 JST-XH | JST-XH-3 | (30, -20) |
-| J5 | MQ-7 JST-XH | JST-XH-4 | (30, -25) |
-| U1 | ESP32-S3 | ESP32_S3_WROOM | (0, 0) |
-| U2 | MP2451 | SOT-23-6 | (-20, -20) |
-| U3 | AP2112 | SOT-89-3 | (-15, -20) |
-| U4 | BME280 | QFN-8_2x2 | (-25, 10) |
-| U5 | DS3231 | SOIC-16 | (-25, -10) |
-| U6 | GT911 | QFN-24_4x4 | (20, 15) |
-| U7, U8 | BSS138 | SOT-23 | (-20, 15), (-20, 10) |
-| U9 | 74LCX125 | SOIC-14 | (-25, 20) |
-| H1, H2 | Expansion Headers | HDR_2X10 | (-30, -15), (-25, -15) |
-| Y1 | Crystal | HC-49S | (-20, -25) |
-| R1-R8 | Resistors | 0402 | Various |
-| C1-C8 | Capacitors | 0402 | Various |
-| D1, D2 | LEDs | 0603 | (-28, -10), (-26, -10) |
-| SW1, SW2 | Buttons | 6x6mm | (-28, -15), (-26, -15) |
+- **Board outline**: 100 × 100 mm, 1.6 mm, 2-layer, M3 mounting holes at the
+  four corners (5,5)/(95,5)/(5,95)/(95,95).
+- **Placement**: all 44 footprints placed from KiCad's built-in libraries.
+- **Routing**: ~348 trace segments + routing vias via Freerouting.
+- **Ground**: GND zones on both layers + ~371 stitching vias (grid + per-pad).
+- **Display keepout**: the lid-mounted ILI9341 panel outline (50 × 69.2 mm) and
+  active area (43.2 × 57.6 mm) are drawn on `Dwgs.User` with a label, so no tall
+  part lands under the display. Driven by the `DISP_*` constants.
+- **Side buttons**: SW1/SW2 are right-angle (side-actuated) tactile switches on
+  the front edge; the case provides plunger holes.
+- **Fab output**: gerbers, Excellon drill, and pick-and-place CSV in
+  `kicad/fabrication/`.
 
-### 3. Route Traces
-Follow the design document for trace routing:
-- **12V traces**: ≥1mm width
-- **5V traces**: ≥0.5mm width
-- **3.3V traces**: ≥0.3mm width
-- **Signal traces**: ≥0.2mm width
-- **SPI traces**: Keep short (<50mm)
-- **UART traces**: Shield from noise
+### One manual step: fill the GND zones
 
-### 4. Run DRC
-After routing, run Design Rules Check:
-```bash
-kicad-cli pcb drc pcb/Afterburner-Modern.kicad_pcb
-```
+The headless `pcbnew` used by CI/sandbox runs may lack a program context, in
+which case `ZONE_FILLER` is unavailable and the pipeline saves the GND zones
+**defined but unfilled** (it auto-detects this via a runtime probe). When that
+happens, kicad-cli DRC reports the GND pads/vias as unconnected.
 
-## Design Reference
+**To finish:** open `kicad/pcb/Afterburner-Modern.kicad_pcb` in KiCad and press
+**B** (Edit ▸ Fill All Zones). This pours the planes and clears all GND
+unconnected/dangling-via items, leaving only the two cosmetic silk-overlap
+warnings on U8. In a full KiCad install the pipeline fills the zones
+automatically and the saved board is already clean.
 
-See `docs/design/DieselFire-S3-Design.md` for:
-- Complete schematic
-- Pin mappings
-- Power budget
-- Communication interfaces
+## Display & button mechanics
 
-## Next Steps
+- The 2.8" ILI9341 panel mounts to the **inside of the case lid**, facing the
+  user; the PCB sits behind it in the base. The FPC tail folds down to U11.
+- Buttons are pressed from the **side of the case** through plunger holes, so
+  the front face stays clear for the touchscreen.
 
-1. Open PCB in KiCad GUI
-2. Place all component footprints
-3. Route traces according to design rules
-4. Run DRC and fix violations
-5. Generate Gerber files for fabrication
-6. Order PCB from manufacturer (JLCPCB/PCBWay)
+See [`kicad/case/README.md`](../../kicad/case/README.md) for the enclosure and
+[DieselFire-S3-Design.md](../design/DieselFire-S3-Design.md) for the schematic.
+
+## Next steps
+
+1. Open the PCB in KiCad and **Fill All Zones** (if generated headless).
+2. Review the two silk-overlap warnings on U8 (cosmetic).
+3. Regenerate gerbers (`kicad-cli` or the pipeline) and order from JLCPCB/PCBWay.

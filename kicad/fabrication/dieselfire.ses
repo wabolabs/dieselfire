@@ -1,0 +1,43 @@
+(session dieselfire
+  (base_design dieselfire)
+  (placement
+    (resolution um 10)
+    (component "MountingHole_3.2mm_M3"
+      (place MH2 760000 -40000 front 0)
+      (place MH4 760000 -560000 front 0)
+      (place MH3 40000 -560000 front 0)
+      (place MH1 40000 -40000 front 0)
+    )
+  )
+  (was_is
+  )
+  (routes 
+    (resolution um 10)
+    (parser
+      (host_cad "KiCad's Pcbnew")
+      (host_version "9.0.2+dfsg-1")
+    )
+    (library_out 
+      (padstack "Via[0-1]_600:300_um"
+        (shape
+          (circle F.Cu 6000 0 0)
+        )
+        (shape
+          (circle B.Cu 6000 0 0)
+        )
+        (attach off)
+      )
+      (padstack "Via[0-1]_600:300_um"
+        (shape
+          (circle F.Cu 6000 0 0)
+        )
+        (shape
+          (circle B.Cu 6000 0 0)
+        )
+        (attach off)
+      )
+    )
+    (network_out 
+    )
+  )
+)
