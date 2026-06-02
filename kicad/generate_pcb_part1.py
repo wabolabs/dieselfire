@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Generate KiCad 9.0 PCB layout for DieselFire S3 - Part 1.
+Generate KiCad 9.0 PCB layout for DieselFire - Part 1.
 Builds board header, zones, vias, and tracks from dataclasses.
-Outputs to pcb/Afterburner-Modern.kicad_pcb (part 1).
+Outputs to pcb/DieselFire.kicad_pcb (part 1).
 """
 
 from dataclasses import dataclass, field
@@ -338,7 +338,7 @@ def build_setup():
             {"name": "F.Fab", "type": "User", "enabled": "1"},
         ],
         "unlimited_dimensions": False,
-        "mnemonic": "DieselFire S3",
+        "mnemonic": "DieselFire",
         "edge_thickness": 0.15,
         "copper_line_width": [0.254, 0.254, 0.254, 0.254, 0.254, 0.254],
         "text_width": 0.0,
@@ -456,14 +456,14 @@ def build_header():
         '',
         '  (paper "A4")',
         '  (title_block',
-        '    (title "DieselFire S3")',
+        '    (title "DieselFire")',
         '    (date "2026-05-29")',
         '    (rev "1.0")',
-        '    (company "Afterburner")',
+        '    (company "DieselFire")',
         '    (comment 1 "ESP32-S3 Diesel Heater Controller")',
         '    (comment 2 "80mm x 60mm 2-Layer PCB")',
         '    (comment 3 "12V Input, 3.3V Logic")',
-        '    (comment 4 "Afterburner Team")',
+        '    (comment 4 "DieselFire Team")',
         '  )',
         '',
         '  (setup',
@@ -498,7 +498,7 @@ def build_header():
         '    (board_thickness 1.6)',
         '    (copper_thickness 0.035)',
         '    (unlimited_dimensions false)',
-        '    (mnemonic "DieselFire S3")',
+        '    (mnemonic "DieselFire")',
         '    (edge_thickness 0.15)',
         '    (copper_line_width [0.254 0.254 0.254 0.254 0.254 0.254])',
         '    (text_width 0.0)',
@@ -588,7 +588,7 @@ def main():
     lines.extend(build_vias_section(vias))
     lines.extend(build_tracks_section(tracks))
 
-    dest = PCB_DIR / "Afterburner-Modern.kicad_pcb"
+    dest = PCB_DIR / "DieselFire.kicad_pcb"
     dest.parent.mkdir(parents=True, exist_ok=True)
     with open(dest, "w") as f:
         f.write("\n".join(lines))

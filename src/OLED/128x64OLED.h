@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -22,7 +22,7 @@
 #ifndef __128x64OLED_H__
 #define __128x64OLED_H__
 
-#include "../cfg/BTCConfig.h"
+#include "../cfg/DFConfig.h"
 
 #if USE_ADAFRUIT_SH1106 == 1
 #include "../../lib/esp32-sh1106-oled/Adafruit_SH1106.h"

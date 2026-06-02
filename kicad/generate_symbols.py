@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate KiCad 9.0 schematic symbol library for DieselFire S3.
+Generate KiCad 9.0 schematic symbol library for DieselFire.
 Uses dataclasses to define symbols, then serializes to KiCad text format.
 """
 
@@ -544,7 +544,7 @@ def serialize_library(symbols):
         "  (version 20241018)",
         "  (generator kicad_sym)",
         "  (date 2026-05-29)",
-        "  (lib (lib Afterburner)",
+        "  (lib (lib DieselFire)",
     ]
     for sym in symbols:
         lines.append("    " + sym.serialize())
@@ -556,7 +556,7 @@ def main():
     symbols = build_symbols()
     content = serialize_library(symbols)
 
-    dest = BASE / "libraries" / "symbols" / "Afterburner.kicad_sym"
+    dest = BASE / "libraries" / "symbols" / "DieselFire.kicad_sym"
     dest.parent.mkdir(parents=True, exist_ok=True)
     with open(dest, "w") as f:
         f.write(content)

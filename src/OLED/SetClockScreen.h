@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2019  Ray Jones <ray@mrjones.id.au>
  *
@@ -24,7 +24,7 @@
 
 #include <stdint.h>
 #include "UIEditScreen.h"
-#include "../RTC/BTCDateTime.h"
+#include "../RTC/DFDateTime.h"
 
 class C128x64_OLED;
 class CScreenManager;
@@ -32,7 +32,7 @@ class CProtocol;
 
 class CSetClockScreen : public CUIEditScreen {
   unsigned long _nextT;
-  BTCDateTime _working;
+  DFDateTime _working;
   int _12hr;
 
   void _adjTimeDate(int dir);

@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2019  Ray Jones <ray@mrjones.id.au>
  *
@@ -19,10 +19,10 @@
  * 
  */
 
-#ifndef __BTC_NV_STORAGE_H__
-#define __BTC_NV_STORAGE_H__
+#ifndef __DF_NV_STORAGE_H__
+#define __DF_NV_STORAGE_H__
 
-#include "BTC_GPIO.h"
+#include "DF_GPIO.h"
 #include "NVCore.h"
 #include "helpers.h"
 #include "TempSense.h"
@@ -238,9 +238,9 @@ struct sCredentials : public CESP32_NVStorage {
   char webUsername[32];
   char webPassword[32];
   void init() {
-    strcpy(APSSID, "Afterburner");
+    strcpy(APSSID, "DieselFire");
     strcpy(APpassword, "thereisnospoon");
-    strcpy(webUpdateUsername, "Afterburner");
+    strcpy(webUpdateUsername, "DieselFire");
     strcpy(webUpdatePassword, "BurnBabyBurn");
     strcpy(webUsername, "");
     strcpy(webPassword, "");
@@ -486,5 +486,5 @@ public:
 
 extern CHeaterStorage& NVstore;
 
-#endif // __BTC_NV_STORAGE_H__
+#endif // __DF_NV_STORAGE_H__
 

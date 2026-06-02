@@ -31,10 +31,10 @@ import pcbnew
 # Paths
 # ===================================================================
 HERE = Path(__file__).resolve().parent
-PCB_PATH = HERE / "pcb" / "Afterburner-Modern.kicad_pcb"
-DSN_PATH = HERE / "freerouting" / "dieselfire.dsn"
-SES_PATH = HERE / "freerouting" / "dieselfire.ses"
-FREEROUTING_BIN = Path("/home/kboran/Nextcloud/development/afterburner/bluetoothheater/external/freerouting-2.2.4-linux-x64/bin/freerouting")
+PCB_PATH = HERE / "pcb" / "DieselFire.kicad_pcb"
+DSN_PATH = HERE / "freerouting" / "DieselFire.dsn"
+SES_PATH = HERE / "freerouting" / "DieselFire.ses"
+FREEROUTING_BIN = Path("/home/kboran/Nextcloud/development/dieselfire/DieselFire/external/freerouting-2.2.4-linux-x64/bin/freerouting")
 FAB_DIR = HERE / "fabrication"
 
 # Design rules
@@ -427,7 +427,7 @@ def export_fab():
 
 def main():
     print("=" * 60)
-    print("DieselFire S3 — PCB Autorouting Pipeline")
+    print("DieselFire — PCB Autorouting Pipeline")
     print("=" * 60)
     print()
 

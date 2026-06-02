@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit critical-impedance routes into Afterburner-Modern.kicad_pcb.
+"""Emit critical-impedance routes into DieselFire.kicad_pcb.
 
 Pre-routes the load-bearing traces so the autorouter has a good starting point:
 
@@ -26,11 +26,11 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PROJECT_ROOT = HERE.parents[0]
-PCB_PATH = PROJECT_ROOT / "pcb" / "Afterburner-Modern.kicad_pcb"
+PCB_PATH = PROJECT_ROOT / "pcb" / "DieselFire.kicad_pcb"
 
 
 def _u(seed: str) -> str:
-    return str(_uuid.uuid5(_uuid.NAMESPACE_URL, f"dieselfire/{seed}"))
+    return str(_uuid.uuid5(_uuid.NAMESPACE_URL, f"DieselFire/{seed}"))
 
 
 @dataclass

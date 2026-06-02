@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -19,14 +19,14 @@
  * 
  */
 
-#ifndef __BTC_MODERATOR_H__
-#define __BTC_MODERATOR_H__
+#ifndef __DF_MODERATOR_H__
+#define __DF_MODERATOR_H__
 
 #include <map>
 #include "../../lib/ArduinoJson/ArduinoJson.h"
 #include "../RTC/Timers.h"
 #include "DebugPort.h"
-#include "BTC_GPIO.h"
+#include "DF_GPIO.h"
 
 
 class CTimerModerator {
@@ -238,4 +238,4 @@ public:
   };
 };
 
-#endif // __BTC_MODERATOR_H__
+#endif // __DF_MODERATOR_H__

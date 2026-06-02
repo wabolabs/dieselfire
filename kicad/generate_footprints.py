@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate KiCad 9.0 footprint library for DieselFire S3.
+Generate KiCad 9.0 footprint library for DieselFire.
 Uses dataclasses to define footprints, then serializes to KiCad text format.
 """
 
@@ -578,7 +578,7 @@ def serialize_footprint_library(footprints):
         "  (version 20241018)",
         "  (generator kicad_footprint)",
         "  (date 2026-05-29)",
-        "  (lib (lib Afterburner)",
+        "  (lib (lib DieselFire)",
     ]
     for fp in footprints:
         lines.append(fp.serialize())
@@ -590,7 +590,7 @@ def main():
     footprints = make_footprint_library()
     content = serialize_footprint_library(footprints)
 
-    dest = BASE / "footprints" / "Afterburner.kicad_fp"
+    dest = BASE / "footprints" / "DieselFire.kicad_fp"
     dest.parent.mkdir(parents=True, exist_ok=True)
     with open(dest, "w") as f:
         f.write(content)

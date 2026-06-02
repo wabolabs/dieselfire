@@ -1,4 +1,4 @@
-# DieselFire S3 - PCB Layout Status
+# DieselFire - PCB Layout Status
 
 ## Current State
 
@@ -32,7 +32,7 @@ which case `ZONE_FILLER` is unavailable and the pipeline saves the GND zones
 **defined but unfilled** (it auto-detects this via a runtime probe). When that
 happens, kicad-cli DRC reports the GND pads/vias as unconnected.
 
-**To finish:** open `kicad/pcb/Afterburner-Modern.kicad_pcb` in KiCad and press
+**To finish:** open `kicad/pcb/DieselFire.kicad_pcb` in KiCad and press
 **B** (Edit ▸ Fill All Zones). This pours the planes and clears all GND
 unconnected/dangling-via items, leaving only the two cosmetic silk-overlap
 warnings on U8. In a full KiCad install the pipeline fills the zones
@@ -46,7 +46,7 @@ automatically and the saved board is already clean.
   the front face stays clear for the touchscreen.
 
 See [`kicad/case/README.md`](../../kicad/case/README.md) for the enclosure and
-[DieselFire-S3-Design.md](../design/DieselFire-S3-Design.md) for the schematic.
+[DieselFire-Design.md](../design/DieselFire-Design.md) for the schematic.
 
 ## Next steps
 

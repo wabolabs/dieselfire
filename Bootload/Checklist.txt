@@ -1,4 +1,4 @@
-Afterburner operation checklist
+DieselFire operation checklist
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
 OLED intact

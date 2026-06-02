@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  * Copyright (C) 2018  James Clark
@@ -21,14 +21,14 @@
  */
 
 //#include "../../lib/TelnetSpy/TelnetSpy.h"
-#include "ABTelnetSpy.h"
+#include "DFTelnetSpy.h"
 
 #ifndef __DEBUGPORT_H__
 #define __DEBUGPORT_H__
 
 class CProtocol;
 
-extern ABTelnetSpy DebugPort;
+extern DFTelnetSpy DebugPort;
 
 void DebugReportFrame(const char* hdr, const CProtocol& Frame, const char* ftr, char* msg);
 

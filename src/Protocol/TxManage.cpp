@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -126,7 +126,7 @@ CTxManage::queueSysUpdate()
 }
 
 void 
-CTxManage::PrepareFrame(const CProtocol& basisFrame, bool isBTCmaster)
+CTxManage::PrepareFrame(const CProtocol& basisFrame, bool isDFmaster)
 {
   // copy supplied frame, typically this will be the values an OEM controller delivered
   // which means we parrot that data by default.
@@ -156,7 +156,7 @@ CTxManage::PrepareFrame(const CProtocol& basisFrame, bool isBTCmaster)
 
   // 0x78 prevents the controller showing bum information when we parrot the OEM controller
   // heater is happy either way, the OEM controller has set the max/min stuff already
-  if(isBTCmaster) {
+  if(isDFmaster) {
     if(m_sysUpdate) {
       m_sysUpdate--;
       m_TxFrame.setActiveMode();   // this allows heater to save the tuning params to EEPROM

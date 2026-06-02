@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -21,7 +21,7 @@
 
 #include <stdint.h>
 #include <driver/adc.h>
-#include "BTCConfig.h"
+#include "DFConfig.h"
 
 
 const gpio_num_t UART_Tx = GPIO_NUM_1;

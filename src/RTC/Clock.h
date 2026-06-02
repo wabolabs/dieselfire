@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -19,12 +19,12 @@
  * 
  */
 
-#ifndef __BTC_CLOCK_H__
-#define __BTC_CLOCK_H__
+#ifndef __DF_CLOCK_H__
+#define __DF_CLOCK_H__
 
 #include "../../lib/RTClib/RTClib.h"
-#include "BTCDateTime.h"
-#include "../cfg/BTCConfig.h"
+#include "DFDateTime.h"
+#include "../cfg/DFConfig.h"
 
 class RTC_DS3231Ex : public RTC_DS3231 {
 public:
@@ -48,7 +48,7 @@ class CClock {
   RTC_Millis& _rtc;
 #endif
   unsigned long _nextRTCfetch;
-  BTCDateTime _currentTime;
+  DFDateTime _currentTime;
   int _prevMinute;
 
 public:
@@ -64,8 +64,8 @@ public:
   CClock(RTC_Millis& rtc) : _rtc(rtc) {};
 #endif
   void begin();
-  const BTCDateTime& update();
-  const BTCDateTime& get() const;
+  const DFDateTime& update();
+  const DFDateTime& get() const;
   void set(const DateTime& newTime);
   void saveData(uint8_t* pData, int len, int ofs);
   void readData(uint8_t* pData, int len, int ofs);
@@ -75,4 +75,4 @@ public:
 
 extern CClock Clock;
 
-#endif // __BTC_TIMERS_H__
+#endif // __DF_TIMERS_H__

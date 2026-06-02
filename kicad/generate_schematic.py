@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate KiCad 9.0 schematic file for DieselFire S3.
+Generate KiCad 9.0 schematic file for DieselFire.
 Uses dataclasses to define schematic elements, then serializes to KiCad text format.
 """
 
@@ -248,10 +248,10 @@ class HierarchicalSheetPath:
 
 @dataclass
 class Schematic:
-    title: str = "DieselFire S3"
+    title: str = "DieselFire"
     date: str = "2026-05-29"
     rev: str = "1.0"
-    company: str = "Afterburner"
+    company: str = "DieselFire"
     comment_count: int = 4
     sheets: List[dict] = field(default_factory=list)
     symbols: List[SymbolInstance] = field(default_factory=list)
@@ -270,7 +270,7 @@ class Schematic:
         lines = [
             '(kicad_sch (version 20241018) (generator kicad_sch)',
             '  (paper A4)',
-            '  (title_block (title "DieselFire S3") (date "2026-05-29") (rev "1.0") (company "Afterburner"))',
+            '  (title_block (title "DieselFire") (date "2026-05-29") (rev "1.0") (company "DieselFire"))',
         ]
 
         # Title block area
@@ -337,9 +337,9 @@ def build_schematic():
 
     # Add title block text
     schematic.text_items = [
-        TextItem("DieselFire S3", -100, 100, 0, 2.54, 2.54, "Title1"),
+        TextItem("DieselFire", -100, 100, 0, 2.54, 2.54, "Title1"),
         TextItem("ESP32-S3 Based Diesel Heater Controller", -100, 80, 0, 1.27, 1.27, "Title1"),
-        TextItem("Afterburner Team", -100, 60, 0, 1.27, 1.27, "Title1"),
+        TextItem("DieselFire Team", -100, 60, 0, 1.27, 1.27, "Title1"),
         TextItem("2026-05-29", -100, 40, 0, 1.27, 1.27, "Title1"),
         TextItem("Sheet 1 of 1", -100, 20, 0, 1.27, 1.27, "Title1"),
     ]
@@ -357,63 +357,63 @@ def build_schematic():
     schematic.symbols.extend([
         SymbolInstance("Connector", "USB-C-31-SR", power_x - 40, power_y + 40, 0,
                        uuid=make_uuid(100)),
-        SymbolInstance("Afterburner", "MP2451", power_x, power_y, 0,
+        SymbolInstance("DieselFire", "MP2451", power_x, power_y, 0,
                        uuid=make_uuid(101)),
-        SymbolInstance("Afterburner", "AP2112", power_x + 40, power_y, 0,
+        SymbolInstance("DieselFire", "AP2112", power_x + 40, power_y, 0,
                        uuid=make_uuid(102)),
-        SymbolInstance("Afterburner", "TERM_BLOCK_2POS", power_x - 40, power_y - 40, 0,
+        SymbolInstance("DieselFire", "TERM_BLOCK_2POS", power_x - 40, power_y - 40, 0,
                        uuid=make_uuid(103)),
     ])
 
     # MCU section
     mcu_x, mcu_y = -40, 40
     schematic.symbols.append(
-        SymbolInstance("Afterburner", "ESP32-S3-WROOM-1-N8R8", mcu_x, mcu_y, 0,
+        SymbolInstance("DieselFire", "ESP32-S3-WROOM-1-N8R8", mcu_x, mcu_y, 0,
                        uuid=make_uuid(200))
     )
 
     # Display section
     display_x, display_y = 40, 60
     schematic.symbols.append(
-        SymbolInstance("Afterburner", "GT911", display_x, display_y, 0,
+        SymbolInstance("DieselFire", "GT911", display_x, display_y, 0,
                        uuid=make_uuid(300))
     )
 
     # Sensor section
     sensor_x, sensor_y = 40, -20
     schematic.symbols.extend([
-        SymbolInstance("Afterburner", "BME280", sensor_x, sensor_y, 0,
+        SymbolInstance("DieselFire", "BME280", sensor_x, sensor_y, 0,
                        uuid=make_uuid(310)),
-        SymbolInstance("Afterburner", "DS3231", sensor_x + 40, sensor_y, 0,
+        SymbolInstance("DieselFire", "DS3231", sensor_x + 40, sensor_y, 0,
                        uuid=make_uuid(311)),
     ])
 
     # I/O section
     io_x, io_y = -40, -60
     schematic.symbols.extend([
-        SymbolInstance("Afterburner", "MQ-7", io_x, io_y, 0,
+        SymbolInstance("DieselFire", "MQ-7", io_x, io_y, 0,
                        uuid=make_uuid(400)),
-        SymbolInstance("Afterburner", "DS18B20", io_x + 40, io_y, 0,
+        SymbolInstance("DieselFire", "DS18B20", io_x + 40, io_y, 0,
                        uuid=make_uuid(401)),
-        SymbolInstance("Afterburner", "JST-XH-3", io_x - 40, io_y - 20, 0,
+        SymbolInstance("DieselFire", "JST-XH-3", io_x - 40, io_y - 20, 0,
                        uuid=make_uuid(402)),
-        SymbolInstance("Afterburner", "JST-XH-4", io_x + 40, io_y - 20, 0,
+        SymbolInstance("DieselFire", "JST-XH-4", io_x + 40, io_y - 20, 0,
                        uuid=make_uuid(403)),
     ])
 
     # Expansion headers
     schematic.symbols.extend([
-        SymbolInstance("Afterburner", "EXPANSION_2X10", -100, -60, 0,
+        SymbolInstance("DieselFire", "EXPANSION_2X10", -100, -60, 0,
                        uuid=make_uuid(500)),
-        SymbolInstance("Afterburner", "EXPANSION_2X10", 100, -60, 0,
+        SymbolInstance("DieselFire", "EXPANSION_2X10", 100, -60, 0,
                        uuid=make_uuid(501)),
     ])
 
     # Level shifters for Blue Wire
     schematic.symbols.extend([
-        SymbolInstance("Afterburner", "BSS138", -100, 20, 0,
+        SymbolInstance("DieselFire", "BSS138", -100, 20, 0,
                        uuid=make_uuid(600)),
-        SymbolInstance("Afterburner", "BSS138", -100, 0, 0,
+        SymbolInstance("DieselFire", "BSS138", -100, 0, 0,
                        uuid=make_uuid(601)),
     ])
 
@@ -487,7 +487,7 @@ def main():
     schematic = build_schematic()
     content = schematic.serialize()
 
-    dest = BASE / "schematic" / "Afterburner-Modern.kicad_sch"
+    dest = BASE / "schematic" / "DieselFire.kicad_sch"
     dest.parent.mkdir(parents=True, exist_ok=True)
     with open(dest, "w") as f:
         f.write(content)

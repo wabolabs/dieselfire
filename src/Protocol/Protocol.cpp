@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -23,7 +23,7 @@
 #include "Protocol.h"
 #include "../Utility/DebugPort.h"
 #include "../Utility/helpers.h"
-#include "../cfg/BTCConfig.h"
+#include "../cfg/DFConfig.h"
 #include "../Utility/macros.h"
 
 
@@ -450,7 +450,7 @@ CProtocolPackage::reportFrames(bool isOEM, std::function<void(const char*)> push
     DebugReportFrame("OEM:", Controller, TERMINATE_OEM_LINE ? "\r\n" : "   ", dbgFrameMsg);
   }
   else {
-    DebugReportFrame("BTC:", Controller, TERMINATE_BTC_LINE ? "\r\n" : "   ", dbgFrameMsg);
+    DebugReportFrame("BTC:", Controller, TERMINATE_DF_LINE ? "\r\n" : "   ", dbgFrameMsg);
   }
   DebugReportFrame("HTR:", Heater, "\r\n", dbgFrameMsg);
   pushMsg(dbgFrameMsg);

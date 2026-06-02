@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2019  Ray Jones <ray@mrjones.id.au>
  *
@@ -443,7 +443,7 @@ CScreenHeader::showFrost()
 void 
 CScreenHeader::showTime()
 {
-  const BTCDateTime& now = Clock.get();
+  const DFDateTime& now = Clock.get();
 
   char msg[16];
   if(now.day() == 0xA5) {

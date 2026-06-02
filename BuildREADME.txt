@@ -9,8 +9,8 @@ Do it that way if you must, but seriously don't!
 PlatformIO rocks - just load the root repo directory with PIO in VScode 
 and away you go.
 
-The Arduino\Afterburner\Afterburner.ino file is a hard symbolic link to the
-proper src\Afterburner\Afterburner.cpp file.
+The Arduino\DieselFire\DieselFire.ino file is a hard symbolic link to the
+proper src\DieselFire\DieselFire.cpp file.
 
-Likewise the Arduino\Afterburner\src and Arduino\Afterburner\data paths are 
-hard junctions to the src\Afterburner\src and src\Afterburner\data files.  
+Likewise the Arduino\DieselFire\src and Arduino\DieselFire\data paths are 
+hard junctions to the src\DieselFire\src and src\DieselFire\data files.  

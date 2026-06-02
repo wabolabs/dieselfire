@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2020  Ray Jones
  *
@@ -24,7 +24,7 @@
 #include "WebContentDL.h"
 #include "../Utility/DebugPort.h"
 #include "../Utility/helpers.h"
-#include "../Utility/BTC_JSON.h"
+#include "../Utility/DF_JSON.h"
 
 // #define DUMP_WEB_BYTES          
 
@@ -102,7 +102,7 @@ void CWebContentDL::get(const char* filename)
     _bytecount = 0;
     _bOK = false;
 
-    std::string URL = "http://afterburner.mrjones.id.au/fota/web";
+    std::string URL = "http://dieselfire.wabo.cc/fota/web";
     URL += _filename;
     _request.open("GET", URL.c_str());
     _request.send();
@@ -283,7 +283,7 @@ void
 CGetWebContent::_get(const char* filename)
 {
   _filename = filename;
-  DebugPort.printf("Requesting %s from Afterburner web site\r\n", _filename.c_str());
+  DebugPort.printf("Requesting %s from DieselFire web site\r\n", _filename.c_str());
   handler.get(_filename.c_str()); 
   setHoldoff(_holdoff, 15000);
 }
@@ -292,7 +292,7 @@ bool
 CGetWebContent::_done()
 {
   if(!handler.busy()) {
-    DebugPort.printf("Completed %s from Afterburner web site\r\n", _filename.c_str());
+    DebugPort.printf("Completed %s from DieselFire web site\r\n", _filename.c_str());
     return true;
   }
   return false;

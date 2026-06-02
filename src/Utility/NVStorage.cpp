@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2019  Ray Jones <ray@mrjones.id.au>
  *
@@ -601,7 +601,7 @@ sMQTTparams::load()
   validatedLoad("host", host, 127, "broker");
   validatedLoad("username", username, 31, "username");
   validatedLoad("password", password, 31, "password");
-  validatedLoad("topic", topicPrefix, 31, "Afterburner");
+  validatedLoad("topic", topicPrefix, 31, "DieselFire");
   preferences.end();    
 }
 
@@ -631,9 +631,9 @@ sCredentials::load()
 {
   // **** MAX LENGTH is 15 for names ****
   preferences.begin("credentials", false);
-  validatedLoad("SSID", APSSID, 31, "Afterburner");
+  validatedLoad("SSID", APSSID, 31, "DieselFire");
   validatedLoad("APpassword", APpassword, 31, "thereisnospoon");
-  validatedLoad("webUpdateUser", webUpdateUsername, 31, "Afterburner");
+  validatedLoad("webUpdateUser", webUpdateUsername, 31, "DieselFire");
   validatedLoad("webUpdatePass", webUpdatePassword, 31, "BurnBabyBurn");
   validatedLoad("webUser", webUsername, 31, "");
   validatedLoad("webPass", webPassword, 31, "");

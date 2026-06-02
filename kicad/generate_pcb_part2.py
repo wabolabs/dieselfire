@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Generate KiCad 9.0 PCB component modules for DieselFire S3 - Part 2.
+Generate KiCad 9.0 PCB component modules for DieselFire - Part 2.
 Builds all component footprints with pads and serializes to PCB file.
-Appends to pcb/Afterburner-Modern.kicad_pcb.
+Appends to pcb/DieselFire.kicad_pcb.
 """
 
 from dataclasses import dataclass, field
@@ -11,7 +11,7 @@ from typing import List, Tuple
 
 BASE = Path(__file__).parent
 PCB_DIR = BASE / "pcb"
-PCB_FILE = PCB_DIR / "Afterburner-Modern.kicad_pcb"
+PCB_FILE = PCB_DIR / "DieselFire.kicad_pcb"
 
 
 @dataclass

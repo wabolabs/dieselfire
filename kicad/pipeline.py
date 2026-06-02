@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""DieselFire S3 — Full PCB Automation Pipeline (KiCad 9.0 + pcbnew API).
+"""DieselFire — Full PCB Automation Pipeline (KiCad 9.0 + pcbnew API).
 
 Two-phase headless PCB generation inspired by the SparkOps Communicator:
 
@@ -37,11 +37,11 @@ import pcbnew
 # ===================================================================
 HERE = Path(__file__).resolve().parent
 PROJECT_ROOT = HERE.parents[0]
-PCB_PATH = HERE / "pcb" / "Afterburner-Modern.kicad_pcb"
-PRO_PATH = HERE / "Afterburner-Modern.kicad_pro"
+PCB_PATH = HERE / "pcb" / "DieselFire.kicad_pcb"
+PRO_PATH = HERE / "DieselFire.kicad_pro"
 FAB_DIR = HERE / "fabrication"
-DSN_PATH = HERE / "freerouting" / "dieselfire.dsn"
-SES_PATH = HERE / "freerouting" / "dieselfire.ses"
+DSN_PATH = HERE / "freerouting" / "DieselFire.dsn"
+SES_PATH = HERE / "freerouting" / "DieselFire.ses"
 FREEROUTING_BIN = HERE.parent / "external" / "freerouting-2.2.4-linux-x64" / "bin" / "freerouting"
 
 # Board dimensions (mm)
@@ -357,10 +357,10 @@ def create_board_outline(board):
 
     # Title block
     tb = board.GetTitleBlock()
-    tb.SetTitle("DieselFire S3")
+    tb.SetTitle("DieselFire")
     tb.SetDate("2026-05-30")
     tb.SetRevision("1.0")
-    tb.SetCompany("Afterburner")
+    tb.SetCompany("DieselFire")
 
     # Net classes
     net_class = pcbnew.NETCLASS(board)
@@ -961,7 +961,7 @@ def export_fab():
 # ===================================================================
 def main():
     print("=" * 60)
-    print("DieselFire S3 — PCB Automation Pipeline")
+    print("DieselFire — PCB Automation Pipeline")
     print("=" * 60)
     print()
 

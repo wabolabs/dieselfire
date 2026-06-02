@@ -1,10 +1,10 @@
-# DieselFire S3
+# DieselFire
 
 A modernized open-source controller for generic Chinese diesel heaters, forked from [Afterburner](https://gitlab.com/mrjones.id.au/bluetoothheater) by Ray Jones.
 
 ## Overview
 
-DieselFire S3 is a complete redesign of the Afterburner project, updated with modern hardware while preserving the core functionality that made Afterburner popular:
+DieselFire is a complete redesign of the Afterburner project, updated with modern hardware while preserving the core functionality that made Afterburner popular:
 
 - **Diesel heater control** via the "blue wire" half-duplex serial protocol (25000 baud)
 - **WiFi connectivity** for web interface, MQTT, and OTA updates
@@ -31,7 +31,7 @@ DieselFire S3 is a complete redesign of the Afterburner project, updated with mo
 
 ## License
 
-DieselFire S3 is released under the **GNU General Public License v3.0**.
+DieselFire is released under the **GNU General Public License v3.0**.
 
 This project is a **fork** of [Afterburner](https://gitlab.com/mrjones.id.au/bluetoothheater) by Ray Jones (Copyright 2018-2020). The original Afterburner code was used as the foundation and has been substantially modified and modernized. All original Afterburner code remains under GPLv3 as per the original license.
 
@@ -42,12 +42,12 @@ See [LICENSE](LICENSE) for the full license text.
 1. **Hardware**: Order PCB from JLCPCB/PCBWay using Gerber files in `gerber/`
 2. **Firmware**: Install PlatformIO, then run `pio run` to build
 3. **Flash**: Connect via USB-C and run `pio run --target upload`
-4. **Configure**: Connect to the AP "DieselFire-S3" (password: thereisnospoon) or connect to existing WiFi
+4. **Configure**: Connect to the AP "DieselFire" (password: thereisnospoon) or connect to existing WiFi
 
 ## Project Structure
 
 ```
-DieselFire-S3/
+DieselFire/
 ├── boards/                  # PlatformIO board definitions
 ├── docs/
 │   ├── design/              # Design documents and specifications
@@ -160,7 +160,7 @@ DieselFire-S3/
 ### Prerequisites
 
 - [PlatformIO](https://platformio.org/) (latest version)
-- ESP32-S3 compatible board (DieselFire S3 PCB)
+- ESP32-S3 compatible board (DieselFire PCB)
 - USB-C cable
 
 ### Build Commands
@@ -170,8 +170,8 @@ DieselFire-S3/
 pip install platformio
 
 # Clone the repository
-git clone https://github.com/yourusername/DieselFire-S3.git
-cd DieselFire-S3
+git clone https://github.com/yourusername/DieselFire.git
+cd DieselFire
 
 # Build firmware
 pio run
@@ -185,10 +185,10 @@ pio device monitor --baud 115200
 
 ### Board Definition
 
-The DieselFire S3 board is defined in `boards/dieselfire-s3.json`. To use it:
+The DieselFire board is defined in `boards/dieselfire.json`. To use it:
 
 ```bash
-pio run -e dieselfire-s3
+pio run -e dieselfire
 ```
 
 ## Configuration
@@ -196,7 +196,7 @@ pio run -e dieselfire-s3
 ### WiFi Setup
 
 On first boot, the device creates an access point:
-- **SSID**: DieselFire-S3
+- **SSID**: DieselFire
 - **Password**: thereisnospoon
 
 Connect to this AP and open a browser to `192.168.4.1` to configure WiFi.
@@ -268,7 +268,7 @@ The firmware follows a modular architecture:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     DieselFire S3                            │
+│                     DieselFire                                │
 │                                                              │
 │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐   │
 │  │  Display    │  │   UI Layer   │  │  Settings/Config │   │
@@ -376,7 +376,7 @@ Please ensure your code follows the existing style and includes appropriate docu
 
 ## Acknowledgments
 
-DieselFire S3 is a fork of [Afterburner](https://gitlab.com/mrjones.id.au/bluetoothheater) by Ray Jones. The original Afterburner project was a groundbreaking open-source controller for Chinese diesel heaters, and this project builds upon that foundation.
+DieselFire is a fork of [Afterburner](https://gitlab.com/mrjones.id.au/bluetoothheater) by Ray Jones. The original Afterburner project was a groundbreaking open-source controller for Chinese diesel heaters, and this project builds upon that foundation.
 
 Special thanks to:
 - Ray Jones (Afterburner original author)
@@ -386,6 +386,6 @@ Special thanks to:
 
 ## Disclaimer
 
-DieselFire S3 is provided "as is" without warranty of any kind. The authors are not responsible for any damage caused by the use of this software or hardware. Diesel heaters produce carbon monoxide and other hazardous gases. Always ensure proper ventilation and installation.
+DieselFire is provided "as is" without warranty of any kind. The authors are not responsible for any damage caused by the use of this software or hardware. Diesel heaters produce carbon monoxide and other hazardous gases. Always ensure proper ventilation and installation.
 
 Use at your own risk.

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 BASE = Path(__file__).parent
-PROJ_FILE = BASE / "Afterburner-Modern.kicad_pro"
+PROJ_FILE = BASE / "DieselFire.kicad_pro"
 
 with open(PROJ_FILE, "r") as f:
     proj = json.load(f)
@@ -13,7 +13,7 @@ with open(PROJ_FILE, "r") as f:
 # Add symbol library references
 proj["libraries"] = {
     "symbol_libraries": [
-        {"uri": "project:Afterburner.kicad_sym"},
+        {"uri": "project:DieselFire.kicad_sym"},
         {"uri": "/usr/share/kicad/symbols/Devices.kicad_sym"},
         {"uri": "/usr/share/kicad/symbols/Connectors.kicad_sym"},
         {"uri": "/usr/share/kicad/symbols/Connector_Adapters.kicad_sym"},
@@ -26,7 +26,7 @@ proj["libraries"] = {
         {"uri": "/usr/share/kicad/symbols/Resistors.kicad_sym"},
     ],
     "footprint_libraries": [
-        {"uri": "project:Afterburner.kicad_fp"},
+        {"uri": "project:DieselFire.kicad_fp"},
         {"uri": "/usr/share/kicad/symbols/Connector.pretty"},
         {"uri": "/usr/share/kicad/symbols/Connector_USB.pretty"},
         {"uri": "/usr/share/kicad/symbols/Connector_PinHeader_2.54mm.pretty"},

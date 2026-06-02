@@ -1,1 +1,1 @@
-"""DieselFire S3 PCB fabrication export."""
+"""DieselFire PCB fabrication export."""

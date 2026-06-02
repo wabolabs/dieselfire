@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate KiCad 9.0 PCB layout for DieselFire S3 using the KiCad Python API.
+Generate KiCad 9.0 PCB layout for DieselFire using the KiCad Python API.
 This ensures proper format compliance.
 """
 
@@ -10,7 +10,7 @@ import pcbnew
 from pathlib import Path
 
 BASE = Path(__file__).parent
-PCB_FILE = BASE / "pcb" / "Afterburner-Modern.kicad_pcb"
+PCB_FILE = BASE / "pcb" / "DieselFire.kicad_pcb"
 
 
 def create_board():
@@ -20,10 +20,10 @@ def create_board():
     board.m_Size = pcbnew.VECTOR2I(80000, 60000)  # 80mm x 60mm
 
     tb = board.GetTitleBlock()
-    tb.SetTitle("DieselFire S3")
+    tb.SetTitle("DieselFire")
     tb.SetDate("2026-05-29")
     tb.SetRevision("1.0")
-    tb.SetCompany("Afterburner")
+    tb.SetCompany("DieselFire")
 
     # Set up net classes
     net_class = pcbnew.NETCLASS(board)

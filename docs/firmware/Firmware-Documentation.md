@@ -1,14 +1,14 @@
-# DieselFire S3 - Firmware Documentation
+# DieselFire - Firmware Documentation
 
 ## Architecture Overview
 
-DieselFire S3 firmware is built on the ESP32-S3 with ESP-IDF v5.x framework. The architecture follows a modular design with clear separation of concerns.
+DieselFire firmware is built on the ESP32-S3 with ESP-IDF v5.x framework. The architecture follows a modular design with clear separation of concerns.
 
 ### High-Level Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     DieselFire S3                            │
+│                     DieselFire                            │
 │                                                              │
 │  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐   │
 │  │  Display    │  │   UI Layer   │  │  Settings/Config │   │
@@ -121,9 +121,9 @@ Legacy OLED screens (to be replaced by LVGL).
 
 **platformio.ini:**
 ```ini
-[env:dieselfire-s3]
+[env:dieselfire]
 platform = espressif32@6.12.0
-board = dieselfire-s3
+board = dieselfire
 framework = espidf
 board_build.partitions = default_8MB.csv
 build_flags =
@@ -146,7 +146,7 @@ monitor_speed = 115200
 
 ### Board Definition
 
-**boards/dieselfire-s3.json:**
+**boards/dieselfire.json:**
 ```json
 {
   "build": {
@@ -165,7 +165,7 @@ monitor_speed = 115200
     "openocd_target": "esp32s3.cfg"
   },
   "frameworks": ["arduino", "espidf"],
-  "name": "DieselFire S3",
+  "name": "DieselFire",
   "upload": {
     "flash_size": "8MB",
     "max_ram_size": "327680",
@@ -173,7 +173,7 @@ monitor_speed = 115200
     "require_upload_port": true,
     "speed": 921600
   },
-  "url": "https://github.com/yourusername/DieselFire-S3",
+  "url": "https://github.com/yourusername/DieselFire",
   "vendor": "DieselFire"
 }
 ```
@@ -361,7 +361,7 @@ if (err != ESP_OK) {
 
 Run tests with:
 ```bash
-pio test --environment dieselfire-s3
+pio test --environment dieselfire
 ```
 
 ## References
@@ -369,4 +369,4 @@ pio test --environment dieselfire-s3
 - [ESP-IDF Documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/)
 - [LVGL Documentation](https://docs.lvgl.io/)
 - [PlatformIO Documentation](https://docs.platformio.org/)
-- [Afterburner Documentation](https://gitlab.com/mrjones.id.au/bluetoothheater/-/wikis/home)
+- [DieselFire Documentation](https://dieselfire.wabo.cc/-/wikis/home)

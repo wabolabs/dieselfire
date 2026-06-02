@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the placement plan to Afterburner-Modern.kicad_pcb.
+"""Apply the placement plan to DieselFire.kicad_pcb.
 
 Reads the .kicad_pcb file, finds each footprint's reference, looks it up
 in plan.OVERRIDES or plan.SHEET_ZONES, and rewrites the (at X Y rot) and
@@ -17,7 +17,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PROJECT_ROOT = HERE.parents[0]  # kicad/
-PCB_PATH = PROJECT_ROOT / "pcb" / "Afterburner-Modern.kicad_pcb"
+PCB_PATH = PROJECT_ROOT / "pcb" / "DieselFire.kicad_pcb"
 
 sys.path.insert(0, str(HERE))
 from plan import OVERRIDES, SHEET_ZONES, DEFAULT_PARK, get_placement

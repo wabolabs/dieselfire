@@ -1,4 +1,4 @@
-# DieselFire S3 - Hardware Documentation
+# DieselFire - Hardware Documentation
 
 ## PCB Design
 

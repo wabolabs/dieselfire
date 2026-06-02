@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -21,7 +21,7 @@
 
 #include <Arduino.h>
 #include "Clock.h"
-#include "BTCDateTime.h"
+#include "DFDateTime.h"
 #include "TimerManager.h"
 #include <Wire.h>
 //#include "DS3231Ex.h"
@@ -74,7 +74,7 @@ DebugPort.println("Using millis() based psuedo \"Real Time Clock\"");
   CTimerManager::findNextTimer(_currentTime.hour(), _currentTime.minute(), _currentTime.dayOfTheWeek());
 }
 
-const BTCDateTime& 
+const DFDateTime& 
 CClock::update()
 {
   long deltaT = millis() - _nextRTCfetch;
@@ -94,7 +94,7 @@ CClock::update()
   return _currentTime;
 }
 
-const BTCDateTime& 
+const DFDateTime& 
 CClock::get() const
 {
   return _currentTime;

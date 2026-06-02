@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2019  Ray Jones <ray@mrjones.id.au>
  *
@@ -19,8 +19,8 @@
  * 
  */
 
-#ifndef __BTC_DATAFILTER_H__
-#define __BTC_DATAFILTER_H__
+#ifndef __DF_DATAFILTER_H__
+#define __DF_DATAFILTER_H__
 
 class CExpMean {
   float _val;

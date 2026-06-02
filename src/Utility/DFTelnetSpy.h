@@ -1,0 +1,48 @@
+/*
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
+ *
+ * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
+ * Copyright (C) 2018  James Clark
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ */
+
+#include "../../lib/TelnetSpy/TelnetSpy.h"
+
+#ifndef __DFTELNETSPY_H__
+#define __DFTELNETSPY_H__
+
+class DFTelnetSpy : public TelnetSpy {
+public:
+  DFTelnetSpy();
+	size_t write(uint8_t) override;
+  void enable(bool);
+  /// getch():
+  //  typical problem we have with terminal software that may or may not send CR/LF
+  // when a user hits ENTER.
+  // This getch method will inject a LF if none was received within a period of time
+  bool getch(char& rxVal);
+protected:
+  bool _enabled;
+  unsigned long _CRtimeout;
+  char _pending;
+  const int _LFPERIOD = 100;
+};
+
+
+
+
+#endif // __DFTELNETSPY_H__

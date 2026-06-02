@@ -8,13 +8,13 @@ PIPELINE="$HERE/pipeline.py"
 APPLY="$HERE/pcb_placement/apply.py"
 CRITICAL="$HERE/pcb_routing/critical.py"
 FAB="$HERE/fabrication"
-PCB="$HERE/pcb/Afterburner-Modern.kicad_pcb"
+PCB="$HERE/pcb/DieselFire.kicad_pcb"
 
 usage() {
     cat <<EOF
 Usage: $(basename "$0") [OPTION]
 
-Run the Afterburner-Modern PCB automation pipeline.
+Run the DieselFire PCB automation pipeline.
 
 Options:
   --full          Full pipeline: place → autoroute → GND pour → DRC → export (default)

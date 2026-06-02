@@ -8,13 +8,13 @@ You need to execute MakeSymLinks_Windows.bat from Explorer.
 Arduino insists upon .ino for their projects, and the .ino
 file name also has to match the parent directory name.
  
-The BIG trick here is Afterburner.ino is empty - zilch, nada, nothing!
+The BIG trick here is DieselFire.ino is empty - zilch, nada, nothing!
 All the REAL source code lives via the src symbolic link.
-The real core exists as a .cpp file: repo\src\Afterburner.cpp
+The real core exists as a .cpp file: repo\src\DieselFire.cpp
 
-Arduino\Afterburner\Afterburner.ino is EMPTY
-Arduino\Afterburner\src\src links to repo\src\  
-Arduino\Afterburner\src\lib links to repo\lib\  
-Arduino\Afterburner\data links to repo\data
+Arduino\DieselFire\DieselFire.ino is EMPTY
+Arduino\DieselFire\src\src links to repo\src\  
+Arduino\DieselFire\src\lib links to repo\lib\  
+Arduino\DieselFire\data links to repo\data
 
 Ugggh. I hate Arduino IDE (and it's build environment!)

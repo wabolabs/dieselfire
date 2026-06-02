@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Headless autorouting for DieselFire S3 — place-and-route finisher.
+"""Headless autorouting for DieselFire — place-and-route finisher.
 
 Runs after critical.py. Takes the placed-and-critically-routed board and
 turns it into a fabrication-ready 2-layer PCB with no KiCad GUI session:
@@ -33,10 +33,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 PROJECT_ROOT = HERE.parents[0]
-PCB = PROJECT_ROOT / "pcb" / "Afterburner-Modern.kicad_pcb"
-PRO = PROJECT_ROOT / "Afterburner-Modern.kicad_pro"
-DSN = PROJECT_ROOT / "fabrication" / "dieselfire.dsn"
-SES = PROJECT_ROOT / "fabrication" / "dieselfire.ses"
+PCB = PROJECT_ROOT / "pcb" / "DieselFire.kicad_pcb"
+PRO = PROJECT_ROOT / "DieselFire.kicad_pro"
+DSN = PROJECT_ROOT / "fabrication" / "DieselFire.dsn"
+SES = PROJECT_ROOT / "fabrication" / "DieselFire.ses"
 FAB = PROJECT_ROOT / "fabrication"
 FREEROUTING = HERE.parents[1] / "external" / "freerouting-2.2.4-linux-x64" / "bin" / "freerouting"
 
@@ -151,7 +151,7 @@ def _add_track(board, ax, ay, bx, by, layer, net, width):
 def _drc_unconnected(board):
     """Save + run kicad-cli DRC (json) and return unconnected pairs."""
     board.Save(str(PCB))
-    rep = FAB / "dieselfire-drc.json"
+    rep = FAB / "DieselFire-drc.json"
     subprocess.run(["kicad-cli", "pcb", "drc", "--format", "json",
                     "-o", str(rep), str(PCB)], check=False, capture_output=True)
     data = json.loads(rep.read_text())
@@ -405,7 +405,7 @@ def finish_board() -> None:
 
 def verify() -> None:
     """Run DRC and check for violations."""
-    report = FAB / "dieselfire-drc.txt"
+    report = FAB / "DieselFire-drc.txt"
     subprocess.run(["kicad-cli", "pcb", "drc", "--severity-error",
                     "-o", str(report), str(PCB)], check=False, capture_output=True)
     text = report.read_text()
@@ -432,10 +432,10 @@ def export_fabrication() -> None:
                     "-o", str(gerber_dir) + "/", str(PCB)],
                    check=True, capture_output=True)
     subprocess.run(["kicad-cli", "pcb", "export", "pos", "--format", "csv",
-                    "--units", "mm", "-o", str(FAB / "dieselfire-cpl.csv"), str(PCB)],
+                    "--units", "mm", "-o", str(FAB / "DieselFire-cpl.csv"), str(PCB)],
                    check=True, capture_output=True)
     
-    print(f"Step 5: gerbers + drill in {gerber_dir}, CPL at dieselfire-cpl.csv")
+    print(f"Step 5: gerbers + drill in {gerber_dir}, CPL at DieselFire-cpl.csv")
 
 
 def main() -> None:

@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  * Copyright (C) 2018  James Clark
@@ -21,7 +21,7 @@
  */
 
 #include "BlueWireTask.h"
-#include "../cfg/BTCConfig.h"
+#include "../cfg/DFConfig.h"
 #include "../cfg/pins.h"
 #include "Protocol.h"
 #include "TxManage.h"
@@ -46,7 +46,7 @@ static HardwareSerial& BlueWireSerial(Serial1);
 
 CommStates CommState;
 CTxManage TxManage(TxEnbPin, BlueWireSerial);
-CProtocol DefaultBTCParams(CProtocol::CtrlMode);  // defines the default parameters, used in case of no OEM controller
+CProtocol DefaultDFParams(CProtocol::CtrlMode);  // defines the default parameters, used in case of no OEM controller
 CModeratedFrame OEMCtrlFrame;        // data packet received from heater in response to OEM controller packet
 CModeratedFrame HeaterFrame1;        // data packet received from heater in response to OEM controller packet
 CProtocol HeaterFrame2;              // data packet received from heater in response to our packet 
@@ -88,7 +88,7 @@ void BlueWireTask(void*) {
   //
   static unsigned long lastRxTime = 0;                     // used to observe inter character delays
   static unsigned long moderator = 50;
-  bool isBTCmaster = false;
+  bool isDFmaster = false;
 
   BlueWireMsgQueue = xQueueCreate(4, BLUEWIRE_MSGQUEUESIZE);
   BlueWireRxQueue = xQueueCreate(4, BLUEWIRE_DATAQUEUESIZE);
@@ -98,14 +98,14 @@ void BlueWireTask(void*) {
   TxManage.begin(); // ensure Tx enable pin is setup
 
   // define defaults should OEM controller be missing
-  DefaultBTCParams.setHeaterDemand(23);
-  DefaultBTCParams.setTemperature_Actual(22);
-  DefaultBTCParams.setSystemVoltage(12.0);
-  DefaultBTCParams.setPump_Min(1.6f);
-  DefaultBTCParams.setPump_Max(5.5f);
-  DefaultBTCParams.setFan_Min(1680);
-  DefaultBTCParams.setFan_Max(4500);
-  DefaultBTCParams.Controller.FanSensor = 1;
+  DefaultDFParams.setHeaterDemand(23);
+  DefaultDFParams.setTemperature_Actual(22);
+  DefaultDFParams.setSystemVoltage(12.0);
+  DefaultDFParams.setPump_Min(1.6f);
+  DefaultDFParams.setPump_Max(5.5f);
+  DefaultDFParams.setFan_Min(1680);
+  DefaultDFParams.setFan_Max(4500);
+  DefaultDFParams.Controller.FanSensor = 1;
 
   initBlueWireSerial();
 
@@ -198,8 +198,8 @@ void BlueWireTask(void*) {
           bHasHtrData = false;
           bHasOEMController = false;
           bHasOEMLCDController = false;
-          isBTCmaster = true;
-          TxManage.PrepareFrame(DefaultBTCParams, isBTCmaster);  // use our parameters, and mix in NV storage values
+          isDFmaster = true;
+          TxManage.PrepareFrame(DefaultDFParams, isDFmaster);  // use our parameters, and mix in NV storage values
           TxManage.Start(timenow);
           CommState.set(CommStates::TxStart);
           break;
@@ -295,8 +295,8 @@ void BlueWireTask(void*) {
         if(bReportBlueWireData) {
           primaryHeaterData.reportFrames(true, pushDebugMsg);
         }
-        isBTCmaster = false;
-        TxManage.PrepareFrame(OEMCtrlFrame, isBTCmaster);  // parrot OEM parameters, but block NV modes
+        isDFmaster = false;
+        TxManage.PrepareFrame(OEMCtrlFrame, isDFmaster);  // parrot OEM parameters, but block NV modes
         CommState.set(CommStates::TxStart);
         break;
 

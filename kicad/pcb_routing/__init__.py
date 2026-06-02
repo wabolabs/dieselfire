@@ -1,1 +1,1 @@
-"""DieselFire S3 PCB routing scripts."""
+"""DieselFire PCB routing scripts."""

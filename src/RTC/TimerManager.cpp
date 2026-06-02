@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  * 
@@ -222,7 +222,7 @@ CTimerManager::condenseMap(uint8_t timerMap[7][120])
 int  
 CTimerManager::manageTime(int _hour, int _minute, int _dow)
 {
-  const BTCDateTime& currentTime = Clock.get();
+  const DFDateTime& currentTime = Clock.get();
   int hour = currentTime.hour();
   int minute = currentTime.minute();
   int dow = currentTime.dayOfTheWeek();
@@ -402,7 +402,7 @@ CTimerManager::createOneShotMap(sTimer& timer, uint16_t* pTimerMap, uint16_t* pT
     int timestart = timer.start.hour * 60 + timer.start.min;  // linear minute of day
     int timestop = timer.stop.hour * 60 + timer.stop.min;
     // create masking based upon TODAY
-    const BTCDateTime tNow = Clock.get();
+    const DFDateTime tNow = Clock.get();
     int dow = tNow.dayOfTheWeek();
     int todayTime = tNow.hour() * 60 + tNow.minute();
     // wrap to next day if start time falls behind current time

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-DieselFire S3 — parametric 3D-printable enclosure generator.
+DieselFire — parametric 3D-printable enclosure generator.
 
 Generates a two-part screw enclosure (base tray + lid) sized to the
-100 x 100 mm KiCad PCB (Afterburner-Modern.kicad_pcb), with:
+100 x 100 mm KiCad PCB (DieselFire.kicad_pcb), with:
   - corner standoffs aligned to the four M3 mounting holes at (5,5)/(95,5)/(5,95)/(95,95)
   - cable-exit cutouts on the walls aligned to the real connector positions
   - a lid-mounted ILI9341 2.8" display: active-area window + recessed glass

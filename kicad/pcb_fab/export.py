@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export DieselFire S3 fabrication artifacts (gerbers, drill, pick-and-place).
+"""Export DieselFire fabrication artifacts (gerbers, drill, pick-and-place).
 
 Wraps kicad-cli to produce everything JLCPCB needs. Outputs land in
 kicad/fabrication/ in the canonical layout that JLCPCB and other
@@ -7,18 +7,18 @@ manufacturers expect:
 
     fabrication/
       gerbers/
-        Afterburner-Modern-F_Cu.gbr
-        Afterburner-Modern-B_Cu.gbr
-        Afterburner-Modern-F_Paste.gbr
-        Afterburner-Modern-B_Paste.gbr
-        Afterburner-Modern-F_Silkscreen.gbr
-        Afterburner-Modern-B_Silkscreen.gbr
-        Afterburner-Modern-F_Mask.gbr
-        Afterburner-Modern-B_Mask.gbr
-        Afterburner-Modern-Edge_Cuts.gbr
+        DieselFire-F_Cu.gbr
+        DieselFire-B_Cu.gbr
+        DieselFire-F_Paste.gbr
+        DieselFire-B_Paste.gbr
+        DieselFire-F_Silkscreen.gbr
+        DieselFire-B_Silkscreen.gbr
+        DieselFire-F_Mask.gbr
+        DieselFire-B_Mask.gbr
+        DieselFire-Edge_Cuts.gbr
       drill/
-        Afterburner-Modern-PTH.drl
-        Afterburner-Modern-NPTH.drl
+        DieselFire-PTH.drl
+        DieselFire-NPTH.drl
       pick-and-place.csv
       drc-report.txt
 
@@ -33,7 +33,7 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]  # kicad/
-PCB = PROJECT_ROOT / "pcb" / "Afterburner-Modern.kicad_pcb"
+PCB = PROJECT_ROOT / "pcb" / "DieselFire.kicad_pcb"
 FAB = PROJECT_ROOT / "fabrication"
 
 GERBER_LAYERS = [
@@ -136,7 +136,7 @@ def main() -> None:
         sys.exit(1)
     
     print("=" * 60)
-    print("DieselFire S3 — Fabrication Export")
+    print("DieselFire — Fabrication Export")
     print("=" * 60)
     
     run_drc()
@@ -146,7 +146,7 @@ def main() -> None:
     
     print(f"\nFab artifacts ready in {FAB}/")
     print("To assemble JLCPCB upload zip:")
-    print(f"  cd {FAB} && zip dieselfire-v1-gerbers.zip gerbers/*.gbr drill/*.drl")
+    print(f"  cd {FAB} && zip DieselFire-v1-gerbers.zip gerbers/*.gbr drill/*.drl")
 
 
 if __name__ == "__main__":

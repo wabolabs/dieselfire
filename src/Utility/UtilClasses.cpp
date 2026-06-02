@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -25,7 +25,7 @@
 #include "NVStorage.h"
 #include "HourMeter.h"
 #include "macros.h"
-#include "BTC_JSON.h"
+#include "DF_JSON.h"
 #include "../WiFi/BTCWebServer.h"
 #include "FuelGauge.h"
 #include "DemandManager.h"

@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2019  Ray Jones <ray@mrjones.id.au>
  *
@@ -56,7 +56,7 @@
 #include "LVCScreen.h"
 #include <Wire.h>
 #include "../cfg/pins.h"
-#include "../cfg/BTCConfig.h"
+#include "../cfg/DFConfig.h"
 #include "KeyPad.h"
 #include "fonts/Icons.h"
 #include "fonts/MiniFont.h"

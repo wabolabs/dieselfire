@@ -1,1 +1,1 @@
-"""DieselFire S3 PCB automation pipeline."""
+"""DieselFire PCB automation pipeline."""

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Placement plan for DieselFire S3 — zone-based layout with proper spacing.
+"""Placement plan for DieselFire — zone-based layout with proper spacing.
 
 Board: 80mm x 60mm, origin at bottom-left (KiCad PCB convention).
 Mounting holes at (4,4), (76,4), (4,56), (76,56).

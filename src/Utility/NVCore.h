@@ -1,6 +1,6 @@
 /*
- * This file is part of the "bluetoothheater" distribution 
- * (https://gitlab.com/mrjones.id.au/bluetoothheater) 
+ * This file is part of the "DieselFire" distribution 
+ * (https://dieselfire.wabo.cc) 
  *
  * Copyright (C) 2018  Ray Jones <ray@mrjones.id.au>
  *
@@ -19,10 +19,10 @@
  * 
  */
 
-#ifndef __BTC_NV_CORE_H__
-#define __BTC_NV_CORE_H__
+#ifndef __DF_NV_CORE_H__
+#define __DF_NV_CORE_H__
 
-#include "ABpreferences.h"
+#include "DFpreferences.h"
 #include <functional>
 
 
@@ -46,7 +46,7 @@ class CNVStorage {
 
 class CESP32_NVStorage {
 protected:
-  ABpreferences preferences;
+  DFpreferences preferences;
 protected:
   bool validatedLoad(const char* key, int8_t& val, int8_t defVal, std::function<bool(int8_t, int8_t, int8_t)> validator, int8_t min, int8_t max);
   bool validatedLoad(const char* key, uint8_t& val, uint8_t defVal, std::function<bool(uint8_t, uint8_t, uint8_t)> validator, uint8_t min, uint8_t max, uint8_t mask=0xff);
@@ -60,5 +60,5 @@ protected:
 };
 
 
-#endif // __BTC_NV_CORE_H__
+#endif // __DF_NV_CORE_H__
 
