@@ -106,8 +106,10 @@
 #include "Utility/DF_GPIO.h"
 #include "Utility/BoardDetect.h"
 #include "Utility/FuelGauge.h"
+#if !USE_ILI9341_DISPLAY
 #include "OLED/ScreenManager.h"
 #include "OLED/KeyPad.h"
+#endif
 #include "Utility/TempSense.h"
 #include "Utility/DataFilter.h"
 #include "Utility/HourMeter.h"
@@ -122,6 +124,14 @@
 #include "Utility/DemandManager.h"
 #include "Protocol/BlueWireTask.h"
 #include "Protocol/433MHz.h"
+#if USE_BME280
+#include <Adafruit_BME280.h>
+#endif
+
+#if USE_ILI9341_DISPLAY
+// TODO: LVGL display driver (src/Display/)
+#endif
+
 #if USE_TWDT == 1
 #include "esp_task_wdt.h"
 #endif
@@ -157,7 +167,9 @@ const char* FirmwareDate = "29 Jun 2020";
 #endif
 
 bool validateFrame(const CProtocol& frame, const char* name);
+#if !USE_ILI9341_DISPLAY
 void checkDisplayUpdate();
+#endif
 void checkDebugCommands();
 void manageStopStartMode();
 void manageCyclicMode();
@@ -177,6 +189,10 @@ void checkUHF();
 // Uses the RMT timeslot driver to operate as a one-wire bus
 //CBME280Sensor BMESensor;
 CTempSense TempSensor;
+#if USE_BME280
+Adafruit_BME280 bme;
+bool bmeReady = false;
+#endif
 long lastTemperatureTime;            // used to moderate DS18B20 access
 int DS18B20holdoff = 2;
 
@@ -189,8 +205,12 @@ unsigned long lastAnimationTime;     // used to sequence updates to LCD for anim
 
 sFilteredData FilteredSamples;
 CSmartError SmartError;
+#if !USE_ILI9341_DISPLAY
 CKeyPad KeyPad;
 CScreenManager ScreenManager;
+#else
+// TODO: LVGL screen manager
+#endif
 DFTelnetSpy DebugPort;
 
 #if USE_JTAG == 0
@@ -332,10 +352,12 @@ void checkBlueWireEvents()
 
 // callback function for Keypad events.
 // must be an absolute function, cannot be a class member due the "this" element!
+#if !USE_ILI9341_DISPLAY
 void parentKeyHandler(uint8_t event) 
 {
   ScreenManager.keyHandler(event);   // call into the Screen Manager
 }
+#endif
 
 void interruptReboot()
 {     
@@ -478,18 +500,36 @@ void setup() {
   initJSONSysModerator();
 
   
-  KeyPad.begin(keyLeft_pin, keyRight_pin, keyCentre_pin, keyUp_pin, keyDown_pin);
-  KeyPad.setCallback(parentKeyHandler);
-
   // Initialize the rtc object
   Clock.begin();
 
   BootTime = Clock.get().secondstime();
-  
+
+#if USE_ILI9341_DISPLAY
+  // TODO: init ILI9341 display + GT911 touch + LVGL
+  pinMode(LED_STATUS, OUTPUT);
+  digitalWrite(LED_STATUS, HIGH);  // LED on (active-low) = alive
+#else
+  KeyPad.begin(keyLeft_pin, keyRight_pin, keyCentre_pin, keyUp_pin, keyDown_pin);
+  KeyPad.setCallback(parentKeyHandler);
+
   ScreenManager.begin();
   if(Clock.lostPower()) {
     ScreenManager.selectMenu(CScreenManager::BranchMenu, CScreenManager::SetClockUI);
   }
+#endif
+
+#if USE_BME280
+  if (bme.begin(0x76)) {
+    bmeReady = true;
+    DebugPort.println("BME280 detected at 0x76");
+  } else if (bme.begin(0x77)) {
+    bmeReady = true;
+    DebugPort.println("BME280 detected at 0x77");
+  } else {
+    DebugPort.println("BME280 not found");
+  }
+#endif
 
 #if USE_WIFI == 1
 
@@ -608,9 +648,11 @@ void setup() {
   UHFremote.begin(Rx433MHz_pin, RMT_CHANNEL_4);
 
 
-  delay(1000); // just to hold the splash screeen for while
+  delay(1000); // just to hold the splash screen for a while
 
+#if !USE_ILI9341_DISPLAY
   ScreenManager.clearDisplay();
+#endif
 }
 
 
@@ -629,10 +671,23 @@ void loop()
 
   Clock.update();
 
-  if(checkTemperatureSensors())
+  if(checkTemperatureSensors()) {
+#if !USE_ILI9341_DISPLAY
     ScreenManager.reqUpdate();
+#endif
+  }
 
-  checkDisplayUpdate();    
+#if !USE_ILI9341_DISPLAY
+  checkDisplayUpdate();
+#else
+  // TODO: LVGL task handler (lv_task_handler())
+  // Blink status LED as heartbeat (no display yet)
+  static unsigned long lastBlink = 0;
+  if (millis() - lastBlink > 500) {
+    lastBlink = millis();
+    digitalWrite(LED_STATUS, !digitalRead(LED_STATUS));
+  }
+#endif
 
   checkBlueWireEvents();
 
@@ -841,6 +896,7 @@ void heaterOff()
 }
 
 
+#if !USE_ILI9341_DISPLAY
 void checkDisplayUpdate()
 {
   // only update OLED when not processing blue wire
@@ -850,7 +906,6 @@ void checkDisplayUpdate()
     ScreenManager.refresh();   // always refresh post major update
   }
  
-
   long tDelta = millis() - lastAnimationTime;
   if(tDelta >= 100) {
     lastAnimationTime = millis() + 100; 
@@ -858,6 +913,7 @@ void checkDisplayUpdate()
       ScreenManager.refresh();
   }
 }
+#endif
 
 void forceBootInit()
 {
@@ -1211,7 +1267,9 @@ int getBoardRevision()
 
 void ShowOTAScreen(int percent, eOTAmodes updateType)
 {
+#if !USE_ILI9341_DISPLAY
   ScreenManager.showOTAMessage(percent, updateType);
+#endif
 }
 
 void feedWatchdog()
@@ -1264,7 +1322,9 @@ void doStreaming()
 
   checkDebugCommands();
 
+#if !USE_ILI9341_DISPLAY
   KeyPad.update();      // scan keypad - key presses handler via callback functions!
+#endif
 
 #if USE_JTAG == 0
 #if DBG_FREERTOS == 0
@@ -1402,7 +1462,9 @@ void setName(const char* name, int type)
     const char* content[2];
     content[0] = "AP reconfig reset";
     content[1] = "initiated";
+#if !USE_ILI9341_DISPLAY
     ScreenManager.showRebootMsg(content, 1000);
+#endif
   // delay(1000);
   //   ESP.restart();
   }
@@ -1431,9 +1493,9 @@ void setPassword(const char* name, int type)
     const char* content[2];
     content[0] = "AP password";
     content[1] = "changed";
+#if !USE_ILI9341_DISPLAY
     ScreenManager.showRebootMsg(content, 1000);
-    // delay(1000);
-    // ESP.restart();
+#endif
   }
 }
 
@@ -1464,7 +1526,9 @@ void showMainmenu()
 
 void reloadScreens()
 {
+#if !USE_ILI9341_DISPLAY
   ScreenManager.reqReload();
+#endif
 }
 
 CTempSense& getTempSensor()
