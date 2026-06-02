@@ -161,7 +161,7 @@ def determine_zone(ref: str, block: str) -> str | None:
         "BAT1": "sensor_c",
         "U9": "io_c",
         "U8": "io_c",
-        "J3": "io_c",
+        "J3": "heater",
         "J4": "ext_sensors",
         "J5": "ext_sensors",
         "H1": "expansion",
@@ -180,21 +180,21 @@ def determine_zone(ref: str, block: str) -> str | None:
         return zone_map[ref_prefix]
     
     fp_zone_map = {
-        "TERM_BLOCK_2POS": "power",
-        "USB-C-31-SR": "power",
-        "MP2451": "power",
-        "AP2112": "power",
-        "ESP32-S3-WROOM-1-N8R8": "mcu",
+        "TERM_BLOCK_2POS": "power_r",
+        "USB-C-31-SR": "ext_sensors",
+        "MP2451": "power_r",
+        "AP2112": "power_r",
+        "ESP32-S3-WROOM-1-N8R8": "mcu_c",
         "GT911": "display",
-        "BME280": "sensors",
-        "DS3231": "sensors",
-        "74LCX125": "io",
-        "BSS138": "io",
+        "BME280": "sensor_c",
+        "DS3231": "sensor_c",
+        "74LCX125": "io_c",
+        "BSS138": "io_c",
         "JST-XH-3": "heater",
         "JST-XH-4": "ext_sensors",
-        "EXPANSION_2X10": "expansion",
-        "SW_TACTILE": "mcu",
-        "LED": "mcu",
+        "IDC-Header_2x10": "expansion",
+        "SW_Push_1TS009": "mcu_c",
+        "LED_0603": "mcu_c",
     }
     
     for key_prefix, zone in fp_zone_map.items():
@@ -205,36 +205,31 @@ def determine_zone(ref: str, block: str) -> str | None:
 
 
 def rewrite_footprint_block(block: str, x: float, y: float, rot: float, layer: str) -> str:
-    """Rewrite the (at X Y [rot]) and (layer "F.Cu") in a footprint block."""
-    lines = block.split('\n')
+    """Rewrite the (at X Y [rot]) and (layer "F.Cu") in a footprint block.
     
-    # Find and rewrite top-level (at ...) — appears before first (property
-    first_prop = None
-    for i, line in enumerate(lines):
-        if '(property' in line:
-            first_prop = i
-            break
+    Uses regex on the raw block text (not line-splitting) to only modify the
+    first (at ...) and (layer ...) that appear before any (property ...) entry.
+    This avoids corrupting pad-level (at ...) or property-level (at ...) entries.
+    """
+    prop_idx = block.find('(property', 1)
+    search_area = block[:prop_idx] if prop_idx > 0 else block
     
-    for i, line in enumerate(lines):
-        if first_prop is not None and i >= first_prop:
-            break
-        stripped = line.strip()
-        if stripped.startswith('(at '):
-            new_at = f'\t\t(at {int(x)} {int(y)})'
-            if rot != 0.0:
-                new_at += f" {int(round(rot))}"
-            lines[i] = new_at
-            break
+    at_re = r'\(at\s+(-?[\d.]+)\s+(-?[\d.]+)(?:\s+(-?[\d.]+))?\)'
+    at_match = re.search(at_re, search_area)
+    if at_match:
+        new_at = f'(at {int(x)} {int(y)}'
+        if abs(rot) > 0.001:
+            new_at += f' {int(round(rot))}'
+        new_at += ')'
+        block = block[:at_match.start()] + new_at + block[at_match.end():]
     
-    # Find and rewrite top-level (layer ...) — appears before first (property
-    for i, line in enumerate(lines):
-        if first_prop is not None and i >= first_prop:
-            break
-        if '(layer "' in line and 'layers' not in line:
-            lines[i] = f'\t\t(layer "{layer}")'
-            break
+    prop_idx = block.find('(property', 1)
+    search_area = block[:prop_idx] if prop_idx > 0 else block
+    layer_match = re.search(r'\(layer\s+"([^"]+)"\)', search_area)
+    if layer_match:
+        block = block[:layer_match.start()] + f'(layer "{layer}")' + block[layer_match.end():]
     
-    return '\n'.join(lines)
+    return block
 
 
 def apply_plan(pcb_path: Path = PCB_PATH) -> tuple[int, int, list[str]]:

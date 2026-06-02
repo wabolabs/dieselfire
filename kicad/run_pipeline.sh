@@ -1,40 +1,88 @@
 #!/usr/bin/env bash
-# DieselFire S3 — Full PCB Automation Pipeline
-#
-# Usage: ./kicad/run_pipeline.sh
-#
-# This script runs the complete PCB generation pipeline:
-#   1. Create board outline, zones, vias via pcbnew API
-#   2. Load KiCad 9.0 built-in footprints and place them
-#   3. Assign nets to pads
-#   4. Route critical traces between pad centers
-#   5. Fill GND zones with stitching vias
-#   6. Run DRC
-#   7. Export gerbers/drill/CPL
-#
-# Requires: KiCad 9.0+, Python 3.10+
-#
-# Output: kicad/fabrication/ (gerbers, drill, pick-and-place)
-
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+HERE="$(cd "$(dirname "$0")" && pwd)"
+cd "$HERE"
 
-echo "============================================================"
-echo "DieselFire S3 — PCB Automation Pipeline"
-echo "============================================================"
-echo ""
+PIPELINE="$HERE/pipeline.py"
+APPLY="$HERE/pcb_placement/apply.py"
+CRITICAL="$HERE/pcb_routing/critical.py"
+FAB="$HERE/fabrication"
+PCB="$HERE/pcb/Afterburner-Modern.kicad_pcb"
 
-# Check prerequisites
-echo "Checking prerequisites..."
-for cmd in python3 kicad-cli; do
-    if ! command -v "$cmd" &>/dev/null; then
-        echo "ERROR: $cmd not found."
-        exit 1
-    fi
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTION]
+
+Run the Afterburner-Modern PCB automation pipeline.
+
+Options:
+  --full          Full pipeline: place → autoroute → GND pour → DRC → export (default)
+  --place-only    Place components only (no autorouting), then export
+  --pre-route     Place + critical pre-routes + export (no autorouter)
+  --clean         Remove all generated files (PCB, freerouting, fabrication)
+  -h, --help      Show this help
+EOF
+    exit 0
+}
+
+clean() {
+    echo "Cleaning generated files..."
+    rm -rf "$HERE/freerouting"
+    rm -rf "$FAB"
+    rm -f "$PCB"
+    echo "Done."
+}
+
+mode="full"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --full) mode="full"; shift ;;
+        --place-only) mode="place"; shift ;;
+        --pre-route) mode="preroute"; shift ;;
+        --clean) clean; exit 0 ;;
+        -h|--help) usage ;;
+        *) echo "Unknown option: $1"; usage ;;
+    esac
 done
-echo "  ✓ All prerequisites available"
-echo ""
 
-# Run the pipeline
-python3 "$SCRIPT_DIR/pipeline.py"
+case "$mode" in
+    full)
+        echo "=== Full pipeline ==="
+        python3 "$PIPELINE"
+        ;;
+    place)
+        echo "=== Place-only pipeline ==="
+        python3 -c "
+import sys, pcbnew
+from pathlib import Path
+sys.path.insert(0, '$HERE')
+
+from pipeline import (
+    create_board_outline, create_nets, place_footprints,
+    save_board, run_drc, export_fab, PCB_PATH
+)
+
+board = pcbnew.BOARD()
+create_board_outline(board)
+net_map = create_nets(board)
+place_footprints(board, net_map)
+save_board(board, PCB_PATH)
+run_drc()
+export_fab()
+print('Place-only pipeline complete.')
+"
+        ;;
+    preroute)
+        echo "=== Pre-route pipeline ==="
+        python3 "$PIPELINE" &
+        PID=$!
+        wait $PID
+        echo "Running critical pre-routes..."
+        python3 "$CRITICAL"
+        echo "Applying placement plan..."
+        python3 "$APPLY"
+        echo "Pre-route pipeline complete."
+        ;;
+esac

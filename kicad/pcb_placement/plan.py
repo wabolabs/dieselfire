@@ -42,8 +42,16 @@ SHEET_ZONES: dict[str, Zone] = {
     "mcu_c":          Zone(x=30,  y=14,  w=25, h=12),  # around U1
     # Sensor passives: near U4/U7 (top-right sensor cluster)
     "sensor_c":       Zone(x=54,  y=42,  w=20, h=12),  # near U4, U7
-    # I/O passives: near U9/U8 (left edge I/O buffers)
-    "io_c":           Zone(x=4,   y=30,  w=20, h=12),  # near U9, U8_1, U8_2
+   # I/O passives: near U9/U8 (left edge I/O buffers)
+    "io_c":       Zone(x=4,  y=30,  w=20, h=12),  # near U9, U8_1, U8_2
+    # Display passives: near U11/U10 (top-center)
+    "display":    Zone(x=54,  y=38,  w=20, h=12),  # near U11, U10
+    # Heater passives: near J3 (left edge)
+    "heater":     Zone(x=4,   y=14,  w=16, h=12),  # near J3
+    # External sensor passives: near J4/J5 (bottom)
+    "ext_sensors": Zone(x=36, y=14,  w=30, h=12),  # near J4, J5
+    # Expansion passives: near H1/H2 (right edge)
+    "expansion":  Zone(x=54,  y=14,  w=20, h=12),  # near H1, H2
 }
 
 

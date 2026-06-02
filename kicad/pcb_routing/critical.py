@@ -299,13 +299,9 @@ def add_nets_and_routes(pcb_path: Path) -> None:
             p1 = route.points[i]
             p2 = route.points[i + 1]
             seg = (
-                f'\t(segment '
-                f'(start {p1[0]} {p1[1]}) '
-                f'(end {p2[0]} {p2[1]}) '
-                f'(width {route.width}) '
-                f'(layer "{route.layer}") '
-                f'(net {net_num}) '
-                f'(uuid "{_u(route.name + "/" + str(i))}"))'
+                f'\t(segment (start {p1[0]} {p1[1]}) (end {p2[0]} {p2[1]}) '
+                f'(width {route.width}) (layer "{route.layer}") '
+                f'(net {net_num}) (uuid "{_u(route.name + "/" + str(i))}"))'
             )
             segment_entries.append(seg)
     
@@ -327,25 +323,13 @@ def add_nets_and_routes(pcb_path: Path) -> None:
         text = text[:insert_pos] + '\n' + '\n'.join(new_net_lines) + text[insert_pos:]
     
     # Insert segments at the top level, just before the final closing paren
-    # of the kicad_pcb file. We need to find the position right before the
-    # last ')' that closes the main (kicad_pcb ...) block.
-    # Count depth from the start to find the top level.
-    depth = 0
-    seg_start = len(text) - 1
-    # Walk backwards from the end to find the position before the final ')'
-    for i in range(len(text) - 1, -1, -1):
-        if text[i] == ')':
-            depth -= 1
-            if depth == 0:
-                seg_start = i
-                break
-        elif text[i] == '(':
-            depth += 1
-    
-    # Insert segments
-    if segment_entries:
-        seg_text = '\n' + '\n'.join(segment_entries) + '\n'
-        text = text[:seg_start] + seg_text + text[seg_start:]
+    # of the kicad_pcb file.
+    # Strip trailing whitespace, then find the last ')' and insert before it.
+    text_stripped = text.rstrip()
+    if text_stripped.endswith(')') and segment_entries:
+        last_paren = text_stripped.rfind(')')
+        seg_block = '\n' + '\n'.join(segment_entries)
+        text = text[:last_paren] + seg_block + '\n' + text[last_paren:]
     
     pcb_path.write_text(text)
     
