@@ -1,0 +1,26 @@
+** Drc report for Afterburner-Modern.kicad_pcb **
+** Created on 2026-06-01T22:25:06-0400 **
+
+** Found 4 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(6.8375 mm, 40.4900 mm): Polygon of U8_1 on F.Silkscreen
+    @(8.0000 mm, 39.6000 mm): Reference field of U8_1
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(12.8375 mm, 40.4900 mm): Polygon of U8_2 on F.Silkscreen
+    @(14.0000 mm, 39.6000 mm): Reference field of U8_2
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(56.0000 mm, 25.9360 mm): Footprint text of SW2 (REF**)
+    @(56.0000 mm, 25.9360 mm): Reference field of SW2
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(28.0000 mm, 25.9360 mm): Reference field of SW1
+    @(28.0000 mm, 25.9360 mm): Footprint text of SW1 (REF**)
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

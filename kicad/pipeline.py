@@ -42,11 +42,11 @@ PRO_PATH = HERE / "Afterburner-Modern.kicad_pro"
 FAB_DIR = HERE / "fabrication"
 DSN_PATH = HERE / "freerouting" / "dieselfire.dsn"
 SES_PATH = HERE / "freerouting" / "dieselfire.ses"
-FREEROUTING_BIN = PROJECT_ROOT / "external" / "freerouting-2.2.4-linux-x64" / "bin" / "freerouting"
+FREEROUTING_BIN = HERE.parent / "external" / "freerouting-2.2.4-linux-x64" / "bin" / "freerouting"
 
 # Board dimensions (mm)
-BOARD_W = 80
-BOARD_H = 60
+BOARD_W = 100
+BOARD_H = 100
 
 # Design rule targets
 TRACK_WIDTH_MM = 0.25
@@ -57,7 +57,7 @@ GAPFILL_TRACK_MM = 0.3
 GAPFILL_CLEARANCE_MM = 0.15
 END_MARGIN_MM = 1.0
 GND_VIA_GRID_MM = 5.0
-GND_VIA_RAD_MM = 0.3
+GND_VIA_RAD_MM = VIA_DIAM_MM / 2
 GND_VIA_CLR_MM = 0.2
 ISLAND_AREA_MM2 = 4.0
 
@@ -91,24 +91,24 @@ def get_components():
     """Return list of component dicts with placement and pad-to-net mappings."""
     comps = []
 
-    # ---- Power input ----
+    # ---- Power input (on B.Cu) ----
     comps.append({
         "ref": "J2",
         "lib": "TerminalBlock",
         "fp_name": "TerminalBlock_MaiXu_MX126-5.0-02P_1x02_P5.00mm",
-        "x": 2, "y": 2, "rotation": 90, "layer": "B.Cu",
+        "x": 14, "y": 14, "rotation": 90, "layer": "B.Cu",
         "pads": {"1": "12V", "2": "GND"},
     })
     comps.append({
         "ref": "J1",
         "lib": "Connector_USB",
         "fp_name": "USB_C_Receptacle_HRO_TYPE-C-31-M-12",
-        "x": 72, "y": 2, "rotation": 90, "layer": "B.Cu",
+        "x": 86, "y": 14, "rotation": 90, "layer": "B.Cu",
         "pads": {
-            "A1": "USB_D-", "A4": "USB_D+", "A5": "GND", "A6": "GND",
-            "A7": "GND", "A8": "GND", "A9": "5V", "A12": "GND",
-            "B1": "USB_D+", "B4": "USB_D-", "B5": "GND", "B6": "GND",
-            "B7": "GND", "B8": "GND", "B9": "5V", "B12": "GND",
+            "A1": "GND", "A4": "5V", "A5": "GND", "A6": "USB_D+",
+            "A7": "USB_D-", "A8": "GND", "A9": "5V", "A12": "GND",
+            "B1": "GND", "B4": "5V", "B5": "GND", "B6": "USB_D+",
+            "B7": "USB_D-", "B8": "GND", "B9": "5V", "B12": "GND",
             "S1": "GND",
         },
     })
@@ -118,14 +118,14 @@ def get_components():
         "ref": "U2",
         "lib": "Package_TO_SOT_SMD",
         "fp_name": "SOT-23-6",
-        "x": 32, "y": 34, "rotation": 0, "layer": "F.Cu",
+        "x": 30, "y": 44, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "12V", "2": "GND", "3": "5V", "4": "GND", "5": "12V", "6": "5V"},
     })
     comps.append({
         "ref": "U3",
         "lib": "Package_TO_SOT_SMD",
         "fp_name": "SOT-89-3",
-        "x": 32, "y": 42, "rotation": 0, "layer": "F.Cu",
+        "x": 22, "y": 58, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "5V", "2": "GND", "3": "3V3"},
     })
 
@@ -134,30 +134,31 @@ def get_components():
         "ref": "U1",
         "lib": "Package_DFN_QFN",
         "fp_name": "QFN-44-1EP_7x7mm_P0.5mm_EP5.2x5.2mm",
-        "x": 38, "y": 28, "rotation": 0, "layer": "F.Cu",
+        "x": 42, "y": 44, "rotation": 0, "layer": "F.Cu",
         "pads": {str(i): "GND" for i in range(1, 46)},
     })
 
-    # ---- Display ----
+    # ---- Display FPC connector (top edge) ----
     comps.append({
         "ref": "U11",
         "lib": "Connector_FFC-FPC",
         "fp_name": "Hirose_FH12-18S-0.5SH_1x18-1MP_P0.50mm_Horizontal",
-        "x": 40, "y": 48, "rotation": 0, "layer": "F.Cu",
+        "x": 50, "y": 94, "rotation": 0, "layer": "F.Cu",
         "pads": {
             "1": "LCD_BL", "2": "3V3", "3": "GND", "4": "SPI_MOSI",
             "5": "SPI_SCK", "6": "SPI_MISO", "7": "SPI_CS", "8": "LCD_DC",
             "9": "LCD_RST", "10": "GND", "11": "3V3", "12": "GND",
             "13": "5V", "14": "GND", "15": "3V3", "16": "GND",
-            "17": "3V3", "18": "GND", "19": "GND", "20": "GND",
+            "17": "3V3", "18": "GND",
         },
     })
-    # Touch controller (GT911 equivalent)
+
+    # ---- Touch controller ----
     comps.append({
         "ref": "U10",
         "lib": "Package_DFN_QFN",
         "fp_name": "QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm",
-        "x": 50, "y": 52, "rotation": 0, "layer": "F.Cu",
+        "x": 30, "y": 68, "rotation": 0, "layer": "F.Cu",
         "pads": {
             "1": "GND", "2": "3V3", "3": "I2C_SDA", "4": "I2C_SCL",
             "5": "TOUCH_INT", "6": "TOUCH_RST",
@@ -170,31 +171,31 @@ def get_components():
         "ref": "U4",
         "lib": "Package_DFN_QFN",
         "fp_name": "DFN-8-1EP_2x2mm_P0.5mm_EP0.9x1.5mm",
-        "x": 62, "y": 50, "rotation": 0, "layer": "F.Cu",
+        "x": 68, "y": 44, "rotation": 0, "layer": "F.Cu",
         "pads": {
             "1": "GND", "2": "I2C_SDA", "3": "I2C_SCL", "4": "3V3",
             "5": "GND", "6": "GND", "7": "3V3", "8": "GND", "9": "GND",
         },
     })
-    # I2C buffer (74LCX125 equivalent)
+    # RTC (DS3231, SOIC-16)
     comps.append({
         "ref": "U7",
         "lib": "Package_SO",
         "fp_name": "SOIC-16_3.9x9.9mm_P1.27mm",
-        "x": 70, "y": 50, "rotation": 0, "layer": "F.Cu",
+        "x": 68, "y": 56, "rotation": 0, "layer": "F.Cu",
         "pads": {
             "1": "I2C_SDA", "2": "I2C_SCL", "3": "GND", "4": "3V3",
-            "5": "GND", "6": "3V3", "7": "GND", "8": "GND",
+            "5": "GND", "6": "SCL_OUT", "7": "GND", "8": "GND",
             "9": "GND", "10": "GND", "11": "3V3", "12": "GND",
             "13": "GND", "14": "GND", "15": "3V3", "16": "GND",
         },
     })
-    # RTC (DS3231 equivalent)
+    # CR2032 battery holder (horizontal SMD — lies flat on board)
     comps.append({
         "ref": "BAT1",
         "lib": "Battery",
-        "fp_name": "Battery_Panasonic_CR2032-VS1N_Vertical_CircularHoles",
-        "x": 76, "y": 54, "rotation": 0, "layer": "F.Cu",
+        "fp_name": "BatteryHolder_Keystone_3002_1x2032",
+        "x": 52, "y": 78, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "3V3", "2": "GND"},
     })
 
@@ -203,7 +204,7 @@ def get_components():
         "ref": "U9",
         "lib": "Package_SO",
         "fp_name": "SOIC-14_3.9x8.7mm_P1.27mm",
-        "x": 8, "y": 50, "rotation": 0, "layer": "F.Cu",
+        "x": 8, "y": 54, "rotation": 0, "layer": "F.Cu",
         "pads": {
             "1": "BLUE_TX", "2": "BLUE_TX_OUT", "3": "TX_GATE",
             "4": "GND", "5": "GND", "6": "GND", "7": "GND",
@@ -215,14 +216,14 @@ def get_components():
         "ref": "U8_1",
         "lib": "Package_TO_SOT_SMD",
         "fp_name": "SOT-23",
-        "x": 8, "y": 44, "rotation": 0, "layer": "F.Cu",
+        "x": 8, "y": 42, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BLUE_TX_OUT", "2": "BLUE_TX_H", "3": "GND"},
     })
     comps.append({
         "ref": "U8_2",
         "lib": "Package_TO_SOT_SMD",
         "fp_name": "SOT-23",
-        "x": 12, "y": 44, "rotation": 0, "layer": "F.Cu",
+        "x": 14, "y": 42, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BLUE_RX_OUT", "2": "BLUE_RX_H", "3": "GND"},
     })
 
@@ -231,35 +232,37 @@ def get_components():
         "ref": "J3",
         "lib": "Connector_JST",
         "fp_name": "JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical",
-        "x": 2, "y": 14, "rotation": 0, "layer": "F.Cu",
+        "x": 8, "y": 66, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BLUE_TX_H", "2": "12V_SENSE", "3": "GND"},
     })
     comps.append({
         "ref": "J4",
         "lib": "Connector_JST",
         "fp_name": "JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical",
-        "x": 66, "y": 2, "rotation": 0, "layer": "F.Cu",
+        "x": 25, "y": 10, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "3V3", "2": "TEMP_SENSOR", "3": "GND"},
     })
     comps.append({
         "ref": "J5",
         "lib": "Connector_JST",
         "fp_name": "JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
-        "x": 74, "y": 2, "rotation": 0, "layer": "F.Cu",
+        "x": 42, "y": 10, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "5V", "2": "GND", "3": "CO_AOUT", "4": "CO_DOUT"},
     })
+
+    # ---- Expansion headers (on B.Cu — reserved for future expansion) ----
     comps.append({
         "ref": "H1",
         "lib": "Connector_IDC",
         "fp_name": "IDC-Header_2x10_P2.54mm_Vertical",
-        "x": 66, "y": 16, "rotation": 0, "layer": "F.Cu",
+        "x": 78, "y": 28, "rotation": 0, "layer": "B.Cu",
         "pads": {str(i): f"GPIO{i}" for i in range(1, 21)},
     })
     comps.append({
         "ref": "H2",
         "lib": "Connector_IDC",
         "fp_name": "IDC-Header_2x10_P2.54mm_Vertical",
-        "x": 66, "y": 30, "rotation": 0, "layer": "F.Cu",
+        "x": 78, "y": 70, "rotation": 0, "layer": "B.Cu",
         "pads": {str(i): f"GPIO{i+20}" for i in range(1, 21)},
     })
 
@@ -268,47 +271,60 @@ def get_components():
         "ref": "SW1",
         "lib": "Button_Switch_SMD",
         "fp_name": "SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm",
-        "x": 34, "y": 34, "rotation": 0, "layer": "F.Cu",
+        "x": 28, "y": 30, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BUTTON1", "2": "GND"},
     })
     comps.append({
         "ref": "SW2",
         "lib": "Button_Switch_SMD",
         "fp_name": "SW_Push_1TS009xxxx-xxxx-xxxx_6x6x5mm",
-        "x": 46, "y": 34, "rotation": 0, "layer": "F.Cu",
+        "x": 56, "y": 30, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "BUTTON2", "2": "GND"},
     })
     comps.append({
         "ref": "D1",
         "lib": "LED_SMD",
         "fp_name": "LED_0603_1608Metric",
-        "x": 42, "y": 34, "rotation": 0, "layer": "F.Cu",
+        "x": 42, "y": 30, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "LED1", "2": "GND"},
     })
     comps.append({
         "ref": "D2",
         "lib": "LED_SMD",
         "fp_name": "LED_0603_1608Metric",
-        "x": 42, "y": 40, "rotation": 0, "layer": "F.Cu",
+        "x": 42, "y": 56, "rotation": 0, "layer": "F.Cu",
         "pads": {"1": "LED2", "2": "GND"},
     })
 
-    # ---- Passives (resistors + capacitors) ----
+    # ---- Passives ----
+    # Resistors in a row between bottom connectors and MCU area
     for i in range(10):
         comps.append({
             "ref": f"R{i+1}",
             "lib": "Resistor_SMD",
             "fp_name": "R_0402_1005Metric",
-            "x": 10 + i * 3, "y": 5, "rotation": 0, "layer": "F.Cu",
+            "x": 20 + i * 3, "y": 22, "rotation": 0, "layer": "F.Cu",
             "pads": {"1": f"R{i+1}_A", "2": f"R{i+1}_B"},
         })
-    for i in range(10):
+    # Capacitors in a row at same Y, to the right of resistors
+    for i in range(8):
         comps.append({
             "ref": f"C{i+1}",
             "lib": "Capacitor_SMD",
             "fp_name": "C_0402_1005Metric",
-            "x": 10 + i * 3, "y": 10, "rotation": 0, "layer": "F.Cu",
+            "x": 52 + i * 3, "y": 22, "rotation": 0, "layer": "F.Cu",
             "pads": {"1": f"C{i+1}_A", "2": f"C{i+1}_B"},
+        })
+
+    # ---- Mounting holes ----
+    # 4x M3 at corners
+    for i, (x, y) in enumerate([(5, 5), (95, 5), (5, 95), (95, 95)]):
+        comps.append({
+            "ref": f"MH{i+1}",
+            "lib": "MountingHole",
+            "fp_name": "MountingHole_3.2mm_M3",
+            "x": x, "y": y, "rotation": 0, "layer": "F.Cu",
+            "pads": {},
         })
 
     return comps
@@ -340,14 +356,13 @@ def create_board_outline(board):
     net_class.SetViaDrill(int(VIA_DRILL_MM * 1e6))
     board.GetNetClasses()["Default"] = net_class
 
-    # Edge cuts (board outline)
+    # Edge cuts (board outline) — full 80×60mm from (0,0)
     edge_layer = board.GetLayerID("Edge.Cuts")
-    cx, cy = BOARD_W / 2, BOARD_H / 2
     pts = [
-        pcbnew.VECTOR2I(int((cx - 38) * 1e6), int((cy - 28) * 1e6)),
-        pcbnew.VECTOR2I(int((cx + 38) * 1e6), int((cy - 28) * 1e6)),
-        pcbnew.VECTOR2I(int((cx + 38) * 1e6), int((cy + 28) * 1e6)),
-        pcbnew.VECTOR2I(int((cx - 38) * 1e6), int((cy + 28) * 1e6)),
+        pcbnew.VECTOR2I(0, 0),
+        pcbnew.VECTOR2I(int(BOARD_W * 1e6), 0),
+        pcbnew.VECTOR2I(int(BOARD_W * 1e6), int(BOARD_H * 1e6)),
+        pcbnew.VECTOR2I(0, int(BOARD_H * 1e6)),
     ]
     for i in range(len(pts)):
         shape = pcbnew.PCB_SHAPE(board)
@@ -358,21 +373,7 @@ def create_board_outline(board):
         shape.SetLayer(edge_layer)
         board.Add(shape)
 
-    # Mounting holes (4x M3)
-    mh_lib = KICAD_FP_BASE / "MountingHole.pretty"
-    for x, y in [(-36, -26), (36, -26), (-36, 26), (36, 26)]:
-        try:
-            mh = pcbnew.FootprintLoad(str(mh_lib), "MountingHole_3.2mm_M3")
-            if mh is None:
-                continue
-            mh.SetReference(f"MH{len([m for m in board.GetFootprints() if m.GetReference().startswith('MH')]) + 1}")
-            mh.SetValue("M3")
-            mh.SetPosition(pcbnew.VECTOR2I(int(x * 1e6), int(y * 1e6)))
-            board.Add(mh)
-        except Exception:
-            pass
-
-    print("  Board outline and mounting holes created.")
+    print("  Board outline created.")
 
 
 def create_nets(board):
@@ -434,7 +435,7 @@ def place_footprints(board, net_map):
 
         fp.SetReference(comp["ref"])
         fp.SetValue(comp["fp_name"])
-        fp.SetPosition(pcbnew.VECTOR2I_MM(int(comp["x"]), int(comp["y"])))
+        fp.SetPosition(pcbnew.VECTOR2I_MM(comp["x"], comp["y"]))
         fp.SetOrientationDegrees(comp["rotation"])
 
         # Set layer
@@ -468,10 +469,11 @@ def save_board(board, path):
 # Phase 2: Route — autoroute, gap-fill, GND pour, DRC, export
 # ===================================================================
 def _clear_copper(board):
-    """Remove all tracks and zones. Uses RemoveNative (C++-side free) to
-    avoid SWIG proxy memory leak that corrupts pcbnew module."""
-    for t in list(board.GetTracks()):
-        board.RemoveNative(t)
+    """Remove zones only — preserve tracks (critical routes from critical.py).
+    
+    Tracks are not cleared so pre-routed critical nets survive into the DSN
+    export.  Only copper zones (pours) are removed to avoid stale pour data.
+    """
     for z in list(board.Zones()):
         board.RemoveNative(z)
 
@@ -536,19 +538,17 @@ def _via_clear(board, x, y, code, rad, clr):
         for pad in fp.Pads():
             if pad.GetNetCode() == code:
                 continue
-            if not pad.GetNetname():
-                continue
             pos = pad.GetPosition()
             pr = 0.5 * math.hypot(pad.GetSize().x, pad.GetSize().y)
             if math.hypot(pos.x - x, pos.y - y) < rad + pr + clr:
                 return False
     for t in board.GetTracks():
-        if t.GetNetCode() == code:
-            continue
         if t.Type() == pcbnew.PCB_VIA_T:
             pos = t.GetPosition()
             if math.hypot(pos.x - x, pos.y - y) < rad + pcbnew.FromMM(0.4) + clr:
                 return False
+        elif t.GetNetCode() == code:
+            continue
         elif t.Type() == pcbnew.PCB_TRACE_T:
             s, e = t.GetStart(), t.GetEnd()
             if _seg_point_dist(s.x, s.y, e.x, e.y, x, y) < rad + t.GetWidth() / 2 + clr:
@@ -651,7 +651,7 @@ def gap_fill(board):
                     v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu)
                     v.SetPosition(pcbnew.VECTOR2I(int(x), int(y)))
                     v.SetDrill(pcbnew.FromMM(VIA_DRILL_MM))
-                    v.SetWidth(pcbnew.FromMM(VIA_DIAM_MM / 2))
+                    v.SetWidth(pcbnew.FromMM(VIA_DIAM_MM))
                     v.SetNet(net)
                     board.Add(v)
                 _add_track(board, ax, ay, bx, by, pcbnew.B_Cu, net, width)
@@ -718,7 +718,7 @@ def gnd_via_grid(board, gnd):
         v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu)
         v.SetPosition(pcbnew.VECTOR2I(int(px), int(py)))
         v.SetDrill(pcbnew.FromMM(VIA_DRILL_MM))
-        v.SetWidth(pcbnew.FromMM(VIA_DIAM_MM / 2))
+        v.SetWidth(pcbnew.FromMM(VIA_DIAM_MM))
         v.SetNet(gnd)
         board.Add(v)
 
@@ -733,10 +733,12 @@ def gnd_via_grid(board, gnd):
             x += step
         y += step
 
-    # Per-pad vias: one via on every interior GND pad
+    # Per-pad vias: one via on every interior GND SMD pad (skip PTH — they already have a hole)
     for fp in board.GetFootprints():
         for pad in fp.Pads():
             if pad.GetNetCode() != code:
+                continue
+            if pad.GetAttribute() == pcbnew.PAD_ATTRIB_PTH:
                 continue
             pos = pad.GetPosition()
             if not (L <= pos.x <= R and T <= pos.y <= B):
@@ -791,7 +793,7 @@ def bond_pour_islands(board, gnd):
                         v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu)
                         v.SetPosition(pt)
                         v.SetDrill(pcbnew.FromMM(VIA_DRILL_MM))
-                        v.SetWidth(pcbnew.FromMM(VIA_DIAM_MM / 2))
+                        v.SetWidth(pcbnew.FromMM(VIA_DIAM_MM))
                         v.SetNet(gnd)
                         board.Add(v)
                         via_pts.append(pt)
