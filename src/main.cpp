@@ -140,9 +140,9 @@
 
 // #define RX_DATA_TIMOUT 50
 
-const int FirmwareRevision = 33;
+const int FirmwareRevision = 1;
 const int FirmwareSubRevision = 0;
-const int FirmwareMinorRevision = 0;  // used for beta version - zero for releases
+const int FirmwareMinorRevision = 0;  // non-zero indicates beta version
 const char* FirmwareDate = __DATE__;
 
 /*

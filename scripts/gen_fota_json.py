@@ -4,10 +4,10 @@
 Usage:
   python gen_fota_json.py \
     --type dieselfire-fota-http \
-    --version 3.3.0 \
+    --version 0.1.0 \
     --host dieselfire.wabo.cc \
     --port 80 \
-    --bin "/fota/dieselfire-3.3.0.bin" \
+    --bin "/fota/dieselfire-0.1.0.bin" \
     [--output fota.json]
 """
 
