@@ -20,10 +20,10 @@
  * 
  */
 
-// BTCWebServer.h
-
 #ifndef _DFWEBSERVER_h
 #define _DFWEBSERVER_h
+
+#include <Arduino.h>
 
 void initWebServer();
 bool doWebServer();
@@ -31,7 +31,7 @@ void stopWebServer();
 
 bool sendWebSocketString(const char* Str);
 bool isWebSocketClientChange(); 
-void listSPIFFS(const char * dirname, uint8_t levels, String& HTMLreport, int withHTMLanchors=0);
+void listSPIFFS(const char* dirname, uint8_t levels, String& HTMLreport, int withHTMLanchors = 0);
 
 const char* getWebContent(bool start); 
 void getWebContent(const char* filename); 

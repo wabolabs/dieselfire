@@ -1,21 +1,12 @@
-// Stubs for dieselfire target (full implementation pending Display/ module)
+// Stubs for GPIO, ScreenManager, and other excluded modules.
+// Web server functions are now in DFWebServer.cpp (ESPAsyncWebServer-based).
 #include <Arduino.h>
 #include <FreeRTOS.h>
 #include "../Utility/DF_GPIO.h"
 #include "../OLED/ScreenManager.h"
 #include "../WiFi/DFota.h"
 
-// Web server
-void initWebServer() {}
-bool doWebServer() { return false; }
-void wsCleanup() {}
-void processWebsocketQueue() {}
-bool isWebSocketClientChange() { return false; }
-void stopWebServer() {}
-void setUploadSize(long) {}
-void getWebContent(bool) {}
-
-// GPIO stubs
+// GPIO stubs (DF_GPIO.cpp is excluded from dieselfire build)
 void CGPIOin::begin(int, int, CGPIOin1::Modes, CGPIOin2::Modes, int) {}
 void CGPIOin::manage() {}
 uint8_t CGPIOin::getState(int) { return 0; }
@@ -39,7 +30,7 @@ int CGPIOalg::getValue() { return 0; }
 CGPIOalg::Modes CGPIOalg::getMode() const { return CGPIOalg::Disabled; }
 CGPIOalg::CGPIOalg() {}
 
-// Screen manager stubs (will be replaced by LVGL)
+// Screen manager stubs (OLED/ is excluded, replaced by LVGL)
 CScreenManager::CScreenManager() {}
 CScreenManager::~CScreenManager() {}
 void CScreenManager::begin() {}
@@ -54,9 +45,7 @@ void CScreenManager::refresh() {}
 void CScreenManager::clearDisplay() {}
 void CScreenManager::selectMenu(eUIMenuSets, int) {}
 
-// SPIFFS listing
-void listSPIFFS(const char*, unsigned char, String&, int) {}
-
+// SPIFFS listing (defined in DFWebServer.cpp)
 // GPIO sub-component constructors
 CGPIOin1::CGPIOin1() {}
 CGPIOin2::CGPIOin2() {}
@@ -78,8 +67,6 @@ CGPIOoutBase::CGPIOoutBase() {}
 // Global ScreenManager instance (main.cpp skips it when USE_ILI9341_DISPLAY)
 CScreenManager ScreenManager;
 
-// WebSocket
-void sendWebSocketString(const char*) {}
-
-// Web server task handle
+// Web server stubs (used when USE_WEBSERVER==1 but called from common code paths)
+void setUploadSize(long) {}
 TaskHandle_t handleWebServerTask = NULL;
