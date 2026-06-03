@@ -62,6 +62,7 @@ set(SCREEN_SRC
   screens/PasswordScreen.cpp
   screens/HourMeterScreen.cpp
   screens/InheritScreen.cpp
+  screens/BWDebugScreen.cpp
 )
 
 # Mock globals

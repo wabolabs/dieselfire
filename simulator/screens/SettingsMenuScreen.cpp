@@ -19,6 +19,7 @@
 #include "HourMeterScreen.h"
 #include "InheritScreen.h"
 #include "MainStatusScreen.h"
+#include "BWDebugScreen.h"
 #include "cfg/DFConfig.h"
 
 SettingsMenuScreen::SettingsMenuScreen() : DieselScreen("Settings") {}
@@ -42,6 +43,7 @@ void SettingsMenuScreen::onLoad() {
     "Fuel Mixture", "Heater Settings", "Fuel Cal", "LVC",
     "System Info", "Hour Meter", "Inherit", "Reboot",
     "Thermostat", "Frost", "Humidity", "Timeouts",
+    "BW Debug",
     nullptr
   };
 
@@ -105,6 +107,7 @@ void SettingsMenuScreen::openScreen(int index) {
     case 16: next = new FrostScreen(); break;
     case 17: next = new HumidityScreen(); break;
     case 18: next = new TimeoutsScreen(); break;
+    case 19: next = new BWDebugScreen(); break;
   }
   if (next) {
     _subScreen = next;

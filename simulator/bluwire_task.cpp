@@ -36,6 +36,12 @@ QueueHandle_t BlueWireRxQueue = NULL;
 QueueHandle_t BlueWireTxQueue = NULL;
 SemaphoreHandle_t BlueWireSemaphore = NULL;
 
+// Debug frame capture — read by BWDebugScreen
+extern uint8_t g_lastTxFrame[24];
+extern uint8_t g_lastRxFrame[24];
+void captureTxFrame(const uint8_t* data);
+void captureRxFrame(const uint8_t* data);
+
 // Simulated TX manager — writes frame to VirtualSerial instead of using
 // hardware timer + UART gate like the real CTxManage.
 struct SimTxMgr {
@@ -49,6 +55,7 @@ struct SimTxMgr {
   void Start(unsigned long timenow) {
     BlueWireSerial.write(m_TxFrame.Data, 24);
     BlueWireSerial.flush();
+    captureTxFrame(m_TxFrame.Data);
     m_nStartTime = timenow;
   }
   bool CheckTx(unsigned long timenow) {
@@ -227,6 +234,7 @@ void BlueWireTask(void*) {
           break;
         }
         bHasHtrData = true;
+        captureRxFrame(HeaterFrame2.Data);
         xQueueSend(BlueWireRxQueue, HeaterFrame2.Data, 0);
         if (!bHasOEMController)
           primaryHeaterData.set(HeaterFrame2, TxManage.getFrame());
@@ -288,3 +296,10 @@ const char* getBlueWireStatStr() {
 }
 
 void reqPumpPrime(bool on) { TxManage.reqPrime(on); }
+
+// Debug frame storage
+uint8_t g_lastTxFrame[24] = {};
+uint8_t g_lastRxFrame[24] = {};
+
+void captureTxFrame(const uint8_t* data) { memcpy(g_lastTxFrame, data, 24); }
+void captureRxFrame(const uint8_t* data) { memcpy(g_lastRxFrame, data, 24); }

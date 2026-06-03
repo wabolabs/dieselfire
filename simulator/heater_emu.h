@@ -39,6 +39,13 @@ public:
   float getBatteryVolts() const { return _batteryV; }
   float getFuelUsedMl() const { return _fuelMl; }
 
+  // ── Fault injection getters ────────────────────────────────
+  bool getBadCRC() const       { return _faultBadCRC; }
+  bool getPartialFrame() const { return _faultPartial; }
+  bool getNoResponse() const   { return _faultNoResp; }
+  bool getRogueBytes() const   { return _faultRogue; }
+  bool getPassiveMode() const  { return _faultPassive; }
+
 private:
   void buildFrame(uint8_t* buf, uint8_t rs, uint8_t es, bool badCRC);
   uint16_t crc16(const uint8_t* data, int len);
