@@ -31,6 +31,9 @@ bool mqttPublishJSON(const char* str);
 void connectToMqtt();
 bool isMQTTconnected();
 const char* getTopicPrefix();
+void subscribe(const char* topic);
+void updateMQTT_climate();
+void handleHAClimateCommand(const char* topic, const char* payload);
 
 
 #endif

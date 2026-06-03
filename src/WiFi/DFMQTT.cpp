@@ -44,6 +44,9 @@
 #include "../Utility/NVStorage.h"
 #include <FreeRTOS.h>
 
+#include "../Utility/helpers.h"
+#include "HADiscovery.h"
+
 extern void DecodeCmd(const char* cmd, String& payload);
 
 //IPAddress testMQTTserver(5, 196, 95, 208);   // test.mosquito.org
@@ -55,8 +58,14 @@ char topicnameCmd[128];
 CModerator BasicMQTTmoderator;  // for basic MQTT interface
 unsigned long MQTTrestart = 0;
 char statusTopic[128];
+char topicnameHAClimate[128];
 TimerHandle_t mqttReconnectTimer = NULL;
 SemaphoreHandle_t mqttSemaphore = NULL;
+
+static const char* g_haMode = "off";
+static const char* g_haPreset = "none";
+static uint8_t g_haStoredSetpoint = 20;
+static CModerator HAClimateModerator;
 
 void subscribe(const char* topic);
 
@@ -96,6 +105,19 @@ void onMqttConnect(bool sessionPresent)
   subscribe(topicnameJSONin);     // subscribe to the JSONin topic
   subscribe(topicnameCmd);        // subscribe to the basic command topic
   subscribe(statusTopic);         // subscribe to the status topic
+
+  // Subscribe to HA climate command topics
+  sprintf(topicnameHAClimate, "%s/climate/#", getTopicPrefix());
+  subscribe(topicnameHAClimate);
+
+  // Publish Home Assistant autodiscovery configs
+  publishHADiscovery();
+
+  // Init HA state tracking
+  g_haMode = "off";
+  g_haPreset = "none";
+  g_haStoredSetpoint = CDemandManager::getDegC();
+  HAClimateModerator.reset();
 
   // spit out an "I'm here" message
   MQTTclient.publish(statusTopic, NVstore.getMQTTinfo().qos, true, "online");
@@ -137,6 +159,10 @@ void onMqttMessage(char* topic, char* payload, AsyncMqttClientMessageProperties 
       BasicMQTTmoderator.reset();
       MQTTclient.publish(statusTopic, NVstore.getMQTTinfo().qos, true, "online");
     }
+  }
+  else if(strncmp(topic, topicnameHAClimate, strlen(topicnameHAClimate)-1) == 0) {  // HA climate command
+    const char* climateSuffix = &topic[strlen(topicnameHAClimate)-1];
+    handleHAClimateCommand(climateSuffix, szPayload);
   }
 }
 
@@ -360,11 +386,137 @@ void updateMQTT()
   float fuelRate = getHeaterInfo().getPump_Actual() * NVstore.getHeaterTuning().pumpCal * 60 * 60;
   pubTopic("FuelRate", fuelRate);
 
+  updateMQTT_climate();
 }
 
 void refreshMQTT()
 {
   BasicMQTTmoderator.reset();
+  HAClimateModerator.reset();
+}
+
+void updateMQTT_climate()
+{
+  if(!MQTTclient.connected()) return;
+  const sMQTTparams params = NVstore.getMQTTinfo();
+
+  int rs = getHeaterInfo().getRunStateEx();
+
+  // HVAC mode
+  {
+    const char* mode;
+    if(rs == 0) {
+      mode = "off";
+    } else {
+      if(strcmp(g_haMode, "off") == 0) {
+        g_haMode = "heat";
+      }
+      mode = g_haMode;
+    }
+    if(HAClimateModerator.shouldSend("mode", mode)) {
+      char topic[128];
+      sprintf(topic, "%s/climate/mode", getTopicPrefix());
+      MQTTclient.publish(topic, params.qos, true, mode);
+    }
+  }
+
+  // Temperature setpoint
+  {
+    uint8_t degC = CDemandManager::getDegC();
+    if(HAClimateModerator.shouldSend("temp", degC)) {
+      char topic[128];
+      char payload[16];
+      sprintf(topic, "%s/climate/temperature", getTopicPrefix());
+      sprintf(payload, "%d", degC);
+      MQTTclient.publish(topic, params.qos, true, payload);
+    }
+  }
+
+  // Current temperature
+  {
+    float currentTemp;
+    if(getTempSensor().getTemperature(0, currentTemp)) {
+      currentTemp = int(currentTemp * 10 + 0.5) * 0.1f;
+      if(HAClimateModerator.shouldSend("currentTemp", currentTemp)) {
+        char topic[128];
+        char payload[16];
+        sprintf(topic, "%s/climate/current_temperature", getTopicPrefix());
+        sprintf(payload, "%.1f", currentTemp);
+        MQTTclient.publish(topic, params.qos, true, payload);
+      }
+    }
+  }
+
+  // HVAC action
+  {
+    const char* action = "off";
+    if(rs == 5) action = "heating";
+    else if(rs == 10) action = "idle";
+    else if(rs != 0) action = "fan";
+    if(HAClimateModerator.shouldSend("action", action)) {
+      char topic[128];
+      sprintf(topic, "%s/climate/action", getTopicPrefix());
+      MQTTclient.publish(topic, params.qos, true, action);
+    }
+  }
+
+  // Preset mode
+  if(HAClimateModerator.shouldSend("preset", g_haPreset)) {
+    char topic[128];
+    sprintf(topic, "%s/climate/preset", getTopicPrefix());
+    MQTTclient.publish(topic, params.qos, true, g_haPreset);
+  }
+}
+
+void handleHAClimateCommand(const char* suffix, const char* payload)
+{
+  DebugPort.printf("HA climate cmd: %s -> %s\r\n", suffix, payload);
+
+  if(strcmp(suffix, "mode/set") == 0) {
+    if(strcmp(payload, "off") == 0) {
+      requestOff();
+      g_haMode = "off";
+    }
+    else if(strcmp(payload, "heat") == 0) {
+      g_haMode = "heat";
+      requestOn();
+    }
+    else if(strcmp(payload, "auto") == 0) {
+      g_haMode = "auto";
+      requestOn();
+      CDemandManager::setThermostatMode(1);
+    }
+  }
+  else if(strcmp(suffix, "temperature/set") == 0) {
+    int temp = atoi(payload);
+    if(temp >= 8 && temp <= 35) {
+      g_haStoredSetpoint = temp;
+      CDemandManager::setDemand(temp);
+      if(strcmp(g_haPreset, "eco") == 0 || strcmp(g_haPreset, "boost") == 0) {
+        g_haPreset = "none";
+      }
+    }
+  }
+  else if(strcmp(suffix, "preset/set") == 0) {
+    if(strcmp(payload, "eco") == 0) {
+      if(strcmp(g_haPreset, "none") == 0) {
+        g_haStoredSetpoint = CDemandManager::getDegC();
+      }
+      g_haPreset = "eco";
+      CDemandManager::setDemand(12);
+    }
+    else if(strcmp(payload, "boost") == 0) {
+      if(strcmp(g_haPreset, "none") == 0) {
+        g_haStoredSetpoint = CDemandManager::getDegC();
+      }
+      g_haPreset = "boost";
+      CDemandManager::setDemand(30);
+    }
+    else {
+      g_haPreset = "none";
+      CDemandManager::setDemand(g_haStoredSetpoint);
+    }
+  }
 }
 
 void subscribe(const char* topic)

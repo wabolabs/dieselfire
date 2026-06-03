@@ -263,6 +263,7 @@ struct sMQTTparams : public CESP32_NVStorage {
   uint8_t enabled;
   uint16_t  port;
   uint8_t qos;
+  uint8_t haDiscovery;
   char host[128];
   char username[32];
   char password[32];
@@ -271,6 +272,7 @@ struct sMQTTparams : public CESP32_NVStorage {
     enabled = false;
     port = 1883;
     qos = 0;
+    haDiscovery = 1;
     memset(host, 0, 128);
     memset(username, 0, 32);
     memset(password, 0, 32);
@@ -280,6 +282,7 @@ struct sMQTTparams : public CESP32_NVStorage {
     enabled = rhs.enabled;
     port = rhs.port;
     qos = rhs.qos;
+    haDiscovery = rhs.haDiscovery;
     memcpy(host, rhs.host, 128);
     memcpy(username, rhs.username, 32);
     memcpy(password, rhs.password, 32);
@@ -295,6 +298,7 @@ struct sMQTTparams : public CESP32_NVStorage {
     retval |= enabled != rhs.enabled;
     retval |= port != rhs.port;
     retval |= qos != rhs.qos;
+    retval |= haDiscovery != rhs.haDiscovery;
     retval |= strcmp(host, rhs.host) != 0;
     retval |= strcmp(password, rhs.password) != 0;
     retval |= strcmp(topicPrefix, rhs.topicPrefix) != 0;

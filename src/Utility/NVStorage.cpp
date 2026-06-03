@@ -598,6 +598,7 @@ sMQTTparams::load()
   validatedLoad("enabled", enabled, 0, u8inBounds, 0, 1);
   validatedLoad("port", port, 1883, u16inBounds, 0, 0xffff);
   validatedLoad("qos", qos, 0, u8inBounds, 0, 2);
+  validatedLoad("haDisc", haDiscovery, 1, u8inBounds, 0, 1);
   validatedLoad("host", host, 127, "broker");
   validatedLoad("username", username, 31, "username");
   validatedLoad("password", password, 31, "password");
@@ -613,6 +614,7 @@ sMQTTparams::save()
   preferences.putUChar("enabled", enabled);
   preferences.putUShort("port", port);
   preferences.putUChar("qos", qos);
+  preferences.putUChar("haDisc", haDiscovery);
   preferences.putString("host", host);
   preferences.putString("username", username);
   preferences.putString("password", password);
