@@ -26,6 +26,7 @@
 
 /* Display driver */
 #define LV_USE_DRAW_SW 1
+#define LV_DRAW_SW_ASM LV_DRAW_SW_ASM_NONE
 #define LV_USE_DRAW_VG_LITE 0
 #define LV_USE_DRAW_PX 0
 
