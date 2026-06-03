@@ -97,3 +97,5 @@ ESP32 Arduino LVGL*
 # opencode AI tooling
 .opencode/node_modules/
 .pio/
+.pio/
+.pio/
