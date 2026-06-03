@@ -9,7 +9,8 @@
 
 ClockClass Clock;
 DebugPortClass DebugPort;
-CHeaterStorage NVstore;
+static CHeaterStorage _nvstore_impl;
+CHeaterStorage& NVstore = _nvstore_impl;
 CFuelGauge FuelGauge;
 sFilteredData FilteredSamples;
 CProtocolPackage BlueWireData;

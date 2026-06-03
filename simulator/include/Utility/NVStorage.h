@@ -2,6 +2,8 @@
 // Mock: Utility/NVStorage.h
 #include <Arduino.h>
 #include <cstdint>
+#include <cstring>
+#include "RTC/Timers.h"
 
 struct sCyclicThermostat {
   int8_t Stop = 0;
@@ -38,10 +40,17 @@ public:
   sUserSettings _settings;
   const sUserSettings& getUserSettings() const { return _settings; }
   void setUserSettings(const sUserSettings& s) { _settings = s; }
+  sTimer _timers[14];
   void save() {}
   void doSave() {}
   void load() {}
   void init() {}
+  void getTimerInfo(int idx, sTimer& t) const {
+    if (idx >= 0 && idx < 14) t = _timers[idx];
+  }
+  void setTimerInfo(int idx, const sTimer& t) {
+    if (idx >= 0 && idx < 14) _timers[idx] = t;
+  }
 };
 
-extern CHeaterStorage NVstore;
+extern CHeaterStorage& NVstore;

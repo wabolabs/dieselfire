@@ -3,6 +3,8 @@
 #include "FrostScreen.h"
 #include "HumidityScreen.h"
 #include "TimeoutsScreen.h"
+#include "TimerChartScreen.h"
+#include "TimerEditScreen.h"
 #include "../../cfg/DFConfig.h"
 
 SettingsMenuScreen::SettingsMenuScreen() : DieselScreen("Settings") {}
@@ -13,7 +15,9 @@ void SettingsMenuScreen::onLoad() {
   hideBackButton();
 
   static const char* items[] = {
-    "Thermostat", "Frost", "Humidity", "Timeouts", nullptr
+    "Timer Overview", "Edit Timer",
+    "Thermostat", "Frost", "Humidity", "Timeouts",
+    nullptr
   };
 
   lv_obj_t* list = lv_list_create(_screen);
@@ -41,10 +45,12 @@ void SettingsMenuScreen::onEntryClick(lv_event_t* e) {
 void SettingsMenuScreen::openScreen(int index) {
   DieselScreen* next = nullptr;
   switch (index) {
-    case 0: next = new ThermostatScreen(); break;
-    case 1: next = new FrostScreen(); break;
-    case 2: next = new HumidityScreen(); break;
-    case 3: next = new TimeoutsScreen(); break;
+    case 0: next = new TimerChartScreen(); break;
+    case 1: next = new TimerEditScreen(); break;
+    case 2: next = new ThermostatScreen(); break;
+    case 3: next = new FrostScreen(); break;
+    case 4: next = new HumidityScreen(); break;
+    case 5: next = new TimeoutsScreen(); break;
   }
   if (next) {
     next->onLoad();

@@ -40,6 +40,7 @@
 #define LV_USE_ROLLER 1
 #define LV_USE_TEXTAREA 1
 #define LV_USE_CHART 1
+#define LV_USE_CANVAS 1
 #define LV_USE_TABLE 1
 #define LV_USE_MENU 1
 #define LV_USE_MSGBOX 1

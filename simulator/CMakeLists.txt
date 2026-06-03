@@ -46,6 +46,8 @@ set(SCREEN_SRC
   screens/FrostScreen.cpp
   screens/HumidityScreen.cpp
   screens/TimeoutsScreen.cpp
+  screens/TimerChartScreen.cpp
+  screens/TimerEditScreen.cpp
 )
 
 # Mock globals
