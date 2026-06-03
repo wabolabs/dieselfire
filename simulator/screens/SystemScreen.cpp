@@ -1,6 +1,6 @@
 #include "SystemScreen.h"
 #include "Utility/NVStorage.h"
-#include "Protocol/Protocol.h"
+#include "Protocol.h"
 #include <cstdio>
 
 extern CHeaterStorage& NVstore;

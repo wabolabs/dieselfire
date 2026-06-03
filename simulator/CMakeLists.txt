@@ -69,11 +69,25 @@ set(MOCK_SRC
   mock/mock_globals.cpp
   mock/mock_data.cpp
   mock/mock_tempsense.cpp
+  mock/mock_utilclasses.cpp
+)
+
+# Real Protocol implementation (needed for CRC, frame building)
+set(REAL_PROTOCOL_SRC
+  ${PROJECT_SRC}/src/Protocol/Protocol.cpp
+  ${PROJECT_SRC}/src/Utility/MODBUS-CRC16.cpp
 )
 
 # Main
 set(MAIN_SRC
   main.cpp
+)
+
+# BlueWire protocol simulation
+set(BLUWIRE_SRC
+  vserial.cpp
+  heater_emu.cpp
+  bluwire_task.cpp
 )
 
 # Include paths
@@ -90,8 +104,14 @@ add_executable(dieselfire-sim
   ${MAIN_SRC}
   ${MOCK_SRC}
   ${SCREEN_SRC}
+  ${BLUWIRE_SRC}
+  ${REAL_PROTOCOL_SRC}
 )
 
 target_include_directories(dieselfire-sim PRIVATE ${INCLUDE_DIRS} screens)
+# Add src/Protocol/ BEFORE other dirs so #include "Protocol.h" gets the real one
+target_include_directories(dieselfire-sim BEFORE PRIVATE ${PROJECT_SRC}/src/Protocol)
 target_link_libraries(dieselfire-sim PRIVATE lvgl::lvgl ${SDL2_LIBRARY} m dl pthread)
 target_compile_definitions(dieselfire-sim PRIVATE LV_CONF_PATH="${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h")
+# Force Arduino.h inclusion so real src/ headers (millis, etc.) work
+target_compile_options(dieselfire-sim PRIVATE "-include${CMAKE_CURRENT_SOURCE_DIR}/include/Arduino.h")

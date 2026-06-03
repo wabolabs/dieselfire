@@ -1,17 +1,33 @@
+#include <Arduino.h>
 #include "mock/mock_data.h"
 #include "Display/Screens/DieselScreen.h"
 #include "Display/Screens/MainStatusScreen.h"
 #include "Utility/DebugPort.h"
 #include "cfg/DFConfig.h"
+#include "vserial.h"
+#include "heater_emu.h"
+#include "Protocol.h"
 
 #include <SDL2/SDL.h>
 #include <lvgl.h>
 #include <stdio.h>
+#include <thread>
+#include <cstring>
+#include <sys/socket.h>
+#include <sys/un.h>
 
 static SDL_Window* window = nullptr;
 static SDL_Renderer* renderer = nullptr;
 static SDL_Texture* texture = nullptr;
 static lv_display_t* display = nullptr;
+
+// BlueWire serial + heater emulator (global for the task)
+VirtualSerial BlueWireSerial;
+HeaterEmulator g_heater;
+
+// Forward declarations from bluwire_task.cpp and mock_globals.cpp
+extern void BlueWireTask(void*);
+extern void checkBlueWireEvents();
 
 static void sdl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) {
   SDL_UpdateTexture(texture, nullptr, px_map, TFT_WIDTH * sizeof(lv_color32_t));
@@ -58,6 +74,24 @@ int main(int, char**) {
   lv_scr_load(mainScreen->getScreen());
   lv_refr_now(display);
 
+  // ── BlueWire protocol simulation setup ─────────────────────
+  int fds[2];
+  if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) != 0) {
+    printf("socketpair failed\n");
+    return 1;
+  }
+  BlueWireSerial.begin(fds[0], true);      // non-blocking end for BlueWire task
+  g_heater.begin(fds[1]);                  // other end for heater emulator
+
+  // Launch BlueWire task thread
+  std::thread bwThread(BlueWireTask, nullptr);
+  bwThread.detach();
+
+  // Launch heater emulator thread
+  std::thread heThread([&]() { g_heater.run(); });
+  heThread.detach();
+
+  // Main loop
   uint32_t lastTick = SDL_GetTicks();
   bool running = true;
 
@@ -70,7 +104,7 @@ int main(int, char**) {
     uint32_t delta = now - lastTick;
     lastTick = now;
     lv_tick_inc(delta);
-    updateSimulation(delta);
+    checkBlueWireEvents();
     lv_task_handler();
     uint32_t elapsed = SDL_GetTicks() - now;
     if (elapsed < 16) SDL_Delay(16 - elapsed);

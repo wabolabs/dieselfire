@@ -21,14 +21,21 @@
  */
 
 //#include "../../lib/TelnetSpy/TelnetSpy.h"
+#ifndef __linux__
 #include "DFTelnetSpy.h"
+#else
+// Linux simulator: get DebugPort from mock
+#include "Utility/DebugPort.h"
+#endif
 
 #ifndef __DEBUGPORT_H__
 #define __DEBUGPORT_H__
 
 class CProtocol;
 
+#ifndef __linux__
 extern DFTelnetSpy DebugPort;
+#endif
 
 void DebugReportFrame(const char* hdr, const CProtocol& Frame, const char* ftr, char* msg);
 

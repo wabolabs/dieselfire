@@ -1,7 +1,7 @@
 #include "MainStatusScreen.h"
 #include "SettingsMenuScreen.h"
 #include "Utility/DataFilter.h"
-#include "Protocol/Protocol.h"
+#include "Protocol.h"
 #include "RTC/Clock.h"
 #include "Utility/NVStorage.h"
 #include "Utility/FuelGauge.h"

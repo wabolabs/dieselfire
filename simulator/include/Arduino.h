@@ -9,6 +9,9 @@
 #include <math.h>
 #include <cstdio>
 #include <cstring>
+#include <thread>
+#include <chrono>
+#include <functional>
 
 // Arduino types
 typedef uint8_t byte;
@@ -45,10 +48,8 @@ typedef int adc2_channel_t;
 #define ADC_UNIT_1 1
 #define ADC_WIDTH_12Bit 3
 
-// FreeRTOS
-typedef void* TaskHandle_t;
-typedef void* SemaphoreHandle_t;
-typedef void* QueueHandle_t;
+// FreeRTOS types (full adapter in FreeRTOS.h)
+#include <FreeRTOS.h>
 
 // Pin modes
 #define INPUT 0
@@ -62,22 +63,48 @@ typedef void* QueueHandle_t;
 #define LED_BUILTIN 2
 typedef uint32_t esp_err_t;
 #define ESP_OK 0
-#define portMAX_DELAY 0xFFFFFFFFUL
+
+// PROGMEM (flash storage) is a no-op on Linux simulator
+#define PROGMEM
+#define pgm_read_byte(addr) (*(const uint8_t*)(addr))
+#define pgm_read_word(addr) (*(const uint16_t*)(addr))
+#define pgm_read_dword(addr) (*(const uint32_t*)(addr))
+#define pgm_read_float(addr) (*(const float*)(addr))
+#define strlen_P strlen
+#define strcmp_P strcmp
+#define strncpy_P strncpy
+#define sprintf_P sprintf
 
 // Functions
 static inline void pinMode(int, int) {}
 static inline void digitalWrite(int, int) {}
 static inline int digitalRead(int) { return 0; }
-static inline unsigned long millis() { return 0; }
-static inline unsigned long micros() { return 0; }
-static inline void delay(unsigned long) {}
-static inline void delayMicroseconds(unsigned long) {}
+static inline unsigned long millis() {
+  static auto epoch = std::chrono::steady_clock::now();
+  auto now = std::chrono::steady_clock::now();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(now - epoch).count();
+}
+static inline unsigned long micros() {
+  static auto epoch = std::chrono::steady_clock::now();
+  auto now = std::chrono::steady_clock::now();
+  return std::chrono::duration_cast<std::chrono::microseconds>(now - epoch).count();
+}
+static inline void delay(unsigned long ms) {
+  std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+static inline void delayMicroseconds(unsigned long us) {
+  std::this_thread::sleep_for(std::chrono::microseconds(us));
+}
 static inline int analogRead(int) { return 0; }
 static inline void analogWrite(int, int) {}
 static inline void randomSeed(unsigned long) {}
 static inline long random(long max) { return 0; }
 static inline long random(long min, long max) { return min; }
 static inline void* ps_malloc(size_t s) { return malloc(s); }
+
+// ESP-IDF watchdogs (stub)
+static inline esp_err_t esp_task_wdt_add(void*) { return ESP_OK; }
+static inline esp_err_t esp_task_wdt_reset() { return ESP_OK; }
 
 // RMT
 typedef int rmt_channel_t;

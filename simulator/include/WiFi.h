@@ -7,6 +7,7 @@
 typedef int wl_status_t;
 #define WL_CONNECTED 3
 #define WL_IDLE_STATUS 0
+typedef int arduino_event_t;
 
 class WiFiClass {
 public:
