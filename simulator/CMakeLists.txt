@@ -10,21 +10,29 @@ set(SDL2_LIBRARY "-l:libSDL2-2.0.so.0")
 
 # LVGL
 include(FetchContent)
+set(LVGL_TAG v9.5.0)
 FetchContent_Declare(
   lvgl
   GIT_REPOSITORY https://github.com/lvgl/lvgl.git
-  GIT_TAG v9.5.0
+  GIT_TAG ${LVGL_TAG}
 )
 set(LV_CONF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h" CACHE PATH "")
 set(LV_BUILD_EXAMPLES OFF CACHE BOOL "")
 set(LV_BUILD_DEMOS OFF CACHE BOOL "")
-FetchContent_MakeAvailable(lvgl)
 
-# Remove Helium SIMD assembly (ARM-only, breaks x86 build)
-file(GLOB_RECURSE HELIUM_FILES "${lvgl_SOURCE_DIR}/src/draw/sw/blend/helium/*.S")
-if(HELIUM_FILES)
-  file(REMOVE ${HELIUM_FILES})
-  message(STATUS "Removed ${HELIUM_FILES} Helium SIMD files (x86-64 host)")
+# Manually populate LVGL so we can patch out ARM Helium ASM before building
+FetchContent_GetProperties(lvgl)
+if(NOT lvgl_POPULATED)
+  FetchContent_Populate(lvgl)
+
+  # Remove ARM Helium SIMD assembly (incompatible with x86-64 assembler)
+  set(HELIUM_FILE "${lvgl_SOURCE_DIR}/src/draw/sw/blend/helium/lv_blend_helium.S")
+  if(EXISTS "${HELIUM_FILE}")
+    file(REMOVE "${HELIUM_FILE}")
+    message(STATUS "Patched LVGL: removed Helium ASM (${HELIUM_FILE})")
+  endif()
+
+  add_subdirectory(${lvgl_SOURCE_DIR} ${lvgl_BINARY_DIR})
 endif()
 
 set(PROJECT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/..")
