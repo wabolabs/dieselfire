@@ -60,9 +60,7 @@ void DieselScreen::popScreen() {
 }
 
 void DieselScreen::onBack() {
-  if (_returnScreen) {
-    lv_scr_load(_returnScreen->getScreen());
-  }
+  if (_backCallback) _backCallback();
 }
 
 void DieselScreen::showHome() {
@@ -93,60 +91,33 @@ lv_obj_t* DieselScreen::createHeader(lv_obj_t* parent) {
   lv_obj_set_style_pad_all(_header, 0, 0);
   lv_obj_set_scrollbar_mode(_header, LV_SCROLLBAR_MODE_OFF);
 
-  _headerBack = lv_button_create(_header);
-  lv_obj_set_pos(_headerBack, 2, 1);
-  lv_obj_set_size(_headerBack, 36, 20);
-  lv_obj_set_style_bg_color(_headerBack, C_HEADER, 0);
-  lv_obj_set_style_bg_color(_headerBack, lv_color_make(0x33,0x33,0x33), LV_STATE_PRESSED);
-  lv_obj_set_style_border_width(_headerBack, 0, 0);
-  lv_obj_t* backLbl = lv_label_create(_headerBack);
-  lv_label_set_text(backLbl, LV_SYMBOL_LEFT " Back");
-  lv_obj_set_style_text_color(backLbl, C_AMBER, 0);
-  lv_obj_center(backLbl);
+  // Back button (left) — small label, clickable
+  _headerBack = lv_label_create(_header);
+  lv_label_set_text(_headerBack, LV_SYMBOL_LEFT);
+  lv_obj_set_style_text_color(_headerBack, C_AMBER, 0);
+  lv_obj_set_pos(_headerBack, 4, 2);
+  lv_obj_set_size(_headerBack, 18, 18);
+  lv_obj_add_flag(_headerBack, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(_headerBack, [](lv_event_t* e) {
     static_cast<DieselScreen*>(lv_event_get_user_data(e))->onBack();
   }, LV_EVENT_CLICKED, this);
 
-  // Settings gear (left of clock)
-  _headerSettings = lv_button_create(_header);
-  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 40, 1);
-  lv_obj_set_size(_headerSettings, 36, 20);
-  lv_obj_set_style_bg_color(_headerSettings, C_HEADER, 0);
-  lv_obj_set_style_bg_color(_headerSettings, lv_color_make(0x33,0x33,0x33), LV_STATE_PRESSED);
-  lv_obj_set_style_border_width(_headerSettings, 0, 0);
-  lv_obj_t* gearLbl = lv_label_create(_headerSettings);
-  lv_label_set_text(gearLbl, LV_SYMBOL_SETTINGS);
-  lv_obj_set_style_text_color(gearLbl, C_GREY, 0);
-  lv_obj_center(gearLbl);
-  lv_obj_add_event_cb(_headerSettings, [](lv_event_t* e) {
-    static_cast<DieselScreen*>(lv_event_get_user_data(e))->onSettings();
-  }, LV_EVENT_CLICKED, this);
-
+  // Clock (center)
   _headerClock = lv_label_create(_header);
   lv_label_set_text(_headerClock, "--:--");
   lv_obj_set_style_text_color(_headerClock, C_WHITE, 0);
   lv_obj_center(_headerClock);
 
-  // Right-side icons: heater>bat>wifi>bt
-  _headerHeater = lv_label_create(_header);
-  lv_label_set_text(_headerHeater, LV_SYMBOL_POWER);
-  lv_obj_set_style_text_color(_headerHeater, C_GREY, 0);
-  lv_obj_set_pos(_headerHeater, TFT_WIDTH - 6, 2);
-
-  _headerBattery = lv_label_create(_header);
-  lv_label_set_text(_headerBattery, LV_SYMBOL_BATTERY_FULL);
-  lv_obj_set_style_text_color(_headerBattery, C_GREEN, 0);
-  lv_obj_set_pos(_headerBattery, TFT_WIDTH - 24, 2);
-
-  _headerWifi = lv_label_create(_header);
-  lv_label_set_text(_headerWifi, LV_SYMBOL_WIFI);
-  lv_obj_set_style_text_color(_headerWifi, C_GREY, 0);
-  lv_obj_set_pos(_headerWifi, TFT_WIDTH - 42, 2);
-
-  _headerBt = lv_label_create(_header);
-  lv_label_set_text(_headerBt, LV_SYMBOL_BLUETOOTH);
-  lv_obj_set_style_text_color(_headerBt, C_GREY, 0);
-  lv_obj_set_pos(_headerBt, TFT_WIDTH - 60, 2);
+  // Settings gear (right)
+  _headerSettings = lv_label_create(_header);
+  lv_label_set_text(_headerSettings, LV_SYMBOL_SETTINGS);
+  lv_obj_set_style_text_color(_headerSettings, C_GREY, 0);
+  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 18, 2);
+  lv_obj_set_size(_headerSettings, 18, 18);
+  lv_obj_add_flag(_headerSettings, LV_OBJ_FLAG_CLICKABLE);
+  lv_obj_add_event_cb(_headerSettings, [](lv_event_t* e) {
+    static_cast<DieselScreen*>(lv_event_get_user_data(e))->onSettings();
+  }, LV_EVENT_CLICKED, this);
 
   return _header;
 }
@@ -161,36 +132,10 @@ void DieselScreen::updateHeaderClock() {
   lv_label_set_text(_headerClock, buf);
 }
 
-void DieselScreen::updateHeaderBtIcon(bool connected) {
-  if (!_headerBt) return;
-  lv_obj_set_style_text_color(_headerBt, connected ? C_BLUE : C_GREY, 0);
-}
-
-void DieselScreen::updateHeaderWifiIcon(int rssi) {
-  if (!_headerWifi) return;
-  lv_obj_set_style_text_color(_headerWifi, rssi > -80 ? C_GREEN : C_GREY, 0);
-}
-
-void DieselScreen::updateHeaderBattery(float volts) {
-  if (!_headerBattery) return;
-  const char* sym;
-  if (volts > 13.0f) sym = LV_SYMBOL_BATTERY_FULL;
-  else if (volts > 12.5f) sym = LV_SYMBOL_BATTERY_3;
-  else if (volts > 12.0f) sym = LV_SYMBOL_BATTERY_2;
-  else if (volts > 11.5f) sym = LV_SYMBOL_BATTERY_1;
-  else sym = LV_SYMBOL_BATTERY_EMPTY;
-  lv_label_set_text(_headerBattery, sym);
-  lv_obj_set_style_text_color(_headerBattery, volts > 12.0f ? C_GREEN : C_RED, 0);
-}
-
-void DieselScreen::updateHeaderHeaterState(int state) {
-  if (!_headerHeater) return;
-  if (state >= 1 && state <= 5) {
-    lv_obj_set_style_text_color(_headerHeater, C_RED, 0);
-  } else {
-    lv_obj_set_style_text_color(_headerHeater, C_GREY, 0);
-  }
-}
+void DieselScreen::updateHeaderBtIcon(bool) {}
+void DieselScreen::updateHeaderWifiIcon(int) {}
+void DieselScreen::updateHeaderBattery(float) {}
+void DieselScreen::updateHeaderHeaterState(int) {}
 
 lv_obj_t* DieselScreen::createLabel(lv_obj_t* parent, const char* text, lv_align_t align, lv_coord_t x, lv_coord_t y) {
   lv_obj_t* lbl = lv_label_create(parent);

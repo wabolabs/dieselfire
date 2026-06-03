@@ -2,6 +2,7 @@
 
 #include <lvgl.h>
 #include <misc/lv_timer.h>
+#include <functional>
 
 class DieselScreen {
 public:
@@ -15,7 +16,7 @@ public:
   virtual void onTimer();
   virtual void onBack();
   virtual void onSettings() {}
-  void setReturnScreen(DieselScreen* s) { _returnScreen = s; }
+  void setBackCallback(std::function<void()> cb) { _backCallback = std::move(cb); }
 
   static void initTheme();
   static void setNavGroup(lv_group_t* group);
@@ -59,12 +60,8 @@ protected:
   lv_obj_t* _headerClock = nullptr;
   lv_obj_t* _headerBack = nullptr;
   lv_obj_t* _headerSettings = nullptr;
-  lv_obj_t* _headerBt = nullptr;
-  lv_obj_t* _headerWifi = nullptr;
-  lv_obj_t* _headerBattery = nullptr;
-  lv_obj_t* _headerHeater = nullptr;
   lv_timer_t* _timer = nullptr;
 
-  DieselScreen* _returnScreen = nullptr;
+  std::function<void()> _backCallback;
   static lv_group_t* _navGroup;
 };

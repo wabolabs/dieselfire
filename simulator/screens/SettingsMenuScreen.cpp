@@ -89,7 +89,9 @@ void SettingsMenuScreen::openScreen(int index) {
     case 18: next = new TimeoutsScreen(); break;
   }
   if (next) {
-    next->setReturnScreen(this);
+    next->setBackCallback([this]() {
+      lv_scr_load(this->getScreen());
+    });
     next->onLoad();
     lv_scr_load(next->getScreen());
   }
