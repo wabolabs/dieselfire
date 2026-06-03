@@ -18,7 +18,8 @@ static const lv_color_t C_RED     = lv_color_make(0xCC, 0x00, 0x00);
 static const lv_color_t C_BLUE    = lv_color_make(0x00, 0xAA, 0xFF);
 
 DieselScreen::DieselScreen(const char* name) : _name(name) {
-  _screen = lv_obj_create(lv_screen_active());
+  _screen = lv_obj_create(NULL);  // NULL parent = standalone screen object
+  lv_obj_set_size(_screen, TFT_WIDTH, TFT_HEIGHT);
   lv_obj_set_style_bg_color(_screen, C_BG, 0);
   lv_obj_set_scrollbar_mode(_screen, LV_SCROLLBAR_MODE_OFF);
 }
