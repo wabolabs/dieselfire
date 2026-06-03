@@ -9,22 +9,26 @@ on:
       - '.github/workflows/wasm.yml'
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  build-wasm:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
           version: latest
 
-      - name: Configure with Emscripten
+      - name: Configure
         run: |
           cd simulator
           mkdir -p build_wasm
@@ -36,15 +40,17 @@ jobs:
           cd simulator/build_wasm
           emmake make -j$(nproc)
 
-      - name: Prepare artifacts
-        run: touch simulator/build_wasm/.nojekyll
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: simulator/build_wasm
-          keep_files: false
-          user_name: github-actions[bot]
-          user_email: github-actions[bot]@users.noreply.github.com
-          cname: dieselfire.wabo.cc
+          path: simulator/build_wasm
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: https://dieselfire.wabo.cc
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
