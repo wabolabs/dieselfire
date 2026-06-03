@@ -8,11 +8,16 @@ on:
       - 'src/**'
       - '.github/workflows/wasm.yml'
 
+permissions:
+  contents: write
+
 jobs:
   build-wasm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14
@@ -40,3 +45,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: simulator/build_wasm
           keep_files: false
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
