@@ -53,13 +53,20 @@ struct SimTxMgr {
     m_TxFrame.setCRC();
   }
   void Start(unsigned long timenow) {
-    BlueWireSerial.write(m_TxFrame.Data, 24);
-    BlueWireSerial.flush();
-    captureTxFrame(m_TxFrame.Data);
+    // Original code: starts HW timer for Tx gate.
+    // Actual serial write happens in CheckTx when timer fires.
     m_nStartTime = timenow;
   }
   bool CheckTx(unsigned long timenow) {
-    return (timenow - m_nStartTime) >= 10;
+    // After ~10ms, write the frame and complete, like original's HW timer ISR.
+    if (m_nStartTime != 0 && (timenow - m_nStartTime) >= 10) {
+      BlueWireSerial.write(m_TxFrame.Data, 24);
+      BlueWireSerial.flush();
+      captureTxFrame(m_TxFrame.Data);
+      m_nStartTime = 0;
+      return true;
+    }
+    return false;
   }
   const CProtocol& getFrame() const { return m_TxFrame; }
   void begin() {}

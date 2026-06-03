@@ -116,3 +116,20 @@ target_link_libraries(dieselfire-sim PRIVATE lvgl::lvgl ${SDL2_LIBRARY} m dl pth
 target_compile_definitions(dieselfire-sim PRIVATE LV_CONF_PATH="${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h")
 # Force Arduino.h inclusion so real src/ headers (millis, etc.) work
 target_compile_options(dieselfire-sim PRIVATE "-include${CMAKE_CURRENT_SOURCE_DIR}/include/Arduino.h")
+
+# ── BlueWire protocol test executable (headless) ──────────────
+add_executable(bluewire-test
+  test_bluewire.cpp
+  ${BLUWIRE_SRC}
+  ${REAL_PROTOCOL_SRC}
+  mock/mock_globals.cpp
+  mock/mock_utilclasses.cpp
+  mock/mock_data.cpp
+  mock/mock_tempsense.cpp
+)
+target_include_directories(bluewire-test PRIVATE
+  ${INCLUDE_DIRS}
+  ${PROJECT_SRC}/src/Protocol
+)
+target_compile_options(bluewire-test PRIVATE "-include${CMAKE_CURRENT_SOURCE_DIR}/include/Arduino.h")
+target_link_libraries(bluewire-test PRIVATE m dl pthread)
