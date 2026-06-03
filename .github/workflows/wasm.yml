@@ -36,6 +36,9 @@ jobs:
           cd simulator/build_wasm
           emmake make -j$(nproc)
 
+      - name: Prepare artifacts
+        run: touch simulator/build_wasm/.nojekyll
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
