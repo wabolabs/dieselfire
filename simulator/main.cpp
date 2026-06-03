@@ -13,25 +13,21 @@ static SDL_Renderer* renderer = nullptr;
 static SDL_Texture* texture = nullptr;
 static lv_display_t* display = nullptr;
 static uint32_t* sdl_buf = nullptr;
+static uint32_t* fb = nullptr;
+int frameCount = 0;
+
 static void sdl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) {
   int32_t w = lv_area_get_width(area);
   int32_t h = lv_area_get_height(area);
+  // LVGL uses BGRA byte order on little-endian, which matches SDL_PIXELFORMAT_ARGB8888
   uint32_t* src = (uint32_t*)px_map;
-
-  // Convert LVGL ARGB8888 to SDL pixels
-  SDL_Rect r = { area->x1, area->y1, w, h };
+  uint32_t* dst = sdl_buf + area->y1 * TFT_WIDTH + area->x1;
   for (int y = 0; y < h; y++) {
-    for (int x = 0; x < w; x++) {
-      uint32_t c = src[y * w + x];
-      uint8_t a = (c >> 24) & 0xFF;
-      uint8_t r8 = (c >> 16) & 0xFF;
-      uint8_t g8 = (c >> 8) & 0xFF;
-      uint8_t b8 = c & 0xFF;
-      sdl_buf[(area->y1 + y) * TFT_WIDTH + (area->x1 + x)] =
-        (a << 24) | (r8 << 16) | (g8 << 8) | b8;
-    }
+    memcpy(dst + y * TFT_WIDTH, src + y * w, w * 4);
   }
-  SDL_UpdateTexture(texture, &r, sdl_buf + area->y1 * TFT_WIDTH + area->x1, TFT_WIDTH * 4);
+  frameCount++;
+  SDL_UpdateTexture(texture, nullptr, sdl_buf, TFT_WIDTH * 4);
+  SDL_RenderClear(renderer);
   SDL_RenderCopy(renderer, texture, nullptr, nullptr);
   SDL_RenderPresent(renderer);
   lv_display_flush_ready(disp);
@@ -46,18 +42,36 @@ static void sdl_mouse_read(lv_indev_t* indev, lv_indev_data_t* data) {
 }
 
 int main(int, char**) {
-  // Init SDL
-  SDL_Init(SDL_INIT_VIDEO);
+  printf("Starting...\n");
+  fflush(stdout);
+  printf("SDL_Init...\n");
+  fflush(stdout);
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    printf("SDL_Init failed: %s\n", SDL_GetError());
+    return 1;
+  }
+  printf("SDL_Init OK\n");
+  fflush(stdout);
+
   window = SDL_CreateWindow("DieselFire Simulator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                             TFT_WIDTH, TFT_HEIGHT, SDL_WINDOW_SHOWN);
+  if (!window) {
+    printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
+    return 1;
+  }
+  printf("SDL window created\n");
+
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
   texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
                               TFT_WIDTH, TFT_HEIGHT);
   sdl_buf = new uint32_t[TFT_WIDTH * TFT_HEIGHT]();
+  memset(sdl_buf, 0, TFT_WIDTH * TFT_HEIGHT * 4);
+  printf("SDL resources ready\n");
 
   // Init LVGL
   lv_init();
   DieselScreen::initTheme();
+  printf("LVGL initialized\n");
 
   size_t bufSize = TFT_WIDTH * TFT_HEIGHT * 4;
   uint8_t* buf1 = new uint8_t[bufSize];
@@ -65,16 +79,24 @@ int main(int, char**) {
 
   display = lv_display_create(TFT_WIDTH, TFT_HEIGHT);
   lv_display_set_flush_cb(display, sdl_flush_cb);
-  lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_PARTIAL);
+  lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_DIRECT);
+  printf("LVGL display created\n");
 
   lv_indev_t* indev = lv_indev_create();
   lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
   lv_indev_set_read_cb(indev, sdl_mouse_read);
+  printf("LVGL input device created\n");
 
-  // Load main screen
+  // Load main screen and force initial render
   auto* mainScreen = new MainStatusScreen();
   mainScreen->onLoad();
   lv_scr_load(mainScreen->getScreen());
+  printf("Screen loaded, starting initial render...\n");
+  fflush(stdout);
+
+  lv_refr_now(display);
+  printf("Initial render complete\n");
+  fflush(stdout);
 
   // Main loop
   uint32_t lastTick = SDL_GetTicks();
@@ -88,17 +110,19 @@ int main(int, char**) {
       if (e.type == SDL_QUIT) running = false;
     }
 
-    // Update simulation
-    updateSimulation(now - lastTick);
+    // Always call lv_tick_inc with the delta
+    uint32_t delta = now - lastTick;
+    lastTick = now;
+    lv_tick_inc(delta);
 
-    // Update clock
-    if (now - lastTick >= 5) {
-      lv_tick_inc(now - lastTick);
-      lastTick = now;
-    }
+    // Update simulation
+    updateSimulation(delta);
 
     lv_task_handler();
-    SDL_Delay(5);
+
+    // Cap at ~60fps
+    uint32_t elapsed = SDL_GetTicks() - now;
+    if (elapsed < 16) SDL_Delay(16 - elapsed);
   }
 
   delete[] sdl_buf;

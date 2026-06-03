@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # SDL2 (use system library + source headers for dev files)
 set(SDL2_INCLUDE_DIR "/tmp/opencode/SDL-release-2.32.4/include")
-set(SDL2_LIBRARY "/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0")
+set(SDL2_LIBRARY "-l:libSDL2-2.0.so.0")
 
 # LVGL
 include(FetchContent)
