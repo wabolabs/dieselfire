@@ -91,12 +91,12 @@ lv_obj_t* DieselScreen::createHeader(lv_obj_t* parent) {
   lv_obj_set_style_pad_all(_header, 0, 0);
   lv_obj_set_scrollbar_mode(_header, LV_SCROLLBAR_MODE_OFF);
 
-  // Back button (left) — small label, clickable
+  // Back button (left)
   _headerBack = lv_label_create(_header);
   lv_label_set_text(_headerBack, LV_SYMBOL_LEFT);
   lv_obj_set_style_text_color(_headerBack, C_AMBER, 0);
-  lv_obj_set_pos(_headerBack, 4, 2);
-  lv_obj_set_size(_headerBack, 18, 18);
+  lv_obj_set_pos(_headerBack, 4, 0);
+  lv_obj_set_size(_headerBack, 22, 22);
   lv_obj_add_flag(_headerBack, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(_headerBack, [](lv_event_t* e) {
     static_cast<DieselScreen*>(lv_event_get_user_data(e))->onBack();
@@ -112,8 +112,8 @@ lv_obj_t* DieselScreen::createHeader(lv_obj_t* parent) {
   _headerSettings = lv_label_create(_header);
   lv_label_set_text(_headerSettings, LV_SYMBOL_SETTINGS);
   lv_obj_set_style_text_color(_headerSettings, C_GREY, 0);
-  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 18, 2);
-  lv_obj_set_size(_headerSettings, 18, 18);
+  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 24, 0);
+  lv_obj_set_size(_headerSettings, 22, 22);
   lv_obj_add_flag(_headerSettings, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(_headerSettings, [](lv_event_t* e) {
     static_cast<DieselScreen*>(lv_event_get_user_data(e))->onSettings();

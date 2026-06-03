@@ -10,4 +10,7 @@ public:
 private:
   static void onEntryClick(lv_event_t* e);
   void openScreen(int index);
+  void deleteSubScreen();
+
+  DieselScreen* _subScreen = nullptr;
 };

@@ -22,6 +22,14 @@
 
 SettingsMenuScreen::SettingsMenuScreen() : DieselScreen("Settings") {}
 
+void SettingsMenuScreen::deleteSubScreen() {
+  if (_subScreen) {
+    lv_obj_del(_subScreen->getScreen());
+    delete _subScreen;
+    _subScreen = nullptr;
+  }
+}
+
 void SettingsMenuScreen::onLoad() {
   createHeader(_screen);
   createLabel(_screen, "Settings", LV_ALIGN_TOP_LEFT, 48, 4);
@@ -51,7 +59,6 @@ void SettingsMenuScreen::onLoad() {
     lv_obj_set_style_pad_top(btn, 6, 0);
     lv_obj_set_style_bg_color(btn, lv_color_make(0x22, 0x22, 0x22), 0);
     lv_obj_set_style_bg_color(btn, lv_color_make(0xFF, 0x7A, 0x00), LV_STATE_PRESSED);
-    lv_obj_set_style_text_color(btn, lv_color_white(), 0);
     lv_obj_set_style_border_width(btn, 0, 0);
     lv_obj_t* lbl = lv_obj_get_child(btn, 0);
     if (lbl) lv_obj_set_style_text_color(lbl, lv_color_white(), 0);
@@ -66,6 +73,9 @@ void SettingsMenuScreen::onEntryClick(lv_event_t* e) {
 }
 
 void SettingsMenuScreen::openScreen(int index) {
+  // Clean up any previous sub-screen
+  deleteSubScreen();
+
   DieselScreen* next = nullptr;
   switch (index) {
     case 0: next = new TimerChartScreen(); break;
@@ -89,8 +99,14 @@ void SettingsMenuScreen::openScreen(int index) {
     case 18: next = new TimeoutsScreen(); break;
   }
   if (next) {
-    next->setBackCallback([this]() {
-      lv_scr_load(this->getScreen());
+    _subScreen = next;
+    // Back callback: load settings screen, then clean up sub-screen
+    DieselScreen* settings = this;
+    next->setBackCallback([settings, next]() {
+      lv_obj_t* subScr = next->getScreen();
+      lv_scr_load(settings->getScreen());
+      lv_obj_del(subScr);
+      delete next;
     });
     next->onLoad();
     lv_scr_load(next->getScreen());
