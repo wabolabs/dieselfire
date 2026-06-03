@@ -60,6 +60,10 @@ protected:
   lv_obj_t* _headerClock = nullptr;
   lv_obj_t* _headerBack = nullptr;
   lv_obj_t* _headerSettings = nullptr;
+  lv_obj_t* _headerBt = nullptr;
+  lv_obj_t* _headerWifi = nullptr;
+  lv_obj_t* _headerBattery = nullptr;
+  lv_obj_t* _headerHeater = nullptr;
   lv_timer_t* _timer = nullptr;
 
   std::function<void()> _backCallback;

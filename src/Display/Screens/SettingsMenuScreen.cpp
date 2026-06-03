@@ -18,6 +18,7 @@
 #include "RebootScreen.h"
 #include "HourMeterScreen.h"
 #include "InheritScreen.h"
+#include "MainStatusScreen.h"
 #include "../../cfg/DFConfig.h"
 
 SettingsMenuScreen::SettingsMenuScreen() : DieselScreen("Settings") {}
@@ -33,7 +34,6 @@ void SettingsMenuScreen::deleteSubScreen() {
 void SettingsMenuScreen::onLoad() {
   createHeader(_screen);
   createLabel(_screen, "Settings", LV_ALIGN_TOP_LEFT, 48, 4);
-  hideBackButton();
 
   static const char* items[] = {
     "Timer Overview", "Edit Timer",
@@ -70,6 +70,14 @@ void SettingsMenuScreen::onEntryClick(lv_event_t* e) {
   auto* btn = static_cast<lv_obj_t*>(lv_event_get_target(e));
   int idx = (int)(intptr_t)lv_obj_get_user_data(btn);
   self->openScreen(idx);
+}
+
+void SettingsMenuScreen::onBack() {
+  // Return to main status screen
+  deleteSubScreen();
+  auto* main = new MainStatusScreen();
+  main->onLoad();
+  lv_scr_load(main->getScreen());
 }
 
 void SettingsMenuScreen::openScreen(int index) {

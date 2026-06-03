@@ -6,6 +6,7 @@ class SettingsMenuScreen : public DieselScreen {
 public:
   SettingsMenuScreen();
   void onLoad() override;
+  void onBack() override;
 
 private:
   static void onEntryClick(lv_event_t* e);
