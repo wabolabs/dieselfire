@@ -6,6 +6,7 @@ class LVGLDisplay {
 public:
   void begin();
   void taskHandler();
+  void showMainScreen();
 
 private:
   static void flushCb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map);

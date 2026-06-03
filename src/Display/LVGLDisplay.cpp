@@ -1,10 +1,13 @@
 #include "LVGLDisplay.h"
 #include "ILI9341Driver.h"
+#include "Screens/DieselScreen.h"
+#include "Screens/MainStatusScreen.h"
 #include "../cfg/pins.h"
 #include "../cfg/DFConfig.h"
 #include "../Utility/DebugPort.h"
 
 static ILI9341Driver panel;
+static MainStatusScreen* mainScreen = nullptr;
 
 void LVGLDisplay::begin() {
   DebugPort.println("LVGL: starting");
@@ -16,6 +19,7 @@ void LVGLDisplay::begin() {
   DebugPort.println("Display ready");
 
   lv_init();
+  DieselScreen::initTheme();
 
   size_t bufSize = TFT_WIDTH * TFT_HEIGHT * 2 / 10;
   _buf1 = (uint8_t*)ps_malloc(bufSize);
@@ -35,7 +39,17 @@ void LVGLDisplay::begin() {
   lv_indev_set_type(_indev, LV_INDEV_TYPE_POINTER);
   lv_indev_set_read_cb(_indev, touchReadCb);
 
+  mainScreen = new MainStatusScreen();
+  mainScreen->onLoad();
+  lv_scr_load(mainScreen->getScreen());
+
   DebugPort.println("LVGL ready");
+}
+
+void LVGLDisplay::showMainScreen() {
+  if (mainScreen) {
+    lv_scr_load(mainScreen->getScreen());
+  }
 }
 
 void LVGLDisplay::taskHandler() {
