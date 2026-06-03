@@ -57,6 +57,11 @@ set(SCREEN_SRC
   screens/HeaterSettingsScreen.cpp
   screens/FuelCalScreen.cpp
   screens/LVCScreen.cpp
+  screens/SystemScreen.cpp
+  screens/RebootScreen.cpp
+  screens/PasswordScreen.cpp
+  screens/HourMeterScreen.cpp
+  screens/InheritScreen.cpp
 )
 
 # Mock globals

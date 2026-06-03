@@ -14,6 +14,10 @@
 #include "HeaterSettingsScreen.h"
 #include "FuelCalScreen.h"
 #include "LVCScreen.h"
+#include "SystemScreen.h"
+#include "RebootScreen.h"
+#include "HourMeterScreen.h"
+#include "InheritScreen.h"
 #include "../../cfg/DFConfig.h"
 
 SettingsMenuScreen::SettingsMenuScreen() : DieselScreen("Settings") {}
@@ -28,6 +32,7 @@ void SettingsMenuScreen::onLoad() {
     "WiFi", "MQTT", "Bluetooth",
     "Sensors", "GPIO",
     "Fuel Mixture", "Heater Settings", "Fuel Cal", "LVC",
+    "System Info", "Hour Meter", "Inherit", "Reboot",
     "Thermostat", "Frost", "Humidity", "Timeouts",
     nullptr
   };
@@ -68,10 +73,14 @@ void SettingsMenuScreen::openScreen(int index) {
     case 8: next = new HeaterSettingsScreen(); break;
     case 9: next = new FuelCalScreen(); break;
     case 10: next = new LVCScreen(); break;
-    case 11: next = new ThermostatScreen(); break;
-    case 12: next = new FrostScreen(); break;
-    case 13: next = new HumidityScreen(); break;
-    case 14: next = new TimeoutsScreen(); break;
+    case 11: next = new SystemScreen(); break;
+    case 12: next = new HourMeterScreen(); break;
+    case 13: next = new InheritScreen(); break;
+    case 14: next = new RebootScreen(); break;
+    case 15: next = new ThermostatScreen(); break;
+    case 16: next = new FrostScreen(); break;
+    case 17: next = new HumidityScreen(); break;
+    case 18: next = new TimeoutsScreen(); break;
   }
   if (next) {
     next->onLoad();
