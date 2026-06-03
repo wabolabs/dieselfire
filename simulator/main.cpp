@@ -31,6 +31,24 @@ static void sdl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_
   flushCount++;
   frameCount = flushCount;
 
+  // Save first frame to PPM for debugging
+  if (flushCount == 1) {
+    FILE* f = fopen("/tmp/lvgl_frame.ppm", "wb");
+    if (f) {
+      fprintf(f, "P6\n%d %d\n255\n", TFT_WIDTH, TFT_HEIGHT);
+      for (int y = 0; y < TFT_HEIGHT; y++) {
+        for (int x = 0; x < TFT_WIDTH; x++) {
+          uint32_t c = sdl_buf[y * TFT_WIDTH + x];
+          putc((c >> 16) & 0xFF, f); // R
+          putc((c >> 8) & 0xFF, f);  // G
+          putc(c & 0xFF, f);         // B
+        }
+      }
+      fclose(f);
+      printf("  saved /tmp/lvgl_frame.ppm\n"); fflush(stdout);
+    }
+  }
+
   // Blit full framebuffer to SDL
   SDL_UpdateTexture(texture, nullptr, sdl_buf, TFT_WIDTH * 4);
   SDL_RenderClear(renderer);
@@ -124,9 +142,26 @@ int main(int, char**) {
   lv_indev_set_read_cb(indev, sdl_mouse_read);
 
   printf("[5/5] loading screen...\n"); fflush(stdout);
-  auto* mainScreen = new MainStatusScreen();
-  mainScreen->onLoad();
-  lv_scr_load(mainScreen->getScreen());
+
+  // Minimal test: solid amber screen
+  lv_obj_t* scr = lv_obj_create(NULL);
+  lv_obj_set_size(scr, TFT_WIDTH, TFT_HEIGHT);
+  lv_obj_set_style_bg_color(scr, lv_palette_main(LV_PALETTE_ORANGE), 0);
+  lv_obj_set_scrollbar_mode(scr, LV_SCROLLBAR_MODE_OFF);
+
+  // Simple label top-left
+  lv_obj_t* lbl = lv_label_create(scr);
+  lv_label_set_text(lbl, "DieselFire");
+  lv_obj_set_style_text_color(lbl, lv_color_white(), 0);
+  lv_obj_align(lbl, LV_ALIGN_TOP_LEFT, 8, 8);
+
+  // Second label bottom-right
+  lv_obj_t* lbl2 = lv_label_create(scr);
+  lv_label_set_text(lbl2, "v1.0");
+  lv_obj_set_style_text_color(lbl2, lv_color_white(), 0);
+  lv_obj_align(lbl2, LV_ALIGN_BOTTOM_RIGHT, -8, -8);
+
+  lv_scr_load(scr);
 
   printf("  flush count before refr: %d\n", flushCount); fflush(stdout);
   lv_refr_now(display);
@@ -135,6 +170,24 @@ int main(int, char**) {
   if (flushCount == 0) {
     printf("  WARNING: flush callback was never called!\n"); fflush(stdout);
   }
+
+  // Verify SDL still works after LVGL: show a red/blue pattern
+  printf("  SDL direct draw test...\n"); fflush(stdout);
+  for (int y = 0; y < TFT_HEIGHT; y++) {
+    for (int x = 0; x < TFT_WIDTH; x++) {
+      if (x < TFT_WIDTH/2) {
+        sdl_buf[y * TFT_WIDTH + x] = 0xFFFF0000; // ARGB red
+      } else {
+        sdl_buf[y * TFT_WIDTH + x] = 0xFF0000FF; // ARGB blue
+      }
+    }
+  }
+  SDL_UpdateTexture(texture, nullptr, sdl_buf, TFT_WIDTH * 4);
+  SDL_RenderClear(renderer);
+  SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+  SDL_RenderPresent(renderer);
+  printf("  SDL direct draw: half red, half blue\n"); fflush(stdout);
+  SDL_Delay(1000); // hold for 1 second
 
   // ── Main loop ─────────────────────────────────────────
   uint32_t lastTick = SDL_GetTicks();
