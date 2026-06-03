@@ -96,12 +96,22 @@ int main(int, char**) {
 
   printf("[3/5] lv_display_create...\n"); fflush(stdout);
   display = lv_display_create(TFT_WIDTH, TFT_HEIGHT);
-  lv_display_set_flush_cb(display, sdl_flush_cb);
-  lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_FULL);
-  lv_display_set_default(display);
+  fflush(stdout);
+  printf("  lv_display_create returned %p\n", (void*)display); fflush(stdout);
+  if (display) {
+    lv_display_set_flush_cb(display, sdl_flush_cb);
+    printf("  flush cb set\n"); fflush(stdout);
+    lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_PARTIAL);
+    printf("  buffers set\n"); fflush(stdout);
+    lv_display_set_default(display);
+    printf("  display set default\n"); fflush(stdout);
+  } else {
+    printf("  ERROR: display creation failed!\n"); fflush(stdout);
+  }
 
   // Theme must be initialized AFTER a display exists
   DieselScreen::initTheme();
+  printf("  theme ready\n"); fflush(stdout);
 
   printf("[4/5] input device...\n"); fflush(stdout);
   lv_indev_t* indev = lv_indev_create();

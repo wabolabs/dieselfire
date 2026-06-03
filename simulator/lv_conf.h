@@ -73,6 +73,10 @@
 /* Input device */
 #define LV_USE_INDEV 1
 
+/* Disable ThorVG to avoid potential init hangs */
+#define LV_USE_THORVG_INTERNAL 0
+#define LV_USE_THORVG_EXTERNAL 0
+
 /* File system */
 #define LV_USE_FS_STDIO 0
 

@@ -16,7 +16,7 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/lvgl/lvgl.git
   GIT_TAG ${LVGL_TAG}
 )
-set(LV_CONF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h" CACHE PATH "")
+set(LV_BUILD_CONF_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h" CACHE PATH "LVGL config file")
 set(LV_BUILD_EXAMPLES OFF CACHE BOOL "")
 set(LV_BUILD_DEMOS OFF CACHE BOOL "")
 
