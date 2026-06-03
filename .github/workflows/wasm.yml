@@ -36,9 +36,6 @@ jobs:
           cd simulator/build_wasm
           emmake make -j$(nproc)
 
-      - name: Copy shell
-        run: cp simulator/shell.html simulator/build_wasm/
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:

@@ -108,7 +108,7 @@ target_link_options(dieselfire-sim PRIVATE ${PLATFORM_LINK_OPTS})
 target_link_libraries(dieselfire-sim PRIVATE lvgl::lvgl ${SDL2_LIBRARY} ${PLATFORM_LIBS})
 
 if(EMSCRIPTEN)
-  set_target_properties(dieselfire-sim PROPERTIES SUFFIX ".html")
+  set_target_properties(dieselfire-sim PROPERTIES SUFFIX ".html" OUTPUT_NAME "index")
 endif()
 
 # ── Headless test executable ───────────────────────────────────
