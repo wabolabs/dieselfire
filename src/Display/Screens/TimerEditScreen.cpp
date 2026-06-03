@@ -1,106 +1,98 @@
 #include "TimerEditScreen.h"
 #include "../../RTC/TimerManager.h"
 #include "../../Utility/NVStorage.h"
+#include "../../cfg/DFConfig.h"
 
 extern CHeaterStorage& NVstore;
 
 static const char* DAY_NAMES[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+static const int ROLLER_H = 44;
+static const int LINE_H = 34;
 
 TimerEditScreen::TimerEditScreen() : DieselScreen("TimerEdit") {}
+
+static lv_obj_t* makeRoller(lv_obj_t* parent, lv_coord_t x, lv_coord_t y, lv_coord_t w,
+                             const char* opts, int sel, lv_event_cb_t cb, void* udata) {
+  lv_obj_t* r = lv_roller_create(parent);
+  lv_obj_set_pos(r, x, y);
+  lv_obj_set_size(r, w, ROLLER_H);
+  lv_roller_set_options(r, opts, LV_ROLLER_MODE_NORMAL);
+  lv_roller_set_selected(r, sel, LV_ANIM_OFF);
+  lv_obj_add_event_cb(r, cb, LV_EVENT_VALUE_CHANGED, udata);
+  return r;
+}
 
 void TimerEditScreen::onLoad() {
   createHeader(_screen);
   createLabel(_screen, "Timer", LV_ALIGN_TOP_LEFT, 48, 3);
 
-  // Scrollable content area
   lv_obj_t* cont = createContentArea();
-  int y = 4;
+  int x = 4, y = 4;
 
-  // Timer selector (1-14)
-  createLabel(cont, "Timer #", LV_ALIGN_TOP_LEFT, 8, y);
-  _timerSelector = lv_roller_create(cont);
-  lv_obj_set_pos(_timerSelector, 60, y);
-  lv_obj_set_width(_timerSelector, 60);
-  lv_roller_set_options(_timerSelector,
-    "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14", LV_ROLLER_MODE_NORMAL);
-  lv_roller_set_selected(_timerSelector, 0, LV_ANIM_OFF);
-  lv_obj_add_event_cb(_timerSelector, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
+  // Row 1: Timer selector
+  createLabel(cont, "Timer #", LV_ALIGN_TOP_LEFT, x, y + 8);
+  _timerSelector = makeRoller(cont, 70, y, 60,
+    "1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14", 0, onTimerChange, this);
 
-  // Start time
-  y += 38;
-  createLabel(cont, "Start", LV_ALIGN_TOP_LEFT, 8, y);
-  _startH = lv_roller_create(cont);
-  lv_obj_set_pos(_startH, 50, y);
-  lv_obj_set_width(_startH, 50);
-  lv_roller_set_options(_startH, "00\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23", LV_ROLLER_MODE_NORMAL);
-  lv_obj_add_event_cb(_startH, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
+  // Row 2: Start time
+  y += LINE_H + ROLLER_H;
+  createLabel(cont, "Start", LV_ALIGN_TOP_LEFT, x, y + 8);
+  _startH = makeRoller(cont, 50, y, 48,
+    "00\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23", 0, onTimerChange, this);
+  createLabel(cont, ":", LV_ALIGN_TOP_LEFT, 100, y + 10);
+  _startM = makeRoller(cont, 108, y, 48,
+    "00\n05\n10\n15\n20\n25\n30\n35\n40\n45\n50\n55", 0, onTimerChange, this);
 
-  createLabel(cont, ":", LV_ALIGN_TOP_LEFT, 103, y + 4);
+  // Row 3: Stop time
+  y += LINE_H + ROLLER_H;
+  createLabel(cont, "Stop", LV_ALIGN_TOP_LEFT, x, y + 8);
+  _stopH = makeRoller(cont, 50, y, 48,
+    "00\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23", 0, onTimerChange, this);
+  createLabel(cont, ":", LV_ALIGN_TOP_LEFT, 100, y + 10);
+  _stopM = makeRoller(cont, 108, y, 48,
+    "00\n05\n10\n15\n20\n25\n30\n35\n40\n45\n50\n55", 0, onTimerChange, this);
 
-  _startM = lv_roller_create(cont);
-  lv_obj_set_pos(_startM, 112, y);
-  lv_obj_set_width(_startM, 50);
-  lv_roller_set_options(_startM, "00\n05\n10\n15\n20\n25\n30\n35\n40\n45\n50\n55", LV_ROLLER_MODE_NORMAL);
-  lv_obj_add_event_cb(_startM, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
-
-  // Stop time
-  y += 38;
-  createLabel(cont, "Stop", LV_ALIGN_TOP_LEFT, 8, y);
-  _stopH = lv_roller_create(cont);
-  lv_obj_set_pos(_stopH, 50, y);
-  lv_obj_set_width(_stopH, 50);
-  lv_roller_set_options(_stopH, "00\n01\n02\n03\n04\n05\n06\n07\n08\n09\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23", LV_ROLLER_MODE_NORMAL);
-  lv_obj_add_event_cb(_stopH, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
-
-  createLabel(cont, ":", LV_ALIGN_TOP_LEFT, 103, y + 4);
-
-  _stopM = lv_roller_create(cont);
-  lv_obj_set_pos(_stopM, 112, y);
-  lv_obj_set_width(_stopM, 50);
-  lv_roller_set_options(_stopM, "00\n05\n10\n15\n20\n25\n30\n35\n40\n45\n50\n55", LV_ROLLER_MODE_NORMAL);
-  lv_obj_add_event_cb(_stopM, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
-
-  // Days of week
-  y += 38;
-  createLabel(cont, "Days", LV_ALIGN_TOP_LEFT, 8, y);
+  // Row 4: Days of week
+  y += LINE_H + ROLLER_H;
+  createLabel(cont, "Days", LV_ALIGN_TOP_LEFT, x, y + 2);
   for (int i = 0; i < 7; i++) {
     _dayBtns[i] = lv_button_create(cont);
-    lv_obj_set_pos(_dayBtns[i], 48 + i * 38, y);
-    lv_obj_set_size(_dayBtns[i], 34, 22);
+    lv_obj_set_pos(_dayBtns[i], 48 + i * 34, y);
+    lv_obj_set_size(_dayBtns[i], 30, 24);
     lv_obj_set_style_bg_color(_dayBtns[i], lv_color_make(0x33,0x33,0x33), 0);
     lv_obj_set_style_bg_color(_dayBtns[i], lv_color_make(0xFF,0x8C,0x00), LV_STATE_CHECKED);
     lv_obj_add_flag(_dayBtns[i], LV_OBJ_FLAG_CHECKABLE);
+    lv_obj_set_style_border_width(_dayBtns[i], 0, 0);
     lv_obj_t* lbl = lv_label_create(_dayBtns[i]);
     lv_label_set_text(lbl, DAY_NAMES[i]);
     lv_obj_center(lbl);
     lv_obj_add_event_cb(_dayBtns[i], onTimerChange, LV_EVENT_VALUE_CHANGED, this);
   }
 
-  // Repeat toggle
-  y += 30;
-  createLabel(cont, "Repeat", LV_ALIGN_TOP_LEFT, 8, y);
+  // Row 5: Repeat toggle
+  y += LINE_H + 24;
+  createLabel(cont, "Repeat", LV_ALIGN_TOP_LEFT, x, y + 2);
   _repeatSwitch = lv_switch_create(cont);
   lv_obj_set_pos(_repeatSwitch, 60, y);
-  lv_obj_add_event_cb(_repeatSwitch, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
 
-  // Temperature
-  y += 36;
-  createLabel(cont, "Temp", LV_ALIGN_TOP_LEFT, 8, y);
+  // Row 6: Temperature
+  y += LINE_H + 24;
+  createLabel(cont, "Temp", LV_ALIGN_TOP_LEFT, x, y + 2);
   _tempSlider = lv_slider_create(cont);
   lv_obj_set_pos(_tempSlider, 50, y);
-  lv_obj_set_size(_tempSlider, TFT_WIDTH - 130, 16);
+  lv_obj_set_size(_tempSlider, TFT_WIDTH - 110, 16);
   lv_slider_set_range(_tempSlider, 80, 350);
   lv_obj_add_event_cb(_tempSlider, onTimerChange, LV_EVENT_VALUE_CHANGED, this);
   _tempLabel = lv_label_create(cont);
   lv_obj_align_to(_tempLabel, _tempSlider, LV_ALIGN_OUT_RIGHT_MID, 8, 0);
 
-  lv_obj_set_height(cont, y + 40);
+  // Set content height for scrolling
+  lv_obj_set_height(cont, y + 50);
   loadTimer(0);
 }
 
 void TimerEditScreen::onTimerChange(lv_event_t* e) {
-  auto* self = static_cast<TimerEditScreen*>(lv_event_get_user_data(e));
-  self->saveTimer();
+  static_cast<TimerEditScreen*>(lv_event_get_user_data(e))->saveTimer();
 }
 
 void TimerEditScreen::loadTimer(int idx) {
