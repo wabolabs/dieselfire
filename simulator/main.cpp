@@ -85,7 +85,6 @@ int main(int, char**) {
   // ── LVGL ─────────────────────────────────────────────
   printf("[2/5] lv_init...\n"); fflush(stdout);
   lv_init();
-  DieselScreen::initTheme();
 
   size_t bufSize = TFT_WIDTH * TFT_HEIGHT * sizeof(lv_color_t);
   printf("  bufSize = %zu bytes (TFT=%dx%d, color=%zu)\n",
@@ -100,6 +99,9 @@ int main(int, char**) {
   lv_display_set_flush_cb(display, sdl_flush_cb);
   lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_FULL);
   lv_display_set_default(display);
+
+  // Theme must be initialized AFTER a display exists
+  DieselScreen::initTheme();
 
   printf("[4/5] input device...\n"); fflush(stdout);
   lv_indev_t* indev = lv_indev_create();
