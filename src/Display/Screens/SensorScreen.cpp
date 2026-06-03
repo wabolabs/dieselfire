@@ -5,6 +5,8 @@
 extern CTempSense TempSensor;
 extern sFilteredData FilteredSamples;
 
+static const char* DEG_C = "\u00B0" "C";
+
 SensorScreen::SensorScreen() : DieselScreen("Sensors") {}
 
 void SensorScreen::onLoad() {
@@ -13,7 +15,7 @@ void SensorScreen::onLoad() {
 
   int y = 40;
   createLabel(_screen, "Ambient", LV_ALIGN_TOP_LEFT, 8, y);
-  _tempLabel = createValueLabel(_screen, "--.- \xC2\xB0C", LV_ALIGN_TOP_LEFT, 70, y);
+  _tempLabel = createValueLabel(_screen, "--.- xxx", LV_ALIGN_TOP_LEFT, 70, y);
 
   y += 30;
   createLabel(_screen, "Humidity", LV_ALIGN_TOP_LEFT, 8, y);
@@ -25,7 +27,7 @@ void SensorScreen::onLoad() {
 
   y += 30;
   createLabel(_screen, "External", LV_ALIGN_TOP_LEFT, 8, y);
-  _extTempLabel = createValueLabel(_screen, "--.- \xC2\xB0C", LV_ALIGN_TOP_LEFT, 70, y);
+  _extTempLabel = createValueLabel(_screen, "--.- xxx", LV_ALIGN_TOP_LEFT, 70, y);
 
   _timer = lv_timer_create([](lv_timer_t* t) {
     static_cast<SensorScreen*>(lv_timer_get_user_data(t))->onTimer();
@@ -39,7 +41,7 @@ void SensorScreen::updateData() {
 
   float temp = FilteredSamples.AmbientTemp.getValue();
   if (temp > -50) {
-    snprintf(buf, sizeof(buf), "%.1f \xC2\xB0C", temp);
+    snprintf(buf, sizeof(buf), "%.1f %s", temp, DEG_C);
     lv_label_set_text(_tempLabel, buf);
   }
 
@@ -57,7 +59,7 @@ void SensorScreen::updateData() {
 
   float extTemp;
   if (TempSensor.getTemperature(0, extTemp)) {
-    snprintf(buf, sizeof(buf), "%.1f \xC2\xB0C", extTemp);
+    snprintf(buf, sizeof(buf), "%.1f %s", extTemp, DEG_C);
     lv_label_set_text(_extTempLabel, buf);
   }
 }
