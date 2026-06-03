@@ -21,10 +21,10 @@
  */
 
 //#include "../../lib/TelnetSpy/TelnetSpy.h"
-#ifndef __linux__
+#if !defined(__linux__) && !defined(__EMSCRIPTEN__)
 #include "DFTelnetSpy.h"
 #else
-// Linux simulator: get DebugPort from mock
+// Simulator/WASM: get DebugPort from mock
 #include "Utility/DebugPort.h"
 #endif
 
@@ -33,7 +33,7 @@
 
 class CProtocol;
 
-#ifndef __linux__
+#if !defined(__linux__) && !defined(__EMSCRIPTEN__)
 extern DFTelnetSpy DebugPort;
 #endif
 
