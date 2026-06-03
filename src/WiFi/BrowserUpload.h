@@ -25,7 +25,11 @@
 #include <Arduino.h>
 #include <SPIFFS.h>
 #include <WebServer.h>
+#if USE_HTTPS
 #include <HTTPResponse.hpp>
+#else
+namespace httpsserver { class HTTPResponse; }
+#endif
 
 struct sBrowserUpload{
   struct {

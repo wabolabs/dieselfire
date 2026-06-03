@@ -40,7 +40,11 @@ TelnetSpy::TelnetSpy() {
 	started = false;
 	listening = false;
 	firstMainLoop = true;
+#if ARDUINO_USB_CDC_ON_BOOT
+	usedSer = (HardwareSerial*)&Serial;
+#else
 	usedSer = &Serial;
+#endif
 	storeOffline = true;
 	connected = false;
 	callbackConnect = NULL;

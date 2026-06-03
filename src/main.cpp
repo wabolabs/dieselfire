@@ -645,7 +645,7 @@ void setup() {
              &handleBlueWireTask);
 
   
-  UHFremote.begin(Rx433MHz_pin, RMT_CHANNEL_4);
+  UHFremote.begin((gpio_num_t)Rx433MHz_pin, RMT_CHANNEL_4);
 
 
   delay(1000); // just to hold the splash screen for a while
@@ -1116,60 +1116,34 @@ bool isCyclicStopStartActive()
 
 void setupGPIO()
 {
-#if USE_JTAG == 1
+#if USE_ILI9341_DISPLAY
+  // new board: GPIO via expansion headers; TODO
+#elif USE_JTAG == 1
   //CANNOT USE GPIO WITH JTAG DEBUG
   return;
 #else
   if(BoardRevision == 10 || BoardRevision == 20 || BoardRevision == 21 || BoardRevision == 30) {
-    // some special considerations for GPIO inputs, depending upon PCB hardware
-    // V1.0 PCBs only expose bare inputs, which are pulled high. Active state into ESP32 is LOW. 
-    // V2.0+ PCBs use an input transistor buffer. Active state into ESP32 is HIGH (inverted).
     int activePinState = (BoardRevision == 10) ? LOW : HIGH;  
     int Input1 = BoardRevision == 20 ? GPIOin1_pinV20 : GPIOin1_pinV21V10;
-    GPIOin.begin(Input1, 
-                 GPIOin2_pin, 
+    GPIOin.begin(Input1, GPIOin2_pin, 
                  NVstore.getUserSettings().GPIO.in1Mode, 
-                 NVstore.getUserSettings().GPIO.in2Mode, 
-                 activePinState);
-
-    // GPIO out is always active high from ESP32
-    // V1.0 PCBs only expose the bare pins
-    // V2.0+ PCBs provide an open collector output that conducts when active
-    GPIOout.begin(GPIOout1_pin, 
-                  GPIOout2_pin, 
+                 NVstore.getUserSettings().GPIO.in2Mode, activePinState);
+    GPIOout.begin(GPIOout1_pin, GPIOout2_pin, 
                   NVstore.getUserSettings().GPIO.out1Mode, 
                   NVstore.getUserSettings().GPIO.out2Mode);
     GPIOout.setThresh(NVstore.getUserSettings().GPIO.thresh[0], 
                       NVstore.getUserSettings().GPIO.thresh[1]);
-
-    // ### MAJOR ISSUE WITH ADC INPUTS ###
-    //
-    // V2.0 PCBs that have not been modified connect the analogue input to GPIO26.
-    // This is ADC2 channel (#9). 
-    // Unfortunately it was subsequently discovered that any ADC2 input cannot be 
-    // used if Wifi is enabled. 
-    // THIS ISSUE IS NOT RESOLVABLE IN SOFTWARE.
-    // *** It is not possible to use ANY of the 10 ADC2 channels if Wifi is enabled :-( ***
-    //
-    // Fix is to cut traces to GPIO33 & GPIO26 and swap the connections.
-    // This directs GPIO input1 into GPIO26 and the analogue input into GPIO33 (ADC1_CHANNEL_5)
-    // This will be properly fixed in V2.1 PCBs
-    //
-    // As V1.0 PCBS expose the bare pins, the correct GPIO33 input can be readily chosen.
     CGPIOalg::Modes algMode = NVstore.getUserSettings().GPIO.algMode;
-    if(BoardRevision == 20)  
-      algMode = CGPIOalg::Disabled;      // force off analogue support in V2.0 PCBs
+    if(BoardRevision == 20) algMode = CGPIOalg::Disabled;
     GPIOalg.begin(GPIOalg_pin, algMode);
   }
   else {
-    // unknown board or forced no GPIO by grounding pin26 - deny all GPIO operation 
-    // set all pins as inputs with pull ups
     pinMode(GPIOin2_pin, INPUT_PULLUP);
     pinMode(GPIOin1_pinV21V10, INPUT_PULLUP);
     pinMode(GPIOin1_pinV20, INPUT_PULLUP);
     pinMode(GPIOout1_pin, INPUT_PULLUP);
     pinMode(GPIOout2_pin, INPUT_PULLUP);
-    GPIOin.begin(0, 0, CGPIOin1::Disabled, CGPIOin2::Disabled, LOW);            // ensure modes disabled (should already be by constructors)
+    GPIOin.begin(0, 0, CGPIOin1::Disabled, CGPIOin2::Disabled, LOW);
     GPIOout.begin(0, 0, CGPIOout1::Disabled, CGPIOout2::Disabled);
     GPIOalg.begin(ADC1_CHANNEL_5, CGPIOalg::Disabled);
   }

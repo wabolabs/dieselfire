@@ -29,7 +29,7 @@
 #include "esp_system.h"
 #include <Preferences.h>
 #include "../Utility/NVStorage.h"
-#include "../../lib/WiFiManager-dev/WiFiManager.h"
+#include <WiFiManager.h>
 
 // function to control the behaviour upon reboot if no wifi manager credentials exist
 // or connection fails

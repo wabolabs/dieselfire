@@ -34,7 +34,7 @@
 #include "../cfg/DFConfig.h"
 #include "../Utility/DF_JSON.h"
 #include "../Utility/Moderator.h"
-#include "../../lib/WiFiManager-dev/WiFiManager.h"
+#include <WiFiManager.h>
 #include <SPIFFS.h>
 #include "../Utility/NVStorage.h"
 #include <WiFiClient.h>
@@ -44,6 +44,10 @@
 #include <Update.h>
 #include "WebContentDL.h"
 
+#include <FreeRTOS.h>
+#include "esp_task_wdt.h"
+
+#if USE_HTTPS == 1
 #include <HTTPSServer.hpp>
 #include <SSLCert.hpp>
 #include <HTTPRequest.hpp>
@@ -52,16 +56,27 @@
 #include <HTTPMultipartBodyParser.hpp>
 #include <HTTPURLEncodedBodyParser.hpp>
 #include <WebsocketHandler.hpp>
-#include <FreeRTOS.h>
+using namespace httpsserver;
+#else
+// Forward declarations for HTTPS types (not used when USE_HTTPS=0)
+namespace httpsserver {
+class HTTPRequest;
+class HTTPResponse;
+class HTTPServer;
+class HTTPSServer;
+class SSLCert;
+class WebsocketHandler;
+}
+using namespace httpsserver;
+#endif
+
+#if !USE_ILI9341_DISPLAY
 #include "../OLED/ScreenManager.h"
-#include "esp_task_wdt.h"
+extern CScreenManager ScreenManager;
+#endif
 
 // Max clients to be connected to the JSON handler
 #define MAX_CLIENTS 4
-
-extern CScreenManager ScreenManager;
-
-using namespace httpsserver;
 
 extern WiFiManager wm;
 extern const char* stdHeader;
@@ -73,9 +88,12 @@ extern const char* rebootIndex;
 
 extern void checkSplashScreenUpdate();
 
+void processWebsocketQueue();
+
+#if USE_HTTPS == 1
 size_t streamFileSSL(fs::File &file, const String& contentType, httpsserver::HTTPResponse* pSSL);
 void streamFileCoreSSL(const size_t fileSize, const String & fileName, const String & contentType);
-void processWebsocketQueue();
+#endif
 
 QueueHandle_t webSocketQueue = NULL;
 QueueHandle_t JSONcommandQueue = NULL;
@@ -108,6 +126,8 @@ void addTableData(String& HTML, String dta);
 String getContentType(String filename);
 bool handleFileRead(String path, HTTPResponse* res=NULL);
 void onNotFound();
+
+#if USE_HTTPS == 1
 void onReboot(HTTPRequest * req, HTTPResponse * res);
 void onFormatSPIFFS(HTTPRequest * req, HTTPResponse * res);
 void onFormatNow(HTTPRequest * req, HTTPResponse * res);
@@ -118,6 +138,7 @@ void onUploadBegin(HTTPRequest* req, HTTPResponse* res);
 void onUploadProgression(HTTPRequest* req, HTTPResponse* res);
 void onUploadCompletion(HTTPRequest* req, HTTPResponse* res);
 void onWMConfig(HTTPRequest* req, HTTPResponse* res);
+#endif
 void onResetWifi(HTTPRequest* req, HTTPResponse* res);
 void doDefaultWebHandler(HTTPRequest * req, HTTPResponse * res);
 void build404Response(HTTPRequest * req, String& content, String file);
