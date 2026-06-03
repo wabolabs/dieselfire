@@ -73,6 +73,18 @@ ESP32 Arduino LVGL*
 fota.json
 simulator/build*/
 
+# KiCad fabrication outputs (generated)
+kicad/fabrication/
+kicad/freerouting/
+kicad/*.rpt
+kicad/*.json
+
 # Keep test_bluewire.cpp, ignore other test artifacts
 simulator/test_*
 !simulator/test_bluewire.cpp
+
+# opencode AI tooling
+.opencode/
+
+# GitHub Pages (auto-generated)
+CNAME

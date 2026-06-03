@@ -1,4 +1,3 @@
-// ABMQTT.h
 /*
  * This file is part of the "DieselFire" distribution 
  * (https://dieselfire.wabo.cc) 

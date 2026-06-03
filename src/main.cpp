@@ -445,7 +445,7 @@ void setup() {
   
   DebugPort.setWelcomeMsg((char*)(
                           "*************************************************\r\n"
-                          "* Connected to BTC heater controller debug port *\r\n"
+                          "* Connected to DieselFire debug port *\r\n"
                           "*************************************************\r\n"
                           ));
   DebugPort.setBufferSize(8192);

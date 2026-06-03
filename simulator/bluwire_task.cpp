@@ -252,7 +252,7 @@ int getBlueWireStat() {
 }
 
 const char* getBlueWireStatStr() {
-  static const char* s[] = {"BTC,Htr", "BTC", "OEM,Htr", "OEM"};
+  static const char* s[] = {"DF,Htr", "DF", "OEM,Htr", "OEM"};
   return s[getBlueWireStat()];
 }
 

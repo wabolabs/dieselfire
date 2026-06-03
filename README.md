@@ -1,5 +1,12 @@
 # DieselFire
 
+> **⚠ ALPHA QUALITY — NOT TESTED ON HARDWARE**
+>
+> This project is in early development. The firmware has **not** been tested on
+> physical ESP32-S3 hardware. All protocol simulation and UI development has
+> been done via the **PC simulator**. There are likely bugs, edge cases, and
+> incomplete drivers. Use at your own risk. Hardware bringup is in progress.
+
 A modernized open-source controller for generic Chinese diesel heaters, forked from [Afterburner](https://gitlab.com/mrjones.id.au/bluetoothheater) by Ray Jones.
 
 ## Overview
@@ -14,6 +21,15 @@ DieselFire is a complete redesign of the Afterburner project, updated with moder
 - **Programmable timers** (14 channels)
 - **Fuel gauge** and hour meter
 - **Smart error detection**
+
+## Online Simulator
+
+Try the DieselFire UI in your browser without any hardware:
+**[dieselfire.wabo.cc](https://dieselfire.wabo.cc)**
+
+Runs as a WebAssembly build of the native PC simulator. Includes the full
+touchscreen interface, Blue Wire protocol simulation, and a diesel heater
+emulator for testing all states and fault conditions.
 
 ## Hardware
 
@@ -170,7 +186,7 @@ DieselFire/
 pip install platformio
 
 # Clone the repository
-git clone https://github.com/yourusername/DieselFire.git
+git clone https://github.com/wabolabs/DieselFire.git
 cd DieselFire
 
 # Build firmware

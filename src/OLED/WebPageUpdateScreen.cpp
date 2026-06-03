@@ -24,8 +24,8 @@
 #include "KeyPad.h"
 #include "../Utility/helpers.h"
 #include "fonts/Arial.h"
-#include "../WiFi/BTCWifi.h"
-#include "../WiFi/BTCWebServer.h"
+#include "../WiFi/DFWifi.h"
+#include "../WiFi/DFWebServer.h"
 
 
 CWebPageUpdateScreen::CWebPageUpdateScreen(C128x64_OLED& display, CScreenManager& mgr) : CUIEditScreen(display, mgr) 

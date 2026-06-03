@@ -450,7 +450,7 @@ CProtocolPackage::reportFrames(bool isOEM, std::function<void(const char*)> push
     DebugReportFrame("OEM:", Controller, TERMINATE_OEM_LINE ? "\r\n" : "   ", dbgFrameMsg);
   }
   else {
-    DebugReportFrame("BTC:", Controller, TERMINATE_DF_LINE ? "\r\n" : "   ", dbgFrameMsg);
+    DebugReportFrame("DF:", Controller, TERMINATE_DF_LINE ? "\r\n" : "   ", dbgFrameMsg);
   }
   DebugReportFrame("HTR:", Heater, "\r\n", dbgFrameMsg);
   pushMsg(dbgFrameMsg);

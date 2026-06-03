@@ -265,7 +265,7 @@ CTxManage::PrepareFrame(const CProtocol& basisFrame, bool isDFmaster)
 #endif
           break;
 
-        case 2:  // BTC controlled thermostat mode
+        case 2:  // DF controlled thermostat mode
           // map linear deviation within thermostat window to a Hz value,
           // Hz mode however uses the desired temperature field, somewhere between 8 - 35 for min/max
           // so create a desired "temp" according the the current hystersis

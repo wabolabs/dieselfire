@@ -181,7 +181,7 @@ def build_project():
         version=1,
         meta={"format": "kicad_project"},
         design_settings={"defaults": {}},
-        authors=[Author("DieselFire Team", "team@afterburner.io")],
+        authors=[Author("DieselFire Team", "team@dieselfire.wabo.cc")],
         net_settings=build_net_settings(),
         pcbnew={
             "active_copper_layer_range": [0, 1],

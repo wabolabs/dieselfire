@@ -25,7 +25,7 @@
 #include "../Utility/helpers.h"
 #include "../Utility/UtilClasses.h"
 #include "../Utility/NVStorage.h"
-#include "../WiFi/BTCWifi.h"
+#include "../WiFi/DFWifi.h"
 #include "../Utility/BoardDetect.h"
 #include "fonts/Icons.h"
 

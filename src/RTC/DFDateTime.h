@@ -19,8 +19,8 @@
  * 
  */
 
-#ifndef __BTCDATETIME_H__
-#define __BTCDATETIME_H__
+#ifndef __DFDATETIME_H__
+#define __DFDATETIME_H__
 
 #include "../../lib/RTClib/RTClib.h"
 

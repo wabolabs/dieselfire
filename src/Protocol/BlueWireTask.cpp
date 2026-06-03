@@ -162,7 +162,7 @@ void BlueWireTask(void*) {
           else {
             bHasHtrData = false;
             if(bReportRecyleEvents) {
-              pushDebugMsg("Timeout collecting BTC heater response data, returning to Idle State\r\n");
+              pushDebugMsg("Timeout collecting DF heater response data, returning to Idle State\r\n");
             }
           }
         }
@@ -194,7 +194,7 @@ void BlueWireTask(void*) {
         if(RxTimeElapsed >= (NVstore.getUserSettings().FrameRate - 60)) {  // compensate for the time spent just doing things in this state machine
           // have not seen any receive data for a second (typ.).
           // OEM controller is probably not connected. 
-          // Skip state machine immediately to BTC_Tx, sending our own settings.
+          // Skip state machine immediately to DF_Tx, sending our own settings.
           bHasHtrData = false;
           bHasOEMController = false;
           bHasOEMLCDController = false;
@@ -362,7 +362,7 @@ void BlueWireTask(void*) {
         // if abnormal transitions, introduce a smart error!
         // SmartError.monitor(HeaterFrame2);
 
-        if(!bHasOEMController)              // no OEM controller - BTC is *the* controller
+        if(!bHasOEMController)              // no OEM controller - DF is *the* controller
           primaryHeaterData.set(HeaterFrame2, TxManage.getFrame());
         
         if(bReportBlueWireData) {  // debug or investigation purposes
@@ -453,8 +453,8 @@ void initBlueWireSerial()
 #endif
 }
 
-// 0x00 - Normal:  BTC, with heater responding
-// 0x01 - Error:   BTC, heater not responding
+// 0x00 - Normal:  DF, with heater responding
+// 0x01 - Error:   DF, heater not responding
 // 0x02 - Special: OEM controller & heater responding
 // 0x03 - Error:   OEM controller, heater not responding
 int getBlueWireStat()
@@ -471,7 +471,7 @@ int getBlueWireStat()
 
 const char* getBlueWireStatStr()
 {
-  static const char* BlueWireStates[] = { "BTC,Htr", "BTC", "OEM,Htr", "OEM" };
+  static const char* BlueWireStates[] = { "DF,Htr", "DF", "OEM,Htr", "OEM" };
 
   return BlueWireStates[getBlueWireStat()];
 }
