@@ -5,7 +5,6 @@
 #include "Utility/DebugPort.h"
 
 lv_group_t* DieselScreen::_navGroup = nullptr;
-DieselScreen* DieselScreen::_currentScreen = nullptr;
 
 // ── Theme colors ────────────────────────────────────────────
 static const lv_color_t C_BG      = lv_color_make(0x12, 0x12, 0x12);
@@ -51,7 +50,6 @@ void DieselScreen::onTimer() {
 }
 
 void DieselScreen::pushScreen(DieselScreen* screen) {
-  _currentScreen = screen;
   lv_scr_load(screen->getScreen());
   screen->onLoad();
 }
@@ -59,6 +57,12 @@ void DieselScreen::pushScreen(DieselScreen* screen) {
 void DieselScreen::popScreen() {
   // TODO: nav stack
   showHome();
+}
+
+void DieselScreen::onBack() {
+  if (_returnScreen) {
+    lv_scr_load(_returnScreen->getScreen());
+  }
 }
 
 void DieselScreen::showHome() {

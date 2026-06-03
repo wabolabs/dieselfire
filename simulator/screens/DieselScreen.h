@@ -13,8 +13,9 @@ public:
   virtual void onLoad();
   virtual void onUnload();
   virtual void onTimer();
-  virtual void onBack() {}
+  virtual void onBack();
   virtual void onSettings() {}
+  void setReturnScreen(DieselScreen* s) { _returnScreen = s; }
 
   static void initTheme();
   static void setNavGroup(lv_group_t* group);
@@ -61,6 +62,6 @@ protected:
   lv_obj_t* _headerHeater = nullptr;
   lv_timer_t* _timer = nullptr;
 
+  DieselScreen* _returnScreen = nullptr;
   static lv_group_t* _navGroup;
-  static DieselScreen* _currentScreen;
 };

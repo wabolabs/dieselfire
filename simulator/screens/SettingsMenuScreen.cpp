@@ -47,11 +47,14 @@ void SettingsMenuScreen::onLoad() {
     lv_obj_t* btn = lv_list_add_button(list, nullptr, items[i]);
     lv_obj_set_user_data(btn, (void*)(intptr_t)i);
     lv_obj_add_event_cb(btn, onEntryClick, LV_EVENT_CLICKED, this);
+    lv_obj_set_height(btn, 32);
+    lv_obj_set_style_pad_top(btn, 6, 0);
     lv_obj_set_style_bg_color(btn, lv_color_make(0x22, 0x22, 0x22), 0);
     lv_obj_set_style_bg_color(btn, lv_color_make(0xFF, 0x7A, 0x00), LV_STATE_PRESSED);
-    // Set label text color to white for visibility on dark background
-    lv_obj_t* label = lv_obj_get_child(btn, 0);
-    if (label) lv_obj_set_style_text_color(label, lv_color_white(), 0);
+    lv_obj_set_style_text_color(btn, lv_color_white(), 0);
+    lv_obj_set_style_border_width(btn, 0, 0);
+    lv_obj_t* lbl = lv_obj_get_child(btn, 0);
+    if (lbl) lv_obj_set_style_text_color(lbl, lv_color_white(), 0);
   }
 }
 
@@ -86,6 +89,7 @@ void SettingsMenuScreen::openScreen(int index) {
     case 18: next = new TimeoutsScreen(); break;
   }
   if (next) {
+    next->setReturnScreen(this);
     next->onLoad();
     lv_scr_load(next->getScreen());
   }
