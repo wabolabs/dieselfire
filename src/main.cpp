@@ -129,7 +129,7 @@
 #endif
 
 #if USE_ILI9341_DISPLAY
-// TODO: LVGL display driver (src/Display/)
+#include "Display/LVGLDisplay.h"
 #endif
 
 #if USE_TWDT == 1
@@ -205,11 +205,11 @@ unsigned long lastAnimationTime;     // used to sequence updates to LCD for anim
 
 sFilteredData FilteredSamples;
 CSmartError SmartError;
-#if !USE_ILI9341_DISPLAY
+#if USE_ILI9341_DISPLAY
+LVGLDisplay display;
+#else
 CKeyPad KeyPad;
 CScreenManager ScreenManager;
-#else
-// TODO: LVGL screen manager
 #endif
 DFTelnetSpy DebugPort;
 
@@ -506,9 +506,9 @@ void setup() {
   BootTime = Clock.get().secondstime();
 
 #if USE_ILI9341_DISPLAY
-  // TODO: init ILI9341 display + GT911 touch + LVGL
+  display.begin();
   pinMode(LED_STATUS, OUTPUT);
-  digitalWrite(LED_STATUS, HIGH);  // LED on (active-low) = alive
+  digitalWrite(LED_STATUS, HIGH);
 #else
   KeyPad.begin(keyLeft_pin, keyRight_pin, keyCentre_pin, keyUp_pin, keyDown_pin);
   KeyPad.setCallback(parentKeyHandler);
@@ -680,8 +680,7 @@ void loop()
 #if !USE_ILI9341_DISPLAY
   checkDisplayUpdate();
 #else
-  // TODO: LVGL task handler (lv_task_handler())
-  // Blink status LED as heartbeat (no display yet)
+  display.taskHandler();
   static unsigned long lastBlink = 0;
   if (millis() - lastBlink > 500) {
     lastBlink = millis();
