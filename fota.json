@@ -1,7 +1,0 @@
-{
-  "type": "dieselfire-fota-http",
-  "version": 3300,
-  "host": "dieselfire.wabo.cc",
-  "port": 80,
-  "bin": "/fota/dieselfire-3.3.0.bin"
-}

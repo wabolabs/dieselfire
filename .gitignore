@@ -99,3 +99,4 @@ ESP32 Arduino LVGL*
 .pio/
 .pio/
 .pio/
+fota.json
