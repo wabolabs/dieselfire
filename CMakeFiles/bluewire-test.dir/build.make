@@ -76,141 +76,141 @@ CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o: CMakeFiles/bluewire-test.dir/f
 CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp
 CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o -MF CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o.d -o CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o -MF CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o.d -o CMakeFiles/bluewire-test.dir/test_bluewire.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp
 
 CMakeFiles/bluewire-test.dir/test_bluewire.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/test_bluewire.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp > CMakeFiles/bluewire-test.dir/test_bluewire.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp > CMakeFiles/bluewire-test.dir/test_bluewire.cpp.i
 
 CMakeFiles/bluewire-test.dir/test_bluewire.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/test_bluewire.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp -o CMakeFiles/bluewire-test.dir/test_bluewire.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/test_bluewire.cpp -o CMakeFiles/bluewire-test.dir/test_bluewire.cpp.s
 
 CMakeFiles/bluewire-test.dir/vserial.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/vserial.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp
 CMakeFiles/bluewire-test.dir/vserial.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/bluewire-test.dir/vserial.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/vserial.cpp.o -MF CMakeFiles/bluewire-test.dir/vserial.cpp.o.d -o CMakeFiles/bluewire-test.dir/vserial.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/vserial.cpp.o -MF CMakeFiles/bluewire-test.dir/vserial.cpp.o.d -o CMakeFiles/bluewire-test.dir/vserial.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp
 
 CMakeFiles/bluewire-test.dir/vserial.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/vserial.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp > CMakeFiles/bluewire-test.dir/vserial.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp > CMakeFiles/bluewire-test.dir/vserial.cpp.i
 
 CMakeFiles/bluewire-test.dir/vserial.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/vserial.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp -o CMakeFiles/bluewire-test.dir/vserial.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/vserial.cpp -o CMakeFiles/bluewire-test.dir/vserial.cpp.s
 
 CMakeFiles/bluewire-test.dir/heater_emu.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/heater_emu.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp
 CMakeFiles/bluewire-test.dir/heater_emu.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/bluewire-test.dir/heater_emu.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/heater_emu.cpp.o -MF CMakeFiles/bluewire-test.dir/heater_emu.cpp.o.d -o CMakeFiles/bluewire-test.dir/heater_emu.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/heater_emu.cpp.o -MF CMakeFiles/bluewire-test.dir/heater_emu.cpp.o.d -o CMakeFiles/bluewire-test.dir/heater_emu.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp
 
 CMakeFiles/bluewire-test.dir/heater_emu.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/heater_emu.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp > CMakeFiles/bluewire-test.dir/heater_emu.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp > CMakeFiles/bluewire-test.dir/heater_emu.cpp.i
 
 CMakeFiles/bluewire-test.dir/heater_emu.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/heater_emu.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp -o CMakeFiles/bluewire-test.dir/heater_emu.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/heater_emu.cpp -o CMakeFiles/bluewire-test.dir/heater_emu.cpp.s
 
 CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp
 CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o -MF CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o.d -o CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o -MF CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o.d -o CMakeFiles/bluewire-test.dir/bluwire_task.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp
 
 CMakeFiles/bluewire-test.dir/bluwire_task.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/bluwire_task.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp > CMakeFiles/bluewire-test.dir/bluwire_task.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp > CMakeFiles/bluewire-test.dir/bluwire_task.cpp.i
 
 CMakeFiles/bluewire-test.dir/bluwire_task.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/bluwire_task.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp -o CMakeFiles/bluewire-test.dir/bluwire_task.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/bluwire_task.cpp -o CMakeFiles/bluewire-test.dir/bluwire_task.cpp.s
 
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o: /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o -MF CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o.d -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o -c /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o -MF CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o.d -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.o -c /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp
 
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp > CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp > CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.i
 
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Protocol/Protocol.cpp.s
 
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o: /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o -MF CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o.d -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o -c /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o -MF CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o.d -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.o -c /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp
 
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp > CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp > CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.i
 
 CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp -o CMakeFiles/bluewire-test.dir/home/runner/work/dieselfire/dieselfire/src/Utility/MODBUS-CRC16.cpp.s
 
 CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp
 CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp
 
 CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp > CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp > CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.i
 
 CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_globals.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_globals.cpp.s
 
 CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp
 CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp
 
 CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp > CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp > CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.i
 
 CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_utilclasses.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_utilclasses.cpp.s
 
 CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp
 CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp
 
 CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp > CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp > CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.i
 
 CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_data.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_data.cpp.s
 
 CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o: CMakeFiles/bluewire-test.dir/flags.make
 CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o: /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp
 CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o: CMakeFiles/bluewire-test.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/dieselfire/dieselfire/simulator/build_wasm/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o -MF CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o.d -o CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.o -c /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp
 
 CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.i"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp > CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.i
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp > CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.i
 
 CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.s"
-	/home/runner/work/_temp/c6606892-4d1e-4d40-9e58-7c8d0ef475b9/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.s
+	/home/runner/work/_temp/7609d078-96d3-4c6e-84ca-591f726c196e/emsdk-main/upstream/emscripten/em++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/dieselfire/dieselfire/simulator/mock/mock_tempsense.cpp -o CMakeFiles/bluewire-test.dir/mock/mock_tempsense.cpp.s
 
 # Object files for target bluewire-test
 bluewire__test_OBJECTS = \

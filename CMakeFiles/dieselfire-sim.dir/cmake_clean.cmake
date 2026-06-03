@@ -67,8 +67,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/dieselfire-sim.dir/screens/WiFiScreen.cpp.o.d"
   "CMakeFiles/dieselfire-sim.dir/vserial.cpp.o"
   "CMakeFiles/dieselfire-sim.dir/vserial.cpp.o.d"
-  "dieselfire-sim.html"
-  "dieselfire-sim.pdb"
+  "index.html"
+  "index.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
