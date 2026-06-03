@@ -73,6 +73,17 @@ void DieselScreen::hideBackButton() {
   if (_headerBack) lv_obj_add_flag(_headerBack, LV_OBJ_FLAG_HIDDEN);
 }
 
+lv_obj_t* DieselScreen::createContentArea() {
+  lv_obj_t* cont = lv_obj_create(_screen);
+  lv_obj_set_size(cont, TFT_WIDTH, TFT_HEIGHT - 22);
+  lv_obj_set_pos(cont, 0, 22);
+  lv_obj_set_style_bg_color(cont, C_BG, 0);
+  lv_obj_set_style_border_width(cont, 0, 0);
+  lv_obj_set_style_pad_all(cont, 0, 0);
+  lv_obj_set_scrollbar_mode(cont, LV_SCROLLBAR_MODE_AUTO);
+  return cont;
+}
+
 lv_obj_t* DieselScreen::createHeader(lv_obj_t* parent) {
   _header = lv_obj_create(parent);
   lv_obj_set_size(_header, TFT_WIDTH, 22);
@@ -82,21 +93,31 @@ lv_obj_t* DieselScreen::createHeader(lv_obj_t* parent) {
   lv_obj_set_style_pad_all(_header, 0, 0);
   lv_obj_set_scrollbar_mode(_header, LV_SCROLLBAR_MODE_OFF);
 
-  _headerBack = lv_label_create(_header);
-  lv_label_set_text(_headerBack, LV_SYMBOL_LEFT);
-  lv_obj_set_style_text_color(_headerBack, C_AMBER, 0);
-  lv_obj_set_pos(_headerBack, 4, 2);
-  lv_obj_add_flag(_headerBack, LV_OBJ_FLAG_CLICKABLE);
+  _headerBack = lv_button_create(_header);
+  lv_obj_set_pos(_headerBack, 2, 1);
+  lv_obj_set_size(_headerBack, 36, 20);
+  lv_obj_set_style_bg_color(_headerBack, C_HEADER, 0);
+  lv_obj_set_style_bg_color(_headerBack, lv_color_make(0x33,0x33,0x33), LV_STATE_PRESSED);
+  lv_obj_set_style_border_width(_headerBack, 0, 0);
+  lv_obj_t* backLbl = lv_label_create(_headerBack);
+  lv_label_set_text(backLbl, LV_SYMBOL_LEFT " Back");
+  lv_obj_set_style_text_color(backLbl, C_AMBER, 0);
+  lv_obj_center(backLbl);
   lv_obj_add_event_cb(_headerBack, [](lv_event_t* e) {
     static_cast<DieselScreen*>(lv_event_get_user_data(e))->onBack();
   }, LV_EVENT_CLICKED, this);
 
   // Settings gear (left of clock)
-  _headerSettings = lv_label_create(_header);
-  lv_label_set_text(_headerSettings, LV_SYMBOL_SETTINGS);
-  lv_obj_set_style_text_color(_headerSettings, C_GREY, 0);
-  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 76, 2);
-  lv_obj_add_flag(_headerSettings, LV_OBJ_FLAG_CLICKABLE);
+  _headerSettings = lv_button_create(_header);
+  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 40, 1);
+  lv_obj_set_size(_headerSettings, 36, 20);
+  lv_obj_set_style_bg_color(_headerSettings, C_HEADER, 0);
+  lv_obj_set_style_bg_color(_headerSettings, lv_color_make(0x33,0x33,0x33), LV_STATE_PRESSED);
+  lv_obj_set_style_border_width(_headerSettings, 0, 0);
+  lv_obj_t* gearLbl = lv_label_create(_headerSettings);
+  lv_label_set_text(gearLbl, LV_SYMBOL_SETTINGS);
+  lv_obj_set_style_text_color(gearLbl, C_GREY, 0);
+  lv_obj_center(gearLbl);
   lv_obj_add_event_cb(_headerSettings, [](lv_event_t* e) {
     static_cast<DieselScreen*>(lv_event_get_user_data(e))->onSettings();
   }, LV_EVENT_CLICKED, this);

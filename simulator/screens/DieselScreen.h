@@ -35,6 +35,9 @@ protected:
   void updateHeaderHeaterState(int state);
   void hideBackButton();
 
+  // Content area (scrollable container below header)
+  lv_obj_t* createContentArea();
+
   // Labels with theme styling
   lv_obj_t* createLabel(lv_obj_t* parent, const char* text, lv_align_t align, lv_coord_t x, lv_coord_t y);
   lv_obj_t* createBigLabel(lv_obj_t* parent, const char* text, lv_align_t align, lv_coord_t x, lv_coord_t y);
