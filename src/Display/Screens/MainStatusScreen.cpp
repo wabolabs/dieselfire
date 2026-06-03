@@ -1,4 +1,5 @@
 #include "MainStatusScreen.h"
+#include "SettingsMenuScreen.h"
 #include "../../Protocol/Protocol.h"
 #include "../../RTC/Clock.h"
 #include "../../Utility/NVStorage.h"
@@ -160,6 +161,12 @@ void MainStatusScreen::buildPrimingTab(lv_obj_t* parent) {
   _primeStatus = createLabel(parent, "Priming not active", LV_ALIGN_CENTER, 0, -20);
   createLabel(parent, "Fuel used:", LV_ALIGN_CENTER, 0, 10);
   _primeFuelUsed = createValueLabel(parent, "0.0 L", LV_ALIGN_CENTER, 0, 30);
+}
+
+void MainStatusScreen::onSettings() {
+  auto* s = new SettingsMenuScreen();
+  s->onLoad();
+  lv_scr_load(s->getScreen());
 }
 
 void MainStatusScreen::updatePriming() {

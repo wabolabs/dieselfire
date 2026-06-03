@@ -13,6 +13,8 @@ public:
   virtual void onLoad();
   virtual void onUnload();
   virtual void onTimer();
+  virtual void onBack() {}
+  virtual void onSettings() {}
 
   static void initTheme();
   static void setNavGroup(lv_group_t* group);
@@ -52,6 +54,7 @@ protected:
   lv_obj_t* _header = nullptr;
   lv_obj_t* _headerClock = nullptr;
   lv_obj_t* _headerBack = nullptr;
+  lv_obj_t* _headerSettings = nullptr;
   lv_obj_t* _headerBt = nullptr;
   lv_obj_t* _headerWifi = nullptr;
   lv_obj_t* _headerBattery = nullptr;

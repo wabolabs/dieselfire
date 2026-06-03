@@ -7,6 +7,7 @@ public:
   MainStatusScreen();
   void onLoad() override;
   void onTimer() override;
+  void onSettings() override;
 
 private:
   void buildTelemetryTab(lv_obj_t* parent);

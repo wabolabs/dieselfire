@@ -81,32 +81,46 @@ lv_obj_t* DieselScreen::createHeader(lv_obj_t* parent) {
   lv_label_set_text(_headerBack, LV_SYMBOL_LEFT);
   lv_obj_set_style_text_color(_headerBack, C_AMBER, 0);
   lv_obj_set_pos(_headerBack, 4, 2);
+  lv_obj_add_flag(_headerBack, LV_OBJ_FLAG_CLICKABLE);
+  lv_obj_add_event_cb(_headerBack, [](lv_event_t* e) {
+    static_cast<DieselScreen*>(lv_event_get_user_data(e))->onBack();
+  }, LV_EVENT_CLICKED, this);
+
+  // Settings gear (left of clock)
+  _headerSettings = lv_label_create(_header);
+  lv_label_set_text(_headerSettings, LV_SYMBOL_SETTINGS);
+  lv_obj_set_style_text_color(_headerSettings, C_GREY, 0);
+  lv_obj_set_pos(_headerSettings, TFT_WIDTH - 76, 2);
+  lv_obj_add_flag(_headerSettings, LV_OBJ_FLAG_CLICKABLE);
+  lv_obj_add_event_cb(_headerSettings, [](lv_event_t* e) {
+    static_cast<DieselScreen*>(lv_event_get_user_data(e))->onSettings();
+  }, LV_EVENT_CLICKED, this);
 
   _headerClock = lv_label_create(_header);
   lv_label_set_text(_headerClock, "--:--");
   lv_obj_set_style_text_color(_headerClock, C_WHITE, 0);
   lv_obj_center(_headerClock);
 
+  // Right-side icons: heater>bat>wifi>bt
   _headerHeater = lv_label_create(_header);
   lv_label_set_text(_headerHeater, LV_SYMBOL_POWER);
   lv_obj_set_style_text_color(_headerHeater, C_GREY, 0);
-  lv_obj_set_pos(_headerHeater, TFT_WIDTH - 10, 2);
-  lv_obj_set_style_text_align(_headerHeater, LV_TEXT_ALIGN_RIGHT, 0);
-
-  _headerWifi = lv_label_create(_header);
-  lv_label_set_text(_headerWifi, LV_SYMBOL_WIFI);
-  lv_obj_set_style_text_color(_headerWifi, C_GREY, 0);
-  lv_obj_set_pos(_headerWifi, TFT_WIDTH - 28, 2);
-
-  _headerBt = lv_label_create(_header);
-  lv_label_set_text(_headerBt, LV_SYMBOL_BLUETOOTH);
-  lv_obj_set_style_text_color(_headerBt, C_GREY, 0);
-  lv_obj_set_pos(_headerBt, TFT_WIDTH - 46, 2);
+  lv_obj_set_pos(_headerHeater, TFT_WIDTH - 6, 2);
 
   _headerBattery = lv_label_create(_header);
   lv_label_set_text(_headerBattery, LV_SYMBOL_BATTERY_FULL);
   lv_obj_set_style_text_color(_headerBattery, C_GREEN, 0);
-  lv_obj_set_pos(_headerBattery, TFT_WIDTH - 64, 2);
+  lv_obj_set_pos(_headerBattery, TFT_WIDTH - 24, 2);
+
+  _headerWifi = lv_label_create(_header);
+  lv_label_set_text(_headerWifi, LV_SYMBOL_WIFI);
+  lv_obj_set_style_text_color(_headerWifi, C_GREY, 0);
+  lv_obj_set_pos(_headerWifi, TFT_WIDTH - 42, 2);
+
+  _headerBt = lv_label_create(_header);
+  lv_label_set_text(_headerBt, LV_SYMBOL_BLUETOOTH);
+  lv_obj_set_style_text_color(_headerBt, C_GREY, 0);
+  lv_obj_set_pos(_headerBt, TFT_WIDTH - 60, 2);
 
   return _header;
 }
