@@ -34,7 +34,8 @@ static const uint8_t BLUE_TX_GATE = 47;
 
 // === Sensors ===
 static const uint8_t DS18B20_Pin = 45;
-static const uint8_t MQ7_DOUT    = 5;
+static const uint8_t MQ7_AOUT    = 4;   // ADC1_CHANNEL_3 on ESP32-S3
+static const uint8_t MQ7_DOUT    = 5;   // Digital threshold output
 
 // === LEDs ===
 static const uint8_t LED_STATUS   = 48;  // Green, active-low

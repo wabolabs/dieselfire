@@ -7,6 +7,7 @@
 #include "Utility/FuelGauge.h"
 #include "Utility/DataFilter.h"
 #include "Utility/TempSense.h"
+#include "Utility/MQCOSensor.h"
 #include "Utility/DF_GPIO.h"
 #include "Protocol.h"
 #include "Protocol/BlueWireTask.h"
@@ -19,6 +20,7 @@ CFuelGauge FuelGauge;
 sFilteredData FilteredSamples;
 CProtocolPackage BlueWireData;
 CTempSense TempSensor;
+CMQCOSensor MQ7;
 CGPIOin GPIOin;
 CGPIOout GPIOout;
 CGPIOalg GPIOalg;

@@ -124,9 +124,7 @@
 #include "Utility/DemandManager.h"
 #include "Protocol/BlueWireTask.h"
 #include "Protocol/433MHz.h"
-#if USE_BME280
-#include <Adafruit_BME280.h>
-#endif
+#include "Utility/MQCOSensor.h"
 
 #if USE_ILI9341_DISPLAY
 #include "Display/LVGLDisplay.h"
@@ -189,10 +187,7 @@ void checkUHF();
 // Uses the RMT timeslot driver to operate as a one-wire bus
 //CBME280Sensor BMESensor;
 CTempSense TempSensor;
-#if USE_BME280
-Adafruit_BME280 bme;
-bool bmeReady = false;
-#endif
+CMQCOSensor MQ7;
 long lastTemperatureTime;            // used to moderate DS18B20 access
 int DS18B20holdoff = 2;
 
@@ -519,16 +514,9 @@ void setup() {
   }
 #endif
 
-#if USE_BME280
-  if (bme.begin(0x76)) {
-    bmeReady = true;
-    DebugPort.println("BME280 detected at 0x76");
-  } else if (bme.begin(0x77)) {
-    bmeReady = true;
-    DebugPort.println("BME280 detected at 0x77");
-  } else {
-    DebugPort.println("BME280 not found");
-  }
+#if USE_MQ7 == 1
+  MQ7.begin();
+  DebugPort.println("MQ-7 CO sensor initialized");
 #endif
 
 #if USE_WIFI == 1
@@ -724,6 +712,9 @@ bool checkTemperatureSensors()
 
         manageCyclicMode();
         manageFrostMode();
+#if USE_MQ7 == 1
+        MQ7.read();
+#endif
         manageHumidity();
         manageStopStartMode();
       }
