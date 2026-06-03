@@ -51,12 +51,15 @@ set(SCREEN_SRC
   screens/WiFiScreen.cpp
   screens/MQTTScreen.cpp
   screens/BTScreen.cpp
+  screens/SensorScreen.cpp
+  screens/GPIOScreen.cpp
 )
 
 # Mock globals
 set(MOCK_SRC
   mock/mock_globals.cpp
   mock/mock_data.cpp
+  mock/mock_tempsense.cpp
 )
 
 # Main

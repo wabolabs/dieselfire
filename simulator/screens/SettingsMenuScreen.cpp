@@ -8,6 +8,8 @@
 #include "WiFiScreen.h"
 #include "MQTTScreen.h"
 #include "BTScreen.h"
+#include "SensorScreen.h"
+#include "GPIOScreen.h"
 #include "cfg/DFConfig.h"
 
 SettingsMenuScreen::SettingsMenuScreen() : DieselScreen("Settings") {}
@@ -20,6 +22,7 @@ void SettingsMenuScreen::onLoad() {
   static const char* items[] = {
     "Timer Overview", "Edit Timer",
     "WiFi", "MQTT", "Bluetooth",
+    "Sensors", "GPIO",
     "Thermostat", "Frost", "Humidity", "Timeouts",
     nullptr
   };
@@ -54,10 +57,12 @@ void SettingsMenuScreen::openScreen(int index) {
     case 2: next = new WiFiScreen(); break;
     case 3: next = new MQTTScreen(); break;
     case 4: next = new BTScreen(); break;
-    case 5: next = new ThermostatScreen(); break;
-    case 6: next = new FrostScreen(); break;
-    case 7: next = new HumidityScreen(); break;
-    case 8: next = new TimeoutsScreen(); break;
+    case 5: next = new SensorScreen(); break;
+    case 6: next = new GPIOScreen(); break;
+    case 7: next = new ThermostatScreen(); break;
+    case 8: next = new FrostScreen(); break;
+    case 9: next = new HumidityScreen(); break;
+    case 10: next = new TimeoutsScreen(); break;
   }
   if (next) {
     next->onLoad();
