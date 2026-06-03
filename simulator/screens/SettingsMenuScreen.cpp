@@ -101,11 +101,12 @@ void SettingsMenuScreen::openScreen(int index) {
   if (next) {
     _subScreen = next;
     // Back callback: load settings screen, then clean up sub-screen
-    DieselScreen* settings = this;
-    next->setBackCallback([settings, next]() {
+    SettingsMenuScreen* sm = this;
+    next->setBackCallback([sm, next]() {
       lv_obj_t* subScr = next->getScreen();
-      lv_scr_load(settings->getScreen());
+      lv_scr_load(sm->getScreen());
       lv_obj_del(subScr);
+      sm->_subScreen = nullptr;
       delete next;
     });
     next->onLoad();
