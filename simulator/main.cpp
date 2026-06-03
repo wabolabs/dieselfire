@@ -21,12 +21,11 @@ static int flushCount = 0;
 static void sdl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) {
   int32_t w = lv_area_get_width(area);
   int32_t h = lv_area_get_height(area);
-
-  // Copy LVGL's ARGB8888 pixels into our SDL framebuffer
-  uint32_t* src = (uint32_t*)px_map;
+  // LVGL renders in ARGB8888 (4 bytes/pixel), matching SDL_PIXELFORMAT_ARGB8888.
+  size_t pixelBytes = sizeof(lv_color32_t);
   for (int y = 0; y < h; y++) {
     memcpy(sdl_buf + (area->y1 + y) * TFT_WIDTH + area->x1,
-           src + y * w, w * sizeof(uint32_t));
+           px_map + y * w * pixelBytes, w * pixelBytes);
   }
 
   flushCount++;
@@ -85,10 +84,16 @@ int main(int, char**) {
   // ── LVGL ─────────────────────────────────────────────
   printf("[2/5] lv_init...\n"); fflush(stdout);
   lv_init();
+  printf("  LV_COLOR_DEPTH=%d, sizeof(lv_color_t)=%zu, sizeof(lv_color32_t)=%zu\n",
+         LV_COLOR_DEPTH, sizeof(lv_color_t), sizeof(lv_color32_t));
+  fflush(stdout);
 
-  size_t bufSize = TFT_WIDTH * TFT_HEIGHT * sizeof(lv_color_t);
-  printf("  bufSize = %zu bytes (TFT=%dx%d, color=%zu)\n",
-         bufSize, TFT_WIDTH, TFT_HEIGHT, sizeof(lv_color_t));
+  // Display buffer: ARGB8888 (4 bytes/pixel). lv_color_t is only 3 bytes,
+  // but with LV_COLOR_DEPTH=32 the render pixels are lv_color32_t (4 bytes).
+  size_t bpp = sizeof(lv_color32_t);
+  size_t bufSize = TFT_WIDTH * TFT_HEIGHT * bpp;
+  printf("  bufSize = %zu bytes (TFT=%dx%d, bpp=%zu)\n",
+         bufSize, TFT_WIDTH, TFT_HEIGHT, bpp);
   fflush(stdout);
 
   uint8_t* buf1 = new uint8_t[bufSize];
@@ -101,7 +106,7 @@ int main(int, char**) {
   if (display) {
     lv_display_set_flush_cb(display, sdl_flush_cb);
     printf("  flush cb set\n"); fflush(stdout);
-    lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_PARTIAL);
+    lv_display_set_buffers(display, buf1, buf2, bufSize, LV_DISPLAY_RENDER_MODE_FULL);
     printf("  buffers set\n"); fflush(stdout);
     lv_display_set_default(display);
     printf("  display set default\n"); fflush(stdout);
