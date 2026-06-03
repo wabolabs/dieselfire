@@ -49,6 +49,9 @@ void SettingsMenuScreen::onLoad() {
     lv_obj_add_event_cb(btn, onEntryClick, LV_EVENT_CLICKED, this);
     lv_obj_set_style_bg_color(btn, lv_color_make(0x22, 0x22, 0x22), 0);
     lv_obj_set_style_bg_color(btn, lv_color_make(0xFF, 0x7A, 0x00), LV_STATE_PRESSED);
+    // Set label text color to white for visibility on dark background
+    lv_obj_t* label = lv_obj_get_child(btn, 0);
+    if (label) lv_obj_set_style_text_color(label, lv_color_white(), 0);
   }
 }
 
