@@ -2,7 +2,7 @@ name: WASM Build
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
     paths:
       - 'simulator/**'
       - 'src/**'
