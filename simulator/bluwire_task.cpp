@@ -8,8 +8,7 @@
 #include "../src/Protocol/BlueWireTask.h"
 #include "vserial.h"
 
-// BlueWire serial port — linked from main.cpp
-extern VirtualSerial BlueWireSerial;
+extern VirtualSerial& BlueWireSerial;
 
 #define RX_DATA_TIMOUT 50
 
@@ -31,19 +30,26 @@ extern bool bReportOEMresync;
 extern bool bReportBlueWireData;
 extern sFilteredData FilteredSamples;
 
+#ifdef BLUELINE_GLOBALS_EXTERNAL
+extern QueueHandle_t BlueWireMsgQueue;
+extern QueueHandle_t BlueWireRxQueue;
+extern QueueHandle_t BlueWireTxQueue;
+extern SemaphoreHandle_t BlueWireSemaphore;
+extern uint8_t g_lastTxFrame[24];
+extern uint8_t g_lastRxFrame[24];
+#else
 QueueHandle_t BlueWireMsgQueue = NULL;
 QueueHandle_t BlueWireRxQueue = NULL;
 QueueHandle_t BlueWireTxQueue = NULL;
 SemaphoreHandle_t BlueWireSemaphore = NULL;
 
-// Debug frame capture — read by BWDebugScreen
-extern uint8_t g_lastTxFrame[24];
-extern uint8_t g_lastRxFrame[24];
-void captureTxFrame(const uint8_t* data);
-void captureRxFrame(const uint8_t* data);
+uint8_t g_lastTxFrame[24] = {};
+uint8_t g_lastRxFrame[24] = {};
+#endif
+void captureTxFrame(const uint8_t* data) { memcpy(g_lastTxFrame, data, 24); }
+void captureRxFrame(const uint8_t* data) { memcpy(g_lastRxFrame, data, 24); }
 
-// Simulated TX manager — writes frame to VirtualSerial instead of using
-// hardware timer + UART gate like the real CTxManage.
+// Simulated TX manager
 struct SimTxMgr {
   CProtocol m_TxFrame;
   unsigned long m_nStartTime = 0;
@@ -52,13 +58,8 @@ struct SimTxMgr {
     m_TxFrame = Frame;
     m_TxFrame.setCRC();
   }
-  void Start(unsigned long timenow) {
-    // Original code: starts HW timer for Tx gate.
-    // Actual serial write happens in CheckTx when timer fires.
-    m_nStartTime = timenow;
-  }
+  void Start(unsigned long timenow) { m_nStartTime = timenow; }
   bool CheckTx(unsigned long timenow) {
-    // After ~10ms, write the frame and complete, like original's HW timer ISR.
     if (m_nStartTime != 0 && (timenow - m_nStartTime) >= 10) {
       BlueWireSerial.write(m_TxFrame.Data, 24);
       BlueWireSerial.flush();
@@ -75,24 +76,23 @@ struct SimTxMgr {
 };
 static SimTxMgr TxManage;
 
-bool validateFrame(const CProtocol& frame, const char* name);
-void DebugReportFrame(const char* hdr, const CProtocol& Frame, const char* ftr, char* msg);
+static unsigned long lastRxTime = 0;
+static unsigned long moderator = 50;
+static bool isDFmaster = false;
+static sRxData BlueWireRxDataLocal;
+
 void pushDebugMsg(const char* msg) {
-  if (BlueWireMsgQueue)
-    xQueueSend(BlueWireMsgQueue, msg, 0);
+  if (BlueWireMsgQueue) xQueueSend(BlueWireMsgQueue, msg, 0);
 }
 
-void BlueWireTask(void*) {
-  static unsigned long lastRxTime = 0;
-  static unsigned long moderator = 50;
-  bool isDFmaster = false;
+bool validateFrame(const CProtocol& frame, const char* name);
+void DebugReportFrame(const char* hdr, const CProtocol& Frame, const char* ftr, char* msg);
 
+void initBlueWire() {
   BlueWireMsgQueue = xQueueCreate(4, BLUEWIRE_MSGQUEUESIZE);
   BlueWireRxQueue = xQueueCreate(4, BLUEWIRE_DATAQUEUESIZE);
   BlueWireTxQueue = xQueueCreate(4, BLUEWIRE_DATAQUEUESIZE);
   BlueWireSemaphore = xSemaphoreCreateBinary();
-
-  TxManage.begin();
 
   DefaultDFParams.setHeaterDemand(23);
   DefaultDFParams.setTemperature_Actual(22);
@@ -104,168 +104,124 @@ void BlueWireTask(void*) {
   DefaultDFParams.Controller.FanSensor = 1;
 
   CommState.setCallback(pushDebugMsg);
+}
 
-  for (;;) {
-    sRxData BlueWireRxData;
-    unsigned long timenow = millis();
-    unsigned long RxTimeElapsed = timenow - lastRxTime;
+void tickBlueWire(unsigned long timenow) {
+  unsigned long RxTimeElapsed = timenow - lastRxTime;
 
-    if (BlueWireSerial.available()) {
-      BlueWireRxData.setValue(BlueWireSerial.read());
-      lastRxTime = timenow;
-    }
+  if (BlueWireSerial.available()) {
+    BlueWireRxDataLocal.setValue(BlueWireSerial.read());
+    lastRxTime = timenow;
+  }
 
-    if (RxTimeElapsed > RX_DATA_TIMOUT) {
-      if (CommState.is(CommStates::OEMCtrlRx) ||
-          CommState.is(CommStates::HeaterRx1) ||
-          CommState.is(CommStates::HeaterRx2)) {
-        if (RxTimeElapsed >= moderator) {
-          moderator += 10;
-          if (bReportRecyleEvents) {
-            sprintf(dbgMsg, "%ldms - ", RxTimeElapsed);
-            pushDebugMsg(dbgMsg);
-          }
-          if (CommState.is(CommStates::OEMCtrlRx)) {
-            bHasOEMController = false;
-            bHasOEMLCDController = false;
-            if (bReportRecyleEvents)
-              pushDebugMsg("Timeout collecting OEM controller data, returning to Idle State\r\n");
-          } else if (CommState.is(CommStates::HeaterRx1)) {
-            bHasHtrData = false;
-            if (bReportRecyleEvents)
-              pushDebugMsg("Timeout collecting OEM heater response data, returning to Idle State\r\n");
-          } else {
-            bHasHtrData = false;
-            if (bReportRecyleEvents)
-              pushDebugMsg("Timeout collecting BTC heater response data, returning to Idle State\r\n");
-          }
-        }
-        if (bReportRecyleEvents)
-          pushDebugMsg("Recycling blue wire serial interface\r\n");
-        CommState.set(CommStates::ExchangeComplete);
-      }
-    }
-
-    switch (CommState.get()) {
-
-      case CommStates::Idle:
-        moderator = 50;
-
-        if (RxTimeElapsed >= 940) {
-          bHasHtrData = false;
-          bHasOEMController = false;
-          bHasOEMLCDController = false;
-          isDFmaster = true;
-          TxManage.PrepareFrame(DefaultDFParams, isDFmaster);
-          TxManage.Start(timenow);
-          CommState.set(CommStates::TxStart);
-          break;
-        }
-
-        if (BlueWireRxData.available() && (RxTimeElapsed > (RX_DATA_TIMOUT + 10))) {
-          if (bReportOEMresync) {
-            sprintf(dbgMsg, "Re-sync'd with OEM Controller. %ldms Idle time.\r\n", RxTimeElapsed);
-            pushDebugMsg(dbgMsg);
-          }
-          bHasHtrData = false;
-          bHasOEMController = true;
-          CommState.set(CommStates::OEMCtrlRx);
+  // Timeout handling in receive states
+  if (RxTimeElapsed > RX_DATA_TIMOUT) {
+    if (CommState.is(CommStates::OEMCtrlRx) ||
+        CommState.is(CommStates::HeaterRx1) ||
+        CommState.is(CommStates::HeaterRx2)) {
+      if (RxTimeElapsed >= moderator) {
+        moderator += 10;
+        if (CommState.is(CommStates::OEMCtrlRx)) {
+          bHasOEMController = false; bHasOEMLCDController = false;
         } else {
-          break;
-        }
-
-      case CommStates::OEMCtrlRx:
-        if (BlueWireRxData.available()) {
-          if (CommState.collectData(OEMCtrlFrame, BlueWireRxData.getValue()))
-            CommState.set(CommStates::OEMCtrlValidate);
-        }
-        break;
-
-      case CommStates::OEMCtrlValidate:
-        if (!validateFrame(OEMCtrlFrame, "OEM"))
-          break;
-        OEMCtrlFrame.setTime();
-        bHasOEMLCDController = (OEMCtrlFrame.Controller.Byte0 != 0x78);
-        CommState.set(CommStates::HeaterRx1);
-        break;
-
-      case CommStates::HeaterRx1:
-        if (BlueWireRxData.available()) {
-          if (CommState.collectData(HeaterFrame1, BlueWireRxData.getValue()))
-            CommState.set(CommStates::HeaterValidate1);
-        }
-        break;
-
-      case CommStates::HeaterValidate1:
-        if (!validateFrame(HeaterFrame1, "RX1")) {
           bHasHtrData = false;
-          break;
         }
-        bHasHtrData = true;
-        HeaterFrame1.setTime();
-        while (BlueWireSerial.available()) {
-          pushDebugMsg("DUMPED ROGUE RX DATA\r\n");
-          BlueWireSerial.read();
-        }
-        BlueWireSerial.flush();
-        primaryHeaterData.set(HeaterFrame1, OEMCtrlFrame);
-        if (bReportBlueWireData)
-          primaryHeaterData.reportFrames(true, pushDebugMsg);
-        isDFmaster = false;
-        TxManage.PrepareFrame(OEMCtrlFrame, isDFmaster);
+      }
+      CommState.set(CommStates::ExchangeComplete);
+    }
+  }
+
+  switch (CommState.get()) {
+
+    case CommStates::Idle:
+      moderator = 50;
+      if (RxTimeElapsed >= 940) {
+        bHasHtrData = false; bHasOEMController = false; bHasOEMLCDController = false;
+        isDFmaster = true;
+        TxManage.PrepareFrame(DefaultDFParams, isDFmaster);
+        TxManage.Start(timenow);
         CommState.set(CommStates::TxStart);
         break;
-
-      case CommStates::TxStart:
-        xQueueSend(BlueWireTxQueue, TxManage.getFrame().Data, 0);
-        TxManage.Start(timenow);
-        CommState.set(CommStates::TxInterval);
+      }
+      if (BlueWireRxDataLocal.available() && (RxTimeElapsed > (RX_DATA_TIMOUT + 10))) {
+        bHasHtrData = false; bHasOEMController = true;
+        CommState.set(CommStates::OEMCtrlRx);
+      } else {
         break;
+      }
 
-      case CommStates::TxInterval:
-        lastRxTime = timenow;
-        if (TxManage.CheckTx(timenow))
-          CommState.set(CommStates::HeaterRx2);
-        break;
+    case CommStates::OEMCtrlRx:
+      if (BlueWireRxDataLocal.available()) {
+        if (CommState.collectData(OEMCtrlFrame, BlueWireRxDataLocal.getValue()))
+          CommState.set(CommStates::OEMCtrlValidate);
+      }
+      break;
 
-      case CommStates::HeaterRx2:
-        if (BlueWireRxData.available()) {
-          if (CommState.collectData(HeaterFrame2, BlueWireRxData.getValue()))
-            CommState.set(CommStates::HeaterValidate2);
-        }
-        break;
+    case CommStates::OEMCtrlValidate:
+      if (!validateFrame(OEMCtrlFrame, "OEM")) break;
+      OEMCtrlFrame.setTime();
+      bHasOEMLCDController = (OEMCtrlFrame.Controller.Byte0 != 0x78);
+      CommState.set(CommStates::HeaterRx1);
+      break;
 
-      case CommStates::HeaterValidate2:
-        if (!validateFrame(HeaterFrame2, "RX2")) {
-          bHasHtrData = false;
-          break;
-        }
-        bHasHtrData = true;
-        captureRxFrame(HeaterFrame2.Data);
-        xQueueSend(BlueWireRxQueue, HeaterFrame2.Data, 0);
-        if (!bHasOEMController)
-          primaryHeaterData.set(HeaterFrame2, TxManage.getFrame());
-        if (bReportBlueWireData) {
-          reportHeaterData.set(HeaterFrame2, TxManage.getFrame());
-          reportHeaterData.reportFrames(false, pushDebugMsg);
-        }
-        CommState.set(CommStates::ExchangeComplete);
-        break;
+    case CommStates::HeaterRx1:
+      if (BlueWireRxDataLocal.available()) {
+        if (CommState.collectData(HeaterFrame1, BlueWireRxDataLocal.getValue()))
+          CommState.set(CommStates::HeaterValidate1);
+      }
+      break;
 
-      case CommStates::ExchangeComplete:
-        xSemaphoreGive(BlueWireSemaphore);
-        CommState.set(CommStates::Idle);
-        break;
-    }
+    case CommStates::HeaterValidate1:
+      if (!validateFrame(HeaterFrame1, "RX1")) { bHasHtrData = false; break; }
+      bHasHtrData = true;
+      HeaterFrame1.setTime();
+      while (BlueWireSerial.available()) { BlueWireSerial.read(); }
+      BlueWireSerial.flush();
+      primaryHeaterData.set(HeaterFrame1, OEMCtrlFrame);
+      isDFmaster = false;
+      TxManage.PrepareFrame(OEMCtrlFrame, isDFmaster);
+      CommState.set(CommStates::TxStart);
+      break;
 
-    if (!BlueWireSerial.available())
-      vTaskDelay(1);
+    case CommStates::TxStart:
+      xQueueSend(BlueWireTxQueue, TxManage.getFrame().Data, 0);
+      TxManage.Start(timenow);
+      CommState.set(CommStates::TxInterval);
+      break;
+
+    case CommStates::TxInterval:
+      lastRxTime = timenow;
+      if (TxManage.CheckTx(timenow))
+        CommState.set(CommStates::HeaterRx2);
+      break;
+
+    case CommStates::HeaterRx2:
+      if (BlueWireRxDataLocal.available()) {
+        if (CommState.collectData(HeaterFrame2, BlueWireRxDataLocal.getValue()))
+          CommState.set(CommStates::HeaterValidate2);
+      }
+      break;
+
+    case CommStates::HeaterValidate2:
+      if (!validateFrame(HeaterFrame2, "RX2")) { bHasHtrData = false; break; }
+      bHasHtrData = true;
+      captureRxFrame(HeaterFrame2.Data);
+      xQueueSend(BlueWireRxQueue, HeaterFrame2.Data, 0);
+      if (!bHasOEMController)
+        primaryHeaterData.set(HeaterFrame2, TxManage.getFrame());
+      CommState.set(CommStates::ExchangeComplete);
+      break;
+
+    case CommStates::ExchangeComplete:
+      xSemaphoreGive(BlueWireSemaphore);
+      CommState.set(CommStates::Idle);
+      break;
   }
 }
 
 bool validateFrame(const CProtocol& frame, const char* name) {
   if (!frame.verifyCRC(pushDebugMsg)) {
-    sprintf(dbgMsg, "\007Bad CRC detected for %s frame - restarting blue wire's serial port\r\n", name);
+    sprintf(dbgMsg, "\007Bad CRC detected for %s frame\r\n", name);
     pushDebugMsg(dbgMsg);
     dbgMsg[0] = 0;
     DebugReportFrame("BAD CRC:", frame, "\r\n", dbgMsg);
@@ -279,9 +235,7 @@ bool validateFrame(const CProtocol& frame, const char* name) {
 void DebugReportFrame(const char* hdr, const CProtocol& Frame, const char* ftr, char* msg) {
   strcat(msg, hdr);
   for (int i = 0; i < 24; i++) {
-    char str[8];
-    sprintf(str, " %02X", Frame.Data[i]);
-    strcat(msg, str);
+    char str[8]; sprintf(str, " %02X", Frame.Data[i]); strcat(msg, str);
   }
   strcat(msg, ftr);
 }
@@ -298,15 +252,8 @@ int getBlueWireStat() {
 }
 
 const char* getBlueWireStatStr() {
-  static const char* BlueWireStates[] = {"BTC,Htr", "BTC", "OEM,Htr", "OEM"};
-  return BlueWireStates[getBlueWireStat()];
+  static const char* s[] = {"BTC,Htr", "BTC", "OEM,Htr", "OEM"};
+  return s[getBlueWireStat()];
 }
 
-void reqPumpPrime(bool on) { TxManage.reqPrime(on); }
-
-// Debug frame storage
-uint8_t g_lastTxFrame[24] = {};
-uint8_t g_lastRxFrame[24] = {};
-
-void captureTxFrame(const uint8_t* data) { memcpy(g_lastTxFrame, data, 24); }
-void captureRxFrame(const uint8_t* data) { memcpy(g_lastRxFrame, data, 24); }
+void reqPumpPrime(bool) {}

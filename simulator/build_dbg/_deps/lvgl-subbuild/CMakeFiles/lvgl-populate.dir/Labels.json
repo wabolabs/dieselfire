@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/CMakeFiles/lvgl-populate"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/CMakeFiles/lvgl-populate.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/CMakeFiles/lvgl-populate-complete.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-build.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-configure.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-download.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-install.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-patch.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-test.rule"
+		},
+		{
+			"file" : "/home/kboran/Nextcloud/development/dieselfire/DieselFire/simulator/build_dbg/_deps/lvgl-subbuild/lvgl-populate-prefix/src/lvgl-populate-stamp/lvgl-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"lvgl-populate"
+		],
+		"name" : "lvgl-populate"
+	}
+}

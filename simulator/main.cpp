@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "mock/mock_data.h"
 #include "Display/Screens/DieselScreen.h"
 #include "Display/Screens/MainStatusScreen.h"
 #include "Utility/DebugPort.h"
@@ -11,23 +10,26 @@
 #include <SDL2/SDL.h>
 #include <lvgl.h>
 #include <stdio.h>
-#include <thread>
 #include <cstring>
-#include <sys/socket.h>
-#include <sys/un.h>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 static SDL_Window* window = nullptr;
 static SDL_Renderer* renderer = nullptr;
 static SDL_Texture* texture = nullptr;
 static lv_display_t* display = nullptr;
 
-// BlueWire serial + heater emulator (global for the task)
-VirtualSerial BlueWireSerial;
+VirtualSerialPair g_serialPair;
+// BlueWireSerial is used by bluwire_task.cpp — reference to one end of the pair
+VirtualSerial& BlueWireSerial = g_serialPair.a;
 HeaterEmulator g_heater;
 
-// Forward declarations from bluwire_task.cpp and mock_globals.cpp
-extern void BlueWireTask(void*);
+extern void tickBlueWire(unsigned long timenow);
+extern void initBlueWire();
 extern void checkBlueWireEvents();
+extern CommStates CommState;
 
 static void sdl_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) {
   SDL_UpdateTexture(texture, nullptr, px_map, TFT_WIDTH * sizeof(lv_color32_t));
@@ -44,6 +46,47 @@ static void sdl_mouse_read(lv_indev_t* indev, lv_indev_data_t* data) {
   data->point.y = y;
   data->state = (buttons & SDL_BUTTON_LMASK) ? LV_INDEV_STATE_PR : LV_INDEV_STATE_REL;
 }
+
+static uint32_t sdlGetTicks() {
+#ifdef __EMSCRIPTEN__
+  return SDL_GetTicks();
+#else
+  return SDL_GetTicks();
+#endif
+}
+
+static void loopIteration() {
+  static uint32_t lastTick = sdlGetTicks();
+  uint32_t now = sdlGetTicks();
+  int delta = (int)(now - lastTick);
+  if (delta < 1) delta = 1;
+  lastTick = now;
+
+  SDL_Event e;
+  while (SDL_PollEvent(&e)) {
+    if (e.type == SDL_QUIT) {
+#ifdef __EMSCRIPTEN__
+      emscripten_cancel_main_loop();
+#endif
+      return;
+    }
+  }
+
+  lv_tick_inc(delta);
+  g_heater.tick(delta);
+  tickBlueWire(now);
+  checkBlueWireEvents();
+  lv_task_handler();
+
+  uint32_t elapsed = sdlGetTicks() - now;
+  if (elapsed < 16) SDL_Delay(16 - elapsed);
+}
+
+#ifndef __EMSCRIPTEN__
+static void nativeMainLoop() {
+  while (true) loopIteration();
+}
+#endif
 
 int main(int, char**) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) { printf("SDL_Init failed\n"); return 1; }
@@ -74,41 +117,17 @@ int main(int, char**) {
   lv_scr_load(mainScreen->getScreen());
   lv_refr_now(display);
 
-  // ── BlueWire protocol simulation setup ─────────────────────
-  int fds[2];
-  if (socketpair(AF_UNIX, SOCK_STREAM, 0, fds) != 0) {
-    printf("socketpair failed\n");
-    return 1;
-  }
-  BlueWireSerial.begin(fds[0], true);      // non-blocking end for BlueWire task
-  g_heater.begin(fds[1]);                  // other end for heater emulator
+  // BlueWire protocol simulation (cooperative — no threads)
+  initBlueWire();
+  g_heater.begin(&g_serialPair.b);
 
-  // Launch BlueWire task thread
-  std::thread bwThread(BlueWireTask, nullptr);
-  bwThread.detach();
+  lv_refr_now(display);
 
-  // Launch heater emulator thread
-  std::thread heThread([&]() { g_heater.run(); });
-  heThread.detach();
-
-  // Main loop
-  uint32_t lastTick = SDL_GetTicks();
-  bool running = true;
-
-  while (running) {
-    uint32_t now = SDL_GetTicks();
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT) running = false;
-    }
-    uint32_t delta = now - lastTick;
-    lastTick = now;
-    lv_tick_inc(delta);
-    checkBlueWireEvents();
-    lv_task_handler();
-    uint32_t elapsed = SDL_GetTicks() - now;
-    if (elapsed < 16) SDL_Delay(16 - elapsed);
-  }
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(loopIteration, 0, 1);
+#else
+  nativeMainLoop();
+#endif
 
   delete[] fb;
   SDL_DestroyTexture(texture);

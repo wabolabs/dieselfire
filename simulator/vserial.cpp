@@ -1,52 +1,60 @@
 #include "vserial.h"
+#include <cstring>
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
+VirtualSerial::VirtualSerial()
+  : _buf(nullptr), _cap(0), _pos(0), _count(0), _peer(nullptr) {
+  _buf = (uint8_t*)malloc(64);
+  _cap = _buf ? 64 : 0;
+}
 
-VirtualSerial::VirtualSerial() {}
+VirtualSerial::~VirtualSerial() { free(_buf); }
 
-VirtualSerial::~VirtualSerial() { end(); }
-
-void VirtualSerial::begin(int fd, bool nonBlocking) {
-  _fd = fd;
-  if (nonBlocking && _fd >= 0) {
-    int flags = fcntl(_fd, F_GETFL, 0);
-    fcntl(_fd, F_SETFL, flags | O_NONBLOCK);
-  }
+void VirtualSerial::connect(VirtualSerial* peer) {
+  _peer = peer;
 }
 
 int VirtualSerial::available() {
-  if (_fd < 0) return 0;
-  int count = 0;
-  if (ioctl(_fd, FIONREAD, &count) < 0) return 0;
-  return count;
+  return _peer ? (int)_peer->_count : 0;
 }
 
 int VirtualSerial::read() {
-  if (_fd < 0) return -1;
-  uint8_t c;
-  ssize_t n = ::read(_fd, &c, 1);
-  return (n == 1) ? c : -1;
+  if (!_peer || _peer->_count == 0) return -1;
+  int c = _peer->_buf[_peer->_pos];
+  _peer->_pos = (_peer->_pos + 1) % _peer->_cap;
+  _peer->_count--;
+  return c;
 }
 
 size_t VirtualSerial::write(uint8_t c) {
-  return write(&c, 1);
+  if (_count >= _cap) {
+    size_t newCap = _cap ? _cap * 2 : 64;
+    uint8_t* newBuf = (uint8_t*)realloc(_buf, newCap);
+    if (!newBuf) return 0;
+    if (_pos + _count > _cap) {
+      // Unwrap wrapped data
+      size_t tail = _cap - _pos;
+      memmove(newBuf + tail, newBuf, _pos);
+      _pos += tail;
+    }
+    _buf = newBuf;
+    _cap = newCap;
+  }
+  size_t idx = (_pos + _count) % _cap;
+  _buf[idx] = c;
+  _count++;
+  return 1;
 }
 
 size_t VirtualSerial::write(const uint8_t* buf, size_t len) {
-  if (_fd < 0) return 0;
-  ssize_t n = ::write(_fd, buf, len);
-  return (n > 0) ? (size_t)n : 0;
+  for (size_t i = 0; i < len; i++) write(buf[i]);
+  return len;
 }
 
-void VirtualSerial::flush() {
-  fsync(_fd);
-}
+void VirtualSerial::flush() {}
 
 void VirtualSerial::end() {
-  if (_fd >= 0) {
-    ::close(_fd);
-    _fd = -1;
-  }
+  free(_buf);
+  _buf = nullptr;
+  _cap = _pos = _count = 0;
+  _peer = nullptr;
 }

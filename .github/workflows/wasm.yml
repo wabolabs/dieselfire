@@ -1,0 +1,42 @@
+name: WASM Build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'simulator/**'
+      - 'src/**'
+      - '.github/workflows/wasm.yml'
+
+jobs:
+  build-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: latest
+
+      - name: Configure with Emscripten
+        run: |
+          cd simulator
+          mkdir -p build_wasm
+          cd build_wasm
+          emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: |
+          cd simulator/build_wasm
+          emmake make -j$(nproc)
+
+      - name: Copy shell
+        run: cp simulator/shell.html simulator/build_wasm/
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: simulator/build_wasm
+          keep_files: false
