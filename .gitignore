@@ -100,3 +100,6 @@ ESP32 Arduino LVGL*
 .pio/
 .pio/
 fota.json
+simulator/build*/
+simulator/test_*
+simulator/test_*
