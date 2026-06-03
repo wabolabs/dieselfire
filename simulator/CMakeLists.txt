@@ -48,6 +48,9 @@ set(SCREEN_SRC
   screens/TimeoutsScreen.cpp
   screens/TimerChartScreen.cpp
   screens/TimerEditScreen.cpp
+  screens/WiFiScreen.cpp
+  screens/MQTTScreen.cpp
+  screens/BTScreen.cpp
 )
 
 # Mock globals
