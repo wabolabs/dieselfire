@@ -142,10 +142,10 @@
 
 // #define RX_DATA_TIMOUT 50
 
-const int FirmwareRevision = 32;
-const int FirmwareSubRevision = 2;
+const int FirmwareRevision = 33;
+const int FirmwareSubRevision = 0;
 const int FirmwareMinorRevision = 0;  // used for beta version - zero for releases
-const char* FirmwareDate = "29 Jun 2020";
+const char* FirmwareDate = __DATE__;
 
 /*
  * Macro to check the outputs of TWDT functions and trigger an abort if an

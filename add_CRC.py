@@ -1,9 +1,6 @@
 Import("env")
 import sys
 
-# access to global build environment
-print (env)
-
 CRCTable = [
 	0X0000, 0XC0C1, 0XC181, 0X0140, 0XC301, 0X03C0, 0X0280, 0XC241,
 	0XC601, 0X06C0, 0X0780, 0XC741, 0X0500, 0XC5C1, 0XC481, 0X0440,
@@ -41,11 +38,11 @@ CRCTable = [
 
 
 def appendCRC(source, target, env) :
-
-  print ("Adding CRC to %s" % str(target[0]))
+  fpath = str(target[0])
+  print("Adding CRC to %s" % fpath)
 
 # read entire firmware binary file into a string
-  f = open(str(target[0]), "rb")
+  f = open(fpath, "rb")
   binfile = f.read()
   f.close()
 

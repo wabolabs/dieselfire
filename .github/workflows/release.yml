@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build dieselfire firmware
+        run: pio run -e dieselfire
+
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate fota.json manifest
+        run: python scripts/gen_fota_json.py \
+          --type dieselfire-fota-http \
+          --version "${{ steps.version.outputs.version }}" \
+          --host dieselfire.wabo.cc \
+          --port 80 \
+          --bin "/fota/dieselfire-${{ steps.version.outputs.version }}.bin" \
+          --output fota.json
+
+      - name: Rename firmware binary
+        run: |
+          cp .pio/build/dieselfire/firmware.bin \
+             dieselfire-${{ steps.version.outputs.version }}.bin
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dieselfire-${{ steps.version.outputs.version }}.bin
+            fota.json
+          generate_release_notes: true
