@@ -53,6 +53,10 @@ set(SCREEN_SRC
   screens/BTScreen.cpp
   screens/SensorScreen.cpp
   screens/GPIOScreen.cpp
+  screens/FuelMixtureScreen.cpp
+  screens/HeaterSettingsScreen.cpp
+  screens/FuelCalScreen.cpp
+  screens/LVCScreen.cpp
 )
 
 # Mock globals
