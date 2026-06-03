@@ -24,6 +24,7 @@ MainStatusScreen::MainStatusScreen()
   : DieselScreen("MainStatus") {}
 
 void MainStatusScreen::onLoad() {
+  createHeader(_screen);
   _tabview = lv_tabview_create(_screen);
   lv_obj_set_size(_tabview, TFT_WIDTH, TFT_HEIGHT - 22);
   lv_obj_set_pos(_tabview, 0, 22);
