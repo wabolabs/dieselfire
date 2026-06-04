@@ -55,7 +55,22 @@ struct sHeaterTuning {
   void setFmax(int v) { Fmax = v; }
 };
 
+struct sMQTTparams {
+  uint8_t enabled = 0;
+  uint16_t port = 1883;
+  uint8_t qos = 0;
+  uint8_t haDiscovery = 1;
+  char host[128] = {};
+  char username[32] = {};
+  char password[32] = {};
+  char topicPrefix[32] = {};
+};
+
 class CHeaterStorage {
+public:
+  sMQTTparams _mqtt;
+  const sMQTTparams& getMQTTinfo() const { return _mqtt; }
+  void setMQTTinfo(const sMQTTparams& m) { _mqtt = m; }
 public:
   sUserSettings _settings;
   sHeaterTuning _tuning;

@@ -1,4 +1,5 @@
 #include "RebootScreen.h"
+#include <Arduino.h>
 #include <cstdio>
 
 RebootScreen::RebootScreen() : DieselScreen("Reboot") {}
@@ -17,4 +18,9 @@ void RebootScreen::onTimer() {
   snprintf(buf, sizeof(buf), "Reboot in %d", _countdown);
   lv_label_set_text(_label, buf);
   _countdown--;
+  if (_countdown < 0) {
+#if defined(ESP32)
+    ESP.restart();
+#endif
+  }
 }

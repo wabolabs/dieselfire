@@ -19,6 +19,13 @@ private:
   void updateBigTemp();
   void updateClockTabContent();
   void updatePriming();
+  void updateHeaterButton();
+
+  static void onHeaterBtn(lv_event_t* e);
+  static void onTempUp(lv_event_t* e);
+  static void onTempDown(lv_event_t* e);
+  static void onPrimeBtn(lv_event_t* e);
+  static void onResetFuel(lv_event_t* e);
 
   lv_obj_t* _tabview = nullptr;
   lv_obj_t* _telemTemp = nullptr;
@@ -33,4 +40,10 @@ private:
   lv_obj_t* _clockDate = nullptr;
   lv_obj_t* _primeStatus = nullptr;
   lv_obj_t* _primeFuelUsed = nullptr;
+
+  lv_obj_t* _heaterBtn = nullptr;
+  lv_obj_t* _tempUp = nullptr;
+  lv_obj_t* _tempDown = nullptr;
+  lv_obj_t* _primeBtn = nullptr;
+  lv_obj_t* _resetFuelBtn = nullptr;
 };

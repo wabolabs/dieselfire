@@ -256,4 +256,3 @@ const char* getBlueWireStatStr() {
   return s[getBlueWireStat()];
 }
 
-void reqPumpPrime(bool) {}
