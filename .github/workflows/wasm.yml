@@ -42,12 +42,12 @@ jobs:
 
       - name: Prepare Pages content
         run: |
-          # Landing page at root, simulator in /sim/
-          cp simulator/site/index.html simulator/build_wasm/
+          # Move WASM simulator into /sim/, landing page at root
           mkdir -p simulator/build_wasm/sim/
           mv simulator/build_wasm/index.html simulator/build_wasm/sim/
           mv simulator/build_wasm/index.js simulator/build_wasm/sim/
           mv simulator/build_wasm/index.wasm simulator/build_wasm/sim/
+          cp simulator/site/index.html simulator/build_wasm/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
