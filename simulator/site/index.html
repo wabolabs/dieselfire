@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DieselFire — Open-source diesel heater controller</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a1a;
+      color: #ccc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container { max-width: 700px; padding: 40px 20px; width: 100%; }
+
+    h1 {
+      font-size: 2.2em;
+      color: #FF8C00;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .subtitle {
+      color: #888;
+      font-size: 1em;
+      margin-bottom: 32px;
+    }
+
+    .alpha-banner {
+      background: #332200;
+      border: 1px solid #664400;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 32px;
+      font-size: 0.9em;
+    }
+    .alpha-banner strong { color: #FFA500; }
+
+    h2 {
+      color: #FF8C00;
+      font-size: 1.3em;
+      margin: 28px 0 12px;
+    }
+    p { margin-bottom: 12px; }
+
+    ul { margin: 8px 0 16px 20px; }
+    li { margin-bottom: 4px; }
+
+    .btn {
+      display: inline-block;
+      background: #FF8C00;
+      color: #1a1a1a;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1.1em;
+      margin: 8px 4px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #FFA533; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #FF8C00;
+      color: #FF8C00;
+    }
+    .btn-outline:hover { background: #FF8C0011; }
+
+    .links { margin: 32px 0; }
+
+    code {
+      background: #2a2a2a;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+    pre {
+      background: #2a2a2a;
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.85em;
+      margin: 8px 0;
+    }
+
+    hr { border: 0; border-top: 1px solid #333; margin: 32px 0; }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 16px;
+      font-size: 0.9em;
+      margin: 12px 0;
+    }
+    .spec-grid dt { color: #FF8C00; }
+    .spec-grid dd { margin-left: 0; }
+
+    footer {
+      text-align: center;
+      color: #555;
+      font-size: 0.85em;
+      padding: 32px 0;
+    }
+    footer a { color: #FF8C00; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>DieselFire</h1>
+    <p class="subtitle">Open-source ESP32-S3 controller for Chinese diesel heaters</p>
+
+    <div class="alpha-banner">
+      <strong>⚠ Alpha — not tested on hardware.</strong><br>
+      This project is in early development. All UI and protocol development
+      has been done via the PC simulator. Hardware bringup is in progress.
+    </div>
+
+    <div class="links">
+      <a href="sim/" class="btn">Launch Simulator</a>
+      <a href="https://github.com/wabolabs/dieselfire" class="btn btn-outline">GitHub</a>
+    </div>
+
+    <h2>Overview</h2>
+    <p>
+      DieselFire is a modernized open-source controller for generic
+      Chinese diesel heaters, forked from Afterburner. It replaces the
+      original 8-bit AVR design with an ESP32-S3, adding a color touchscreen,
+      WiFi, BLE, MQTT, and environmental sensors on a purpose-built PCB.
+    </p>
+
+    <h2>Features</h2>
+    <ul>
+      <li>Blue Wire half-duplex serial protocol at 25000 baud</li>
+      <li>2.8" 320&times;240 ILI9341 color TFT with capacitive touch (GT911)</li>
+      <li>WiFi for web interface, MQTT, and OTA firmware updates</li>
+      <li>Bluetooth Low Energy for mobile app control</li>
+      <li>BME280 temperature, humidity, and pressure sensor</li>
+      <li>MQ-7 carbon monoxide detection</li>
+      <li>DS18B20 external temperature probe (optional)</li>
+      <li>14 programmable timer channels</li>
+      <li>Fuel gauge and hour meter</li>
+      <li>DS3231 RTC with battery backup</li>
+      <li>OTA updates via FOTA and ArduinoOTA</li>
+    </ul>
+
+    <hr>
+
+    <h2>Online Simulator</h2>
+    <p>
+      The <a href="sim/">browser-based simulator</a> runs the full LVGL
+      touchscreen interface compiled to WebAssembly. It includes a realistic
+      diesel heater emulator with 9 operating states, Blue Wire protocol
+      simulation with CRC validation, and fault injection (bad CRC, partial
+      frames, timeouts) accessible from the BW Debug screen.
+    </p>
+
+    <h2>Quick Start</h2>
+    <pre>git clone https://github.com/wabolabs/DieselFire.git
+cd DieselFire
+pio run -e dieselfire
+pio run -t upload -e dieselfire</pre>
+
+    <p>Native PC simulator:</p>
+    <pre>cd simulator
+cmake -B build && cmake --build build -j$(nproc)
+./build/dieselfire-sim</pre>
+
+    <hr>
+
+    <h2>Specifications</h2>
+    <dl class="spec-grid">
+      <dt>MCU</dt><dd>ESP32-S3-WROOM-1-N8R8 (8MB flash, 8MB PSRAM)</dd>
+      <dt>Display</dt><dd>2.8" 320&times;240 ILI9341 + GT911 touch</dd>
+      <dt>Connectivity</dt><dd>USB-C, WiFi, BLE 5, Blue Wire (UART)</dd>
+      <dt>Sensors</dt><dd>BME280, MQ-7, DS18B20 (optional)</dd>
+      <dt>RTC</dt><dd>DS3231 with CR2032 backup</dd>
+      <dt>Power</dt><dd>12V DC input</dd>
+      <dt>PCB</dt><dd>100&times;100mm 2-layer, KiCad design</dd>
+      <dt>License</dt><dd>GPLv3</dd>
+    </dl>
+
+    <hr>
+
+    <h2>License</h2>
+    <p>
+      DieselFire is free software licensed under the
+      <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General Public License v3</a>.
+      Based on Afterburner by Ray Jones and James Clark.
+    </p>
+
+    <footer>
+      <a href="https://dieselfire.wabo.cc">dieselfire.wabo.cc</a>
+    </footer>
+  </div>
+</body>
+</html>
